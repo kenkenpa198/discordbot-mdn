@@ -19,10 +19,12 @@ now = datetime.datetime.now()
 date_j = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
 time_j = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
 
-print('▼動作確認')
+print('===== もだねちゃん起動 =====')
+
+print('===== 動作確認 =====')
 print(date_j)
 print(time_j)
-print('今は' + date_j + time_j + 'だよ！')
+print('現在時刻：' + date_j + time_j)
 
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = 'NzMzODQ3NTg4MDQxNjU0MzYz.XxJJaA.BjEDKqzF3Yz0o-ZFm4fXWRdQLq4'
@@ -34,19 +36,27 @@ client = discord.Client()
 @client.event
 async def on_ready():
 	# 起動したらターミナルにログイン通知が表示される
-	print('ログインしました')
+	print('===== ログインしました =====')
 
 # ------------------------------------------
 
 ### 話しかけた人に返信する非同期関数を定義
 ## あいさつ
-async def hello(message):
+async def send_hello(message):
 	reply = f'{message.author.mention}\nやっほー！もだねちゃんだよ！'
 	await message.channel.send(reply)
 	print(reply)
 
 ## 時間のお知らせ
-async def datetime(message):
+async def send_datetime(message):
+
+	#変数nowを定義（現在の日時）
+	now = datetime.datetime.now()
+
+	#変数day_j time_jを定義（現在の日時を日本語表記にフォーマット化）
+	date_j = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
+	time_j = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
+
 	reply = f'{message.author.mention}\nはーい！\n今は' + date_j + time_j + 'だよ！'
 	await message.channel.send(reply)
 	print(reply)
@@ -57,7 +67,7 @@ async def datetime(message):
 janken_list = 'ジャンケン……\n\n▼出したい手を数字で入力してね\n:fist:：0　:v:：1　:hand_splayed:：2'
 
 # 「さいしょはグー」を送信する関数
-async def janken(message):
+async def send_janken(message):
 	reply = f'{message.author.mention}\nジャンケンだね！負けないよ！'
 	await message.channel.send(reply)
 	time.sleep(1)
@@ -65,7 +75,7 @@ async def janken(message):
 	await message.channel.send(reply)
 
 # プレイヤーとコンピュータの手を算出する関数
-async def janken_2(message):
+async def send_janken_2(message):
 
 	# アイコだった場合ジャンケンを繰り返す
 	# while文で使う変数を定義
@@ -119,12 +129,12 @@ async def on_message(message):
 	if client.user in message.mentions: # もしmessage.mentionsにもだねが入っていたら
 		print(message.content)
 		if '日時' in message.content or '日付' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content:
-			await datetime(message)
+			await send_datetime(message)
 		elif 'じゃんけん' in message.content or 'ジャンケン' in message.content:
-			await janken(message)
-			await janken_2(message)
+			await send_janken(message)
+			await send_janken_2(message)
 		else:
-			await hello(message)
+			await send_hello(message)
 
 # Botの起動とDiscordサーバーへの接続
 client.run(TOKEN)
