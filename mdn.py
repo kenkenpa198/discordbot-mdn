@@ -126,11 +126,12 @@ async def on_message(message):
 	if message.author.bot:
 		return
 	# 話しかけられたかの判定
-	if client.user in message.mentions: # もしmessage.mentionsにもだねが入っていたら
+	# もしmessage.mentionsにもだねちゃんが入っていたら or message.contentに'!mdn'が入っていたら
+	if client.user in message.mentions or '!mdn' in message.content:
 		print(message.content)
-		if '日時' in message.content or '日付' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content:
+		if '日時' in message.content or '日付' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content or '!mdn t' in message.content:
 			await send_datetime(message)
-		elif 'じゃんけん' in message.content or 'ジャンケン' in message.content:
+		elif 'じゃんけん' in message.content or 'ジャンケン' in message.content or '!mdn j' in message.content:
 			await send_janken(message)
 			await send_janken_2(message)
 		else:
