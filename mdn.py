@@ -1,30 +1,30 @@
-##モジュール読み込み
-
-#Discord
-import discord
-
+##### モジュール読み込み #####
 # 基本モジュール
 import datetime
 import time
 import pytz
 import random
 
-#utils.py
+# Discord
+import discord
+
+# utils.py
 import utils
+
+##### 起動確認 #####
+print('===== もだねちゃん起動 =====')
+print('===== 動作確認 =====')
 
 #変数nowを定義（現在の日時）
 now = datetime.datetime.now()
 
-#変数day_j time_jを定義（現在の日時を日本語表記にフォーマット化）
-date_j = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
-time_j = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
+#変数yymm_kpn hhmm_jpnを定義（現在の日時を日本語表記にフォーマット化）
+yymm_jpn = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
+hhmm_jpn = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
 
-print('===== もだねちゃん起動 =====')
-
-print('===== 動作確認 =====')
-print(date_j)
-print(time_j)
-print('現在時刻：' + date_j + time_j)
+print(yymm_jpn)
+print(hhmm_jpn)
+print('現在時刻：' + yymm_jpn + hhmm_jpn)
 
 # 自分のBotのアクセストークンに置き換えてください
 TOKEN = 'NzMzODQ3NTg4MDQxNjU0MzYz.XxJJaA.BjEDKqzF3Yz0o-ZFm4fXWRdQLq4'
@@ -38,31 +38,29 @@ async def on_ready():
 	# 起動したらターミナルにログイン通知が表示される
 	print('===== ログインしました =====')
 
-# ------------------------------------------
 
-### 話しかけた人に返信する非同期関数を定義
+##### 話しかけた人に返信する非同期関数を定義 #####
 ## あいさつ
 async def send_hello(message):
 	reply = f'{message.author.mention}\nやっほー！もだねちゃんだよ！'
 	await message.channel.send(reply)
 	print(reply)
 
-## 時間のお知らせ
+## 時報
 async def send_datetime(message):
 
 	#変数nowを定義（現在の日時）
 	now = datetime.datetime.now()
 
-	#変数day_j time_jを定義（現在の日時を日本語表記にフォーマット化）
-	date_j = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
-	time_j = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
+	#変数day_j hhmm_jpnを定義（現在の日時を日本語表記にフォーマット化）
+	yymm_jpn = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
+	hhmm_jpn = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
 
-	reply = f'{message.author.mention}\nはーい！\n今は' + date_j + time_j + 'だよ！'
+	reply = f'{message.author.mention}\nはーい！\n今は' + yymm_jpn + hhmm_jpn + 'だよ！'
 	await message.channel.send(reply)
 	print(reply)
 
 ## ジャンケン
-
 # ジャンケンの説明文
 janken_list = 'ジャンケン……\n\n▼出したい手を数字で入力してね\n:fist:：0　:v:：1　:hand_splayed:：2'
 
@@ -117,9 +115,8 @@ async def send_janken_2(message):
 	reply = f'{message.author.mention}\n' + result + '\n\n楽しかったー！またやろうね！'
 	await message.channel.send(reply)
 
-# ------------------------------------------
 
-## 発言時に実行されるイベントハンドラを定義
+##### 発言時に実行されるイベントハンドラを定義 #####
 @client.event
 async def on_message(message):
 	# メッセージ送信者がBotだった場合は無視する
@@ -129,13 +126,14 @@ async def on_message(message):
 	# もしmessage.mentionsにもだねちゃんが入っていたら or message.contentに'!mdn'が入っていたら
 	if client.user in message.mentions or '!mdn' in message.content:
 		print(message.content)
-		if '日時' in message.content or '日付' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content or '!mdn t' in message.content:
+		if '!mdn t' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content:
 			await send_datetime(message)
-		elif 'じゃんけん' in message.content or 'ジャンケン' in message.content or '!mdn j' in message.content:
+		elif '!mdn j' in message.content or 'じゃんけん' in message.content or 'ジャンケン' in message.content:
 			await send_janken(message)
 			await send_janken_2(message)
 		else:
 			await send_hello(message)
 
-# Botの起動とDiscordサーバーへの接続
+
+##### Botの起動とDiscordサーバーへの接続 #####
 client.run(TOKEN)
