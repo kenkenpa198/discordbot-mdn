@@ -1,4 +1,7 @@
-##### モジュール読み込み #####
+##### 読み込み #####
+
+# coding: utf-8
+
 # 基本モジュール
 import datetime
 import time
@@ -8,17 +11,18 @@ import random
 # Discord
 import discord
 
-# utils.py
+# 自作モジュール
 import utils
+import info
 
 ##### 起動確認 #####
 print('===== もだねちゃん起動 =====')
 print('===== 動作確認 =====')
 
-#変数nowを定義（現在の日時）
+# 変数nowを定義（現在の日時）
 now = datetime.datetime.now()
 
-#変数yymm_kpn hhmm_jpnを定義（現在の日時を日本語表記にフォーマット化）
+# 変数yymm_kpn hhmm_jpnを定義（現在の日時を日本語表記にフォーマット化）
 yymm_jpn = '{0:%m}'.format(now) + '月' + '{0:%d}'.format(now) + '日'
 hhmm_jpn = '{0:%H}'.format(now) + '時' + '{0:%M}'.format(now) + '分'
 
@@ -26,11 +30,11 @@ print(yymm_jpn)
 print(hhmm_jpn)
 print('現在時刻：' + yymm_jpn + hhmm_jpn)
 
-# 自分のBotのアクセストークンに置き換えてください
-TOKEN = 'NzMzODQ3NTg4MDQxNjU0MzYz.XxJJaA.BjEDKqzF3Yz0o-ZFm4fXWRdQLq4'
+# Botのアクセストークンの読み込み
+TOKEN = 'NzMzODQ3NTg4MDQxNjU0MzYz.XxJJaA.BjEDKqzF3Yz0o-ZFm4fXWRdQLq4' # botのトークン
 
 # 接続に必要なオブジェクトを生成
-client = discord.Client()
+client = discord.Client() # ユーザー
 
 # 起動時に動作する処理
 @client.event
@@ -38,8 +42,7 @@ async def on_ready():
 	# 起動したらターミナルにログイン通知が表示される
 	print('===== ログインしました =====')
 
-
-##### 話しかけた人に返信する非同期関数を定義 #####
+##### 話しかけられた時に実行されるイベントハンドラを定義 #####
 ## あいさつ
 async def send_hello(message):
 	reply = f'{message.author.mention}\nやっほー！もだねちゃんだよ！'
@@ -62,20 +65,16 @@ async def send_datetime(message):
 
 ## ジャンケン
 # ジャンケンの説明文
-janken_list = 'ジャンケン……\n\n▼出したい手を数字で入力してね\n:fist:：0　:v:：1　:hand_splayed:：2'
+janken_list = '▼出したい手を数字で入力してね\n:fist:：0　:v:：1　:hand_splayed:：2'
 
-# 「さいしょはグー」を送信する関数
+# 関数
 async def send_janken(message):
 	reply = f'{message.author.mention}\nジャンケンだね！負けないよ！'
 	await message.channel.send(reply)
 	time.sleep(1)
-	reply = f'{message.author.mention}\nじゃあいくよっ！\nさいしょはグー！' + janken_list
+	reply = f'{message.author.mention}\nじゃあいくよっ！\nさいしょはグー！ジャンケン……\n\n' + janken_list
 	await message.channel.send(reply)
 
-# プレイヤーとコンピュータの手を算出する関数
-async def send_janken_2(message):
-
-	# アイコだった場合ジャンケンを繰り返す
 	# while文で使う変数を定義
 	player_hand = 0
 	computer_hand = 0
@@ -123,17 +122,16 @@ async def on_message(message):
 	if message.author.bot:
 		return
 	# 話しかけられたかの判定
-	# もしmessage.mentionsにもだねちゃんが入っていたら or message.contentに'!mdn'が入っていたら
-	if client.user in message.mentions or '!mdn' in message.content:
+	# もしmessage.mentionsにもだねちゃんが入っていたら
+	if client.user in message.mentions:
 		print(message.content)
-		if '!mdn t' in message.content or '何日' in message.content or '何時' in message.content or '何分' in message.content:
+		if '何日' in message.content or '何時' in message.content or '何分' in message.content:
 			await send_datetime(message)
-		elif '!mdn j' in message.content or 'じゃんけん' in message.content or 'ジャンケン' in message.content:
+		elif 'じゃんけん' in message.content or 'ジャンケン' in message.content:
 			await send_janken(message)
-			await send_janken_2(message)
 		else:
 			await send_hello(message)
 
 
 ##### Botの起動とDiscordサーバーへの接続 #####
-client.run(TOKEN)
+client.run(info.TOKEN)

@@ -16,7 +16,7 @@ def rise_hand(hand, name='ゲスト'):
 ## プレイヤーとコンピュータの手を比較してアイコの判定を戻り値として返す
 def judge_aiko(player, computer):
 	if player == computer:
-		return 'アイコだ！さあ、もう一回！'
+		return 'アイコだ！さあ、もう一回！ジャンケン……\n\n'
 
 ## プレイヤーとコンピュータの手を比較して勝敗を戻り値として返す
 def judge(player, computer):
