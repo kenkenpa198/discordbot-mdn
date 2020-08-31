@@ -1,6 +1,6 @@
 # coding: utf-8
 
-##### 情報読み込み #####
+##### 読み込み #####
 # Pythonモジュール
 import traceback # エラー表示のためにインポート
 
@@ -8,9 +8,11 @@ import traceback # エラー表示のためにインポート
 import discord
 from discord.ext import commands
 
+# 自作モジュール
+
 # コグの名前を格納
 INITIAL_EXTENSIONS = [
-	'cogs.cog'
+	'cog'
 ]
 
 # 起動確認
