@@ -4,6 +4,7 @@
 # Pythonモジュール
 import time
 import random
+import re
 
 # 外部モジュール
 import discord #discord.py
@@ -44,18 +45,21 @@ class Cog(commands.Cog):
 			command_help = '▼コマンド一覧```' + help_s + help_e + help_j + '```'
 			await ctx.send('やっほー！もだねちゃんだよ！\n\n私を操作できるコマンド一覧だよ！\n`!mdn <<コマンド名>>`と入力してご指示くださいっ！\n\n' + command_help)
 	
-	# mdnサブコマンド
+	# mdnサブコマンド 読み上げ機能
+	vc = 'ボイスチャンネル'
+
 	# ボイスチャンネルへ入室させる
 	@mdn.command()
 	async def s(self, ctx):
 		# ボイスチャンネルを取得する
+		global vc
 		vc = ctx.author.voice.channel
 		# ボイスチャンネルへ接続する
-		await ctx.send(f'> :microphone: {ctx.author.voice.channel}\nこのボイスチャンネルへ入室するよ！')
+		await ctx.send(f'> == VCへ入室します ==\n> :microphone: {vc}')
 		time.sleep(.5)
 		await vc.connect()
 		time.sleep(.5)
-		await ctx.send(f'やっほー！もだねちゃんだよ！読み上げを開始するね！')
+		await ctx.send(f'やっほー！もだねちゃんだよ！読み上げを開始するねっ！')
 		
 		# if文（できれば）
 		# if ctx.author in ((discord.VoiceChannel)):
@@ -69,8 +73,10 @@ class Cog(commands.Cog):
 	@mdn.command()
 	async def e(self, ctx):
 		# ボイスチャンネルから退出する
+		await ctx.send(f'読み上げを終了するよ！またね！')
+		time.sleep(4)
 		await ctx.voice_client.disconnect()
-		await ctx.send(f'ボイスチャンネルから退室したよ！\nまたね！')
+		await ctx.send(f'> == VCから退出しました ==\n> :microphone: {vc}')
 	
 	# テキストチャンネルに投稿されたテキストを読み上げる
 	@commands.Cog.listener()
@@ -79,9 +85,13 @@ class Cog(commands.Cog):
 			pass
 		else:
 			if message.guild.voice_client:
-				print(message.content)
-				openjtalk.jtalk(message.content)
-				source = discord.FFmpegPCMAudio('out.wav')
+				spk_msg = message.content
+				# print(spk_msg)
+				# openjtalk.abb_mention(spk_msg) # メンションを省略
+				# openjtalk.abb_url(spk_msg) # URLを省略
+				openjtalk.jtalk(spk_msg) # jtalkの実行
+				print(spk_msg)
+				source = discord.FFmpegPCMAudio('out.wav') #wavファイルを出力
 				message.guild.voice_client.play(source)
 			else:
 				pass
