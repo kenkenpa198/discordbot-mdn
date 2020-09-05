@@ -6,6 +6,7 @@ from datetime import datetime
 import discord #discord.py
 from discord.ext import commands # Bot Commands Frameworkのインポート
 
+# open-jtalk
 def jtalk(t):
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
@@ -20,20 +21,19 @@ def jtalk(t):
     aplay = ['afplay','-q','out.wav']
     wr = subprocess.Popen(aplay)
 
-def say_datetime():
-    d = datetime.now()
-    text = '%s月%s日、%s時%s分%s秒aあああああ' % (d.month, d.day, d.hour, d.minute, d.second)
-    jtalk(text)
-
+# メンションを省略
 def abb_mention(t):
     if '<@' in t:
-        t.replace(re.compile('<@'), '')
+        return re.sub(r'<@\d{18}> ', 'メンション省略', t)
     else:
-        return
+        return t
         
+# <@32323232323> うおおおおお
+# ....................................
+# \d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d
 
 def abb_url(t):
     pass
 
 if __name__ == '__main__':
-    say_datetime()
+    pass # say_datetime()

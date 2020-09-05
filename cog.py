@@ -4,7 +4,6 @@
 # Pythonモジュール
 import time
 import random
-import re
 
 # 外部モジュール
 import discord #discord.py
@@ -29,6 +28,9 @@ class Cog(commands.Cog):
 	@commands.command()
 	async def ping(self, ctx):
 		await ctx.send('pong!')
+		print(ctx)
+		print(ctx.author)
+		print(ctx.author.mention)
 	
 	@commands.command()
 	async def what(self, ctx, what):
@@ -59,7 +61,7 @@ class Cog(commands.Cog):
 		time.sleep(.5)
 		await vc.connect()
 		time.sleep(.5)
-		await ctx.send(f'やっほー！もだねちゃんだよ！読み上げを開始するねっ！')
+		await ctx.send(f'やっほー！読み上げを開始するねっ！')
 		
 		# if文（できれば）
 		# if ctx.author in ((discord.VoiceChannel)):
@@ -86,11 +88,11 @@ class Cog(commands.Cog):
 		else:
 			if message.guild.voice_client:
 				spk_msg = message.content
-				# print(spk_msg)
-				# openjtalk.abb_mention(spk_msg) # メンションを省略
+				print(spk_msg) #置換前のテキストを出力
+				openjtalk.abb_mention(spk_msg) # メンションを省略
 				# openjtalk.abb_url(spk_msg) # URLを省略
-				openjtalk.jtalk(spk_msg) # jtalkの実行
-				print(spk_msg)
+				# openjtalk.jtalk(spk_msg) # jtalkの実行
+				print(spk_msg) #置換後のテキストを出力
 				source = discord.FFmpegPCMAudio('out.wav') #wavファイルを出力
 				message.guild.voice_client.play(source)
 			else:
