@@ -22,18 +22,9 @@ def jtalk(t):
     wr = subprocess.Popen(aplay)
 
 # メンションを省略
-def abb_mention(t):
-    if '<@' in t:
-        return re.sub(r'<@\d{18}> ', 'メンション省略', t)
-    else:
-        return t
-        
-# <@32323232323> うおおおおお
-# ....................................
-# \d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d
-
-def abb_url(t):
-    pass
+def abb_msg(t):
+    rep = r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?' # 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
+    return re.sub(rep, 'URL省略', t)
 
 if __name__ == '__main__':
     pass # say_datetime()

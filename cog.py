@@ -4,6 +4,7 @@
 # Pythonモジュール
 import time
 import random
+import re
 
 # 外部モジュール
 import discord #discord.py
@@ -27,16 +28,23 @@ class Cog(commands.Cog):
 	# コマンドの作成 コマンドはcommandデコレータで必ず就職する
 	@commands.command()
 	async def ping(self, ctx):
+		print('===== テスト =====')
 		await ctx.send('pong!')
 		print(ctx)
 		print(ctx.author)
 		print(ctx.author.mention)
+		print(ctx.message.content)
+		print(ctx.message.clean_content)
+		# print('引数：' + agt)
 	
 	@commands.command()
 	async def what(self, ctx, what):
-		await ctx.send(f'{what}ってなーに？')
+		print('===== whatってなーに？ =====')
+		what_txt = f'{what}ってなーに？'
+		await ctx.send(what_txt)
+		print(what_txt)
 
-	# メインとなるmdnコマンド
+	### メインとなるmdnコマンド
 	@commands.group()
 	async def mdn(self, ctx):
 		# サブコマンドが指定されていない場合、メッセージを送信する
@@ -47,12 +55,14 @@ class Cog(commands.Cog):
 			command_help = '▼コマンド一覧```' + help_s + help_e + help_j + '```'
 			await ctx.send('やっほー！もだねちゃんだよ！\n\n私を操作できるコマンド一覧だよ！\n`!mdn <<コマンド名>>`と入力してご指示くださいっ！\n\n' + command_help)
 	
-	# mdnサブコマンド 読み上げ機能
+	## 読み上げ機能
+	# 読み上げは「### テキストチャンネルに投稿されたテキストへ反応する > # 読み上げ機能用」を使用
 	vc = 'ボイスチャンネル'
 
-	# ボイスチャンネルへ入室させる
+	# mdnサブコマンド：ボイスチャンネルへ入室させる
 	@mdn.command()
 	async def s(self, ctx):
+		print('===== 読み上げを開始します =====')
 		# ボイスチャンネルを取得する
 		global vc
 		vc = ctx.author.voice.channel
@@ -70,37 +80,21 @@ class Cog(commands.Cog):
 		# else:
 		# 	await ctx.send(f'ごめんね。入室先が見つからないんだ…。\n先にボイスチャンネルへ入室した上で私を呼んでね！')
 	
-	# mdnサブコマンド
-	# ボイスチャンネルから退出させる
+	# mdnサブコマンド：ボイスチャンネルから退出させる
 	@mdn.command()
 	async def e(self, ctx):
 		# ボイスチャンネルから退出する
 		await ctx.send(f'読み上げを終了するよ！またね！')
-		time.sleep(4)
+		time.sleep(3.5)
 		await ctx.voice_client.disconnect()
 		await ctx.send(f'> == VCから退出しました ==\n> :microphone: {vc}')
+		print('===== 読み上げを終了します =====')
 	
-	# テキストチャンネルに投稿されたテキストを読み上げる
-	@commands.Cog.listener()
-	async def on_message(self, message):
-		if message.content.startswith('!'):
-			pass
-		else:
-			if message.guild.voice_client:
-				spk_msg = message.content
-				print(spk_msg) #置換前のテキストを出力
-				openjtalk.abb_mention(spk_msg) # メンションを省略
-				# openjtalk.abb_url(spk_msg) # URLを省略
-				# openjtalk.jtalk(spk_msg) # jtalkの実行
-				print(spk_msg) #置換後のテキストを出力
-				source = discord.FFmpegPCMAudio('out.wav') #wavファイルを出力
-				message.guild.voice_client.play(source)
-			else:
-				pass
-	
+	## ジャンケン機能
+	# mdnサブコマンド：ジャンケンを実行する
 	@mdn.command()
 	async def j(self, ctx):
-		print('===== ジャンケンを実行します =====')
+		print('===== ジャンケンを開始します =====')
 		# ジャンケンの説明文
 		janken_list = '▼出したい手を数字で入力してね\n> :fist:：0　:v:：1　:hand_splayed:：2'
 
@@ -146,7 +140,24 @@ class Cog(commands.Cog):
 		time.sleep(1.5)
 		result = utils.judge(player_hand, computer_hand)
 		await ctx.send(f'{ctx.author.mention}\n' + result + '\n\n楽しかったー！またやろうね！')
+		print('===== ジャンケンを終了します =====')
 
+	### テキストチャンネルに投稿されたテキストへ反応する
+	@commands.Cog.listener()
+	async def on_message(self, message):
+		if message.content.startswith('!'): # !が先頭に入っていたら無視
+			return
+		else:
+			if message.guild.voice_client: # 読み上げ機能用
+				spk_msg = message.clean_content
+				print('整形前：' + spk_msg) #置換前のテキストを出力
+				spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
+				print('整形後：' + spk_msg_fmt) #置換後のテキストを出力
+				openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
+				source = discord.FFmpegPCMAudio('out.wav') #wavファイルを出力
+				message.guild.voice_client.play(source)
+			else:
+				return
 
 # Bot本体側からコグを読み込む際に呼び出される関数
 def setup(bot):
