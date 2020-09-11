@@ -1,1 +1,1 @@
-discordbot: python mdn.py
+discord-bot: python mdn.py
