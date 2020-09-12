@@ -9,8 +9,8 @@ from discord.ext import commands # Bot Commands Frameworkのインポート
 # open-jtalk
 def jtalk(t):
     open_jtalk = ['open_jtalk']
-    mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
-    htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
+    mech = ['-x','/usr/local/lib/open_jtalk/dic']
+    htsvoice = ['-m','/usr/local/lib/open_jtalk/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.8']
     outwav = ['-ow','out.wav']
     cmd = open_jtalk + mech + htsvoice + speed + outwav
@@ -18,7 +18,7 @@ def jtalk(t):
     c.stdin.write(t.encode())
     c.stdin.close()
     c.wait()
-    aplay = ['afplay','-q','out.wav']
+    aplay = ['aplay','-q','out.wav']
     wr = subprocess.Popen(aplay)
 
 # メンションを省略
