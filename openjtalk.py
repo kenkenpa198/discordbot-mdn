@@ -1,25 +1,25 @@
 #coding: utf-8
+import os
 import subprocess
 import re
-from datetime import datetime
-
-import discord #discord.py
-from discord.ext import commands # Bot Commands Frameworkのインポート
+from pydub import AudioSegment
 
 # open-jtalk
-def jtalk(t):
+def jtalk(t, filepath='voice_message'):
     open_jtalk = ['open_jtalk']
-    mech = ['-x','/usr/local/lib/open_jtalk/dic']
-    htsvoice = ['-m','/usr/local/lib/open_jtalk/voice/mei/mei_happy.htsvoice']
+    mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
+    htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.8']
-    outwav = ['-ow','out.wav']
+    outwav = ['-ow', filepath+'.wav']
     cmd = open_jtalk + mech + htsvoice + speed + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     c.stdin.write(t.encode())
     c.stdin.close()
     c.wait()
-    aplay = ['aplay','-q','out.wav']
-    wr = subprocess.Popen(aplay)
+    audio_segment = AudioSegment.from_wav(filepath+'.wav')
+    os.remove(filepath+'.wav')
+    audio_segment.export(filepath+'.mp3', format='mp3')
+    return filepath+'.mp3'
 
 # メンションを省略
 def abb_msg(t):

@@ -154,7 +154,7 @@ class Cog(commands.Cog):
 				spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
 				print('整形後：' + spk_msg_fmt) #置換後のテキストを出力
 				openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
-				source = discord.FFmpegPCMAudio('out.wav') #wavファイルを出力
+				source = discord.FFmpegPCMAudio('voice_message.mp3') #wavファイルを出力
 				message.guild.voice_client.play(source)
 			else:
 				return
