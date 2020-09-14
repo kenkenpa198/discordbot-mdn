@@ -1,25 +1,23 @@
 #coding: utf-8
-###ジャンケン！
 
-## 入力された数値が0〜2の間か判定する
-# def validate(hand):
-# 	if hand < 0 or hand > 2:
-# 		return False
-# 	return True
+##### ジャンケン用関数 #####
+## 返答のチェック関数を定義
+def janken_check(m):
+	return m.content == '0' or m.content == '1' or m.content == '2' # 数値が0,1,2のどれかだったらOK
 
-## 「▼nameが出した手\n（手の絵文字）」を戻り値として返す
+## メッセージをグーチョキパーの絵文字へ変換する
 # handsはグーチョキパー3つのリスト
 # 入力されたリストの番号（0,1,2）を受け取り、番号に対応した手を出力する
-def rise_hand(hand, name='ゲスト'):
-	hands = [':fist:', ':v:', ':hand_splayed:']#0:グー 1:チョキ 2:パー
-	return '▼'+ name + 'が出した手\n' + hands[hand]
+def rise_hand(hand):
+	hands = [':fist:', ':v:', ':hand_splayed:'] # 0:グー 1:チョキ 2:パー
+	return hands[hand]
 
 ## プレイヤーとコンピュータの手を比較してアイコの判定を戻り値として返す
 def judge_aiko(player, computer):
 	if player == computer:
 		print('勝敗：アイコ')
 		print('--- 繰り返します ---')
-		return 'アイコだ！さあ、もう一回！ジャンケン……\n\n'
+		return 'アイコだ！さあ、もう一回！\nジャンケン……'
 
 ## プレイヤーとコンピュータの手を比較して勝敗を戻り値として返す
 def judge(player, computer):

@@ -54,5 +54,9 @@ class MyBot(commands.Bot):
 ##### Botの起動とDiscordサーバーへの接続 #####
 if __name__ == '__main__':
 	bot = MyBot(command_prefix='!') #コマンド実行を示す「!」を指定
-	TOKEN = 'NzU0NDExODkzNDAxMTkwNDEw.X10W0w._1PBisR0GF1bN6ETHIELGkU1EVY' # botのトークン
+	TOKEN = 'NzU0NDExODkzNDAxMTkwNDEw.X10W0w._1PBisR0GF1bN6ETHIELGkU1EVY' # トークン
+
+	# 開発
+	# bot = MyBot(command_prefix='?') #コマンド実行を示す「?」を指定
+	# TOKEN = 'NzU0NDE2NjU5NjIzNzA2ODQ1.X10bRA.0oWkYlYppLNwh9VUKstKvDG4fmM' # トークン
 	bot.run(TOKEN)
