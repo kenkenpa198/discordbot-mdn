@@ -1,5 +1,5 @@
 build:
-	docker:
-	  worker: Dockerfile
+  docker:
+    worker: Dockerfile
   run:
-	worker: python3 mdn.py
+    worker: python3 mdn.py
