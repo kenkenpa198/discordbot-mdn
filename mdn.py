@@ -12,7 +12,7 @@ from discord.ext import commands
 
 # コグの名前を格納
 INITIAL_EXTENSIONS = [
-	'cog'
+    'cog'
 ]
 
 # 起動確認
@@ -22,27 +22,27 @@ client = discord.Client() # ユーザー
 
 class MyBot(commands.Bot):
 
-	# MyBotのコンストラタ
-	def __init__(self, command_prefix):
-		# superクラスのコンストラクタに値を渡して実行
-		super().__init__(command_prefix)
+    # MyBotのコンストラタ
+    def __init__(self, command_prefix):
+        # superクラスのコンストラクタに値を渡して実行
+        super().__init__(command_prefix)
 
-		# INITIAL_COGSに格納されている名前からコグを読み込む
-		# エラーが発生した場合はエラー内容を表示
-		for cog in INITIAL_EXTENSIONS:
-			try:
-				self.load_extension(cog)
-			except Exception:
-				traceback.print_exc()
+        # INITIAL_COGSに格納されている名前からコグを読み込む
+        # エラーが発生した場合はエラー内容を表示
+        for cog in INITIAL_EXTENSIONS:
+            try:
+                self.load_extension(cog)
+            except Exception:
+                traceback.print_exc()
 
 
-	# 起動時に動作する処理
-	async def on_ready(self):
-		# 起動したらターミナルにログイン通知が表示される
-		print('===== ログインしました =====')
-		print(self.user)
-		print(self.user.name)
-		print(self.user.id)
+    # 起動時に動作する処理
+    async def on_ready(self):
+        # 起動したらターミナルにログイン通知が表示される
+        print('===== ログインしました =====')
+        print(self.user)
+        print(self.user.name)
+        print(self.user.id)
 
 ##### コマンド #####
 ## あいさつ
@@ -53,10 +53,10 @@ class MyBot(commands.Bot):
 
 ##### Botの起動とDiscordサーバーへの接続 #####
 if __name__ == '__main__':
-	bot = MyBot(command_prefix='!') #コマンド実行を示す「!」を指定
-	TOKEN = 'NzU0NDExODkzNDAxMTkwNDEw.X10W0w._1PBisR0GF1bN6ETHIELGkU1EVY' # トークン
+    bot = MyBot(command_prefix='!') #コマンド実行を示す「!」を指定
+    TOKEN = 'NzU0NDExODkzNDAxMTkwNDEw.X10W0w._1PBisR0GF1bN6ETHIELGkU1EVY' # トークン
 
-	# 開発
-	# bot = MyBot(command_prefix='?') #コマンド実行を示す「?」を指定
-	# TOKEN = 'NzU0NDE2NjU5NjIzNzA2ODQ1.X10bRA.0oWkYlYppLNwh9VUKstKvDG4fmM' # トークン
-	bot.run(TOKEN)
+    # 開発
+    # bot = MyBot(command_prefix='?') #コマンド実行を示す「?」を指定
+    # TOKEN = 'NzU0NDE2NjU5NjIzNzA2ODQ1.X10bRA.0oWkYlYppLNwh9VUKstKvDG4fmM' # トークン
+    bot.run(TOKEN)
