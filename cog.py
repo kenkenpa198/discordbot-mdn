@@ -5,6 +5,7 @@
 import time
 import random
 import re
+import asyncio
 
 # 外部モジュール
 import discord #discord.py
@@ -83,33 +84,39 @@ class Cog(commands.Cog):
     @mdn.command()
     async def s(self, ctx):
         print('===== 読み上げを開始します =====')
-        if ctx.author.voice is None: # ボイスチャンネルにコマンド実行者がいるか判定
-            print('--- VCにコマンド実行者がいないため中断します ---')
-            await ctx.send(f'{ctx.author.mention}\nごめんね、入室先が見つからないよ…！\nVCへ入室した上でコマンドを実行してね！')
-            return
+        await ctx.send(f'{ctx.author.mention}\nはーい！読み上げを開始するねっ！')
 
-        # ボイスチャンネルを取得する
+        # ボイスチャンネルにコマンド実行者がいるか判定
+        if ctx.author.voice is None:
+            print('--- VCにコマンド実行者がいないため待機します ---')
+            embed = discord.Embed(title='VCへの入室を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください')
+            await ctx.send(embed=embed)
+
+            # ボイスチャンネルにコマンド実行者がいるかチェックする関数を定義
+            def vc_check(m, b, a):
+                return ctx.author.voice is not None
+
+            # ボイスチャンネルにコマンド実行者がいれば変数へVCの情報を渡す
+            try:
+                await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
+            except asyncio.TimeoutError:
+                await ctx.send(f'{ctx.author.mention}\nごめんね、入室先が見つからなかったよ…！\n準備できたらまた呼んでね！')
+                print('===== VCへの接続を中断しました =====')
+                return
+            else:
+                pass
+        else:
+            pass
+
         global vc
         vc = ctx.author.voice.channel
         print('接続：' + str(vc))
-
         # ボイスチャンネルへ接続する
-        await ctx.send(f'{ctx.author.mention}\nはーい！読み上げを開始するねっ！')
         embed = discord.Embed(title='VCへ入室します', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
         time.sleep(1)
         await vc.connect()
         await ctx.send(f'やっほー！もだねちゃんだよ！')
-        # global vc_mdn_members
-        # vc_mdn_members = ctx.guild.voice_client.channel.members # もだねちゃんが入っているVCのメンバーリスト
-        # print(str(vc_mdn_members))
-        
-        # if文（できれば）
-        # if ctx.author in ((discord.VoiceChannel)):
-        #     await vc.connect()
-        #     await ctx.send(f'> :microphone: {ctx.author.voice.channel}\nこのボイスチャンネルへ入室するよ！\nよろしくね！')
-        # else:
-        #     await ctx.send(f'ごめんね。入室先が見つからないんだ…。\n先にボイスチャンネルへ入室した上で私を呼んでね！')
     
     # mdnサブコマンド：ボイスチャンネルから退出させる
     @mdn.command()
