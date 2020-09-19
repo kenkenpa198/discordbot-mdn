@@ -64,7 +64,7 @@ class Cog(commands.Cog):
 
 
     ### メインとなるmdnコマンド
-    @commands.group(aliases=['m'])
+    @commands.group()
     async def mdn(self, ctx):
         # サブコマンドが指定されていない場合、メッセージを送信する
         if ctx.invoked_subcommand is None:
@@ -94,7 +94,7 @@ class Cog(commands.Cog):
 
             # ボイスチャンネルにコマンド実行者がいるかチェックする関数を定義
             def vc_check(m, b, a):
-                return ctx.author.voice is not None
+                return ctx.author.voice is not None # bool(ctx.author.voice)でもOK
 
             # ボイスチャンネルにコマンド実行者がいれば変数へVCの情報を渡す
             try:
@@ -104,12 +104,13 @@ class Cog(commands.Cog):
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
-                pass
+                pass #time.sleep(.5)
         else:
             pass
 
-        global vc
+        global vc, var_ctx
         vc = ctx.author.voice.channel
+        var_ctx = ctx
         print('接続：' + str(vc))
         # ボイスチャンネルへ接続する
         embed = discord.Embed(title='VCへ入室します', description=':microphone: ' + str(vc), color=0xff7777)
@@ -122,12 +123,12 @@ class Cog(commands.Cog):
     @mdn.command()
     async def e(self, ctx):
         # ボイスチャンネルから退出する
+        print('===== 読み上げを終了します =====')
         await ctx.send(f'読み上げを終了するよ！またね！')
         time.sleep(3.5)
         await ctx.voice_client.disconnect()
         embed = discord.Embed(title='VCから退出しました', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
-        print('===== 読み上げを終了します =====')
         print('退室：' + str(vc))
     
     ## ジャンケン機能
@@ -213,16 +214,23 @@ class Cog(commands.Cog):
         # print(member)
         # print(before)
         # print(after)
-        # if not before.channel and after.channel:
-        #     print('--- VCへ入室 ---')
-        #     vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-        #     print(vcl)
-        # elif before.channel and not after.channel:
-        #     print('--- VCから退室 ---')
-        #     vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-        #     print(vcl)
-        #     if vcl and vcl.is_connected():
-        #         await vcl.disconnect()
+        if not before.channel and after.channel: # ユーザーの前と後のVCの状態を比較して、値が有る状態だったら（入室したら）
+            print('--- VCへ入室 ---')
+            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
+            print(vcl)
+        elif before.channel and not after.channel: # ユーザーの前と後のVCの状態を比較して、値が無い状態だったら（退室したら）
+            print('--- VCから退室 ---')
+            vch = before.channel
+            if len(vch.members) == 1 and vch.members[0] == self.bot.user: # 
+                vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
+                if vcl and vcl.is_connected():
+                    print('===== 読み上げを終了します =====')
+                    await var_ctx.send(f'最後のひとりになったから読み上げを終了するよ！じゃあね！')
+                    time.sleep(.5)
+                    await vcl.disconnect()
+                    embed = discord.Embed(title='VCから退出しました', description=':microphone: ' + str(vc), color=0xff7777)
+                    await var_ctx.send(embed=embed)
+                    print('退室：' + str(vc))
 
 # Bot本体側からコグを読み込む際に呼び出される関数
 def setup(bot):

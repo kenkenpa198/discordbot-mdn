@@ -10,7 +10,8 @@ RUN set -x && \
     mkdir /discordbot-mdn
     # mkdir -p /usr/local/Cellar/open-jtalk && \
     # mv /usr/local/lib/open_jtalk /usr/local/Cellar/open-jtalk && \
-    # mv /usr/local/Cellar/open-jtalk/open_jtalk 1.11
+    # mv /usr/local/Cellar/open-jtalk/open_jtalk /usr/local/Cellar/open-jtalk/1.11
+    # ln -s /usr/local/lib/open_jtalk /usr/local/Cellar/open-jtalk
 COPY mdn.py /discordbot-mdn
 COPY cog.py /discordbot-mdn
 COPY utils.py /discordbot-mdn
