@@ -27,7 +27,7 @@ class Cog(commands.Cog):
         self.bot = bot
     
     # コマンドの作成 コマンドはcommandデコレータで必ず就職する
-    @commands.command(aliases=['p'])
+    @commands.command()
     async def ping(self, ctx):
         print('===== ping! =====')
         await ctx.send('pong!')
@@ -45,22 +45,22 @@ class Cog(commands.Cog):
         print(ctx.guild.voice_client.channel.members)
         print(ctx.guild.voice_client.channel.id)
     
-    @commands.command(aliases=['w'])
+    @commands.command()
     async def what(self, ctx, what):
         print('===== whatってなーに？ =====')
         what_txt = f'{what}ってなーに？'
         await ctx.send(what_txt)
         print(what_txt)
 
-    @commands.command()
-    async def set(self, ctx):
-        print('===== 初期設定を行います =====')
-        guild = ctx.message.guild
-        role = discord.utils.get(guild.roles, name='develop')
-        print('変更対象：' + str(role))
-        print('--- 役職の色を変更しました ---')
-        await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
-        await ctx.send(f'初期設定を行ったよ！これからよろしくねっ！')
+    # @commands.command()
+    # async def set(self, ctx):
+    #     print('===== 初期設定を行います =====')
+    #     guild = ctx.message.guild
+    #     role = discord.utils.get(guild.roles, name='develop')
+    #     print('変更対象：' + str(role))
+    #     print('--- 役職の色を変更しました ---')
+    #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
+    #     await ctx.send(f'初期設定を行ったよ！これからよろしくねっ！')
 
 
     ### メインとなるmdnコマンド

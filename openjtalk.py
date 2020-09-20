@@ -7,10 +7,8 @@ from pydub import AudioSegment
 # open-jtalk
 def jtalk(t, filepath='voice_message'):
     open_jtalk = ['open_jtalk']
-    mech = ['-x','/usr/local/lib/open_jtalk/dic']
-    # mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic'] #開発
-    htsvoice = ['-m','/usr/local/lib/open_jtalk/voice/mei/mei_happy.htsvoice']
-    # htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice'] #開発
+    mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
+    htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.8']
     outwav = ['-ow', filepath+'.wav']
     cmd = open_jtalk + mech + htsvoice + speed + outwav
