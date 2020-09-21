@@ -84,12 +84,12 @@ class Cog(commands.Cog):
     @mdn.command()
     async def s(self, ctx):
         print('===== 読み上げを開始します =====')
-        await ctx.send(f'{ctx.author.mention}\nはーい！読み上げを開始するねっ！')
+        await ctx.send(f'{ctx.author.mention}\nはーい！読み上げ機能だねっ！\nボイスチャンネルに入室するよ！')
 
         # ボイスチャンネルにコマンド実行者がいるか判定
         if ctx.author.voice is None:
             print('--- VCにコマンド実行者がいないため待機します ---')
-            embed = discord.Embed(title='VCへの入室を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください')
+            embed = discord.Embed(title='ボイスチャンネルへの入室を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください')
             await ctx.send(embed=embed)
 
             # ボイスチャンネルにコマンド実行者がいるかチェックする関数を定義
@@ -113,7 +113,7 @@ class Cog(commands.Cog):
         var_ctx = ctx
         print('接続：' + str(vc))
         # ボイスチャンネルへ接続する
-        embed = discord.Embed(title='VCへ入室します', description=':microphone: ' + str(vc), color=0xff7777)
+        embed = discord.Embed(title='読み上げを開始します', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
         time.sleep(1)
         await vc.connect()
@@ -124,10 +124,10 @@ class Cog(commands.Cog):
     async def e(self, ctx):
         # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
-        await ctx.send(f'読み上げを終了するよ！またねー！')
-        time.sleep(3.75)
+        await ctx.send(f'ボイスチャンネルから退室するよ！またね！')
+        time.sleep(4)
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='VCから退出しました', description=':microphone: ' + str(vc), color=0xff7777)
+        embed = discord.Embed(title='読み上げを終了しました', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
     
@@ -225,10 +225,10 @@ class Cog(commands.Cog):
                 vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
                 if vcl and vcl.is_connected():
                     print('===== 読み上げを終了します =====')
-                    await var_ctx.send(f'読み上げを終了するよ！バイバイ！')
+                    await var_ctx.send(f'あっ！私が最後のひとりだね！\nボイスチャンネルから退室するよ！バイバイ！')
                     time.sleep(.5)
                     await vcl.disconnect()
-                    embed = discord.Embed(title='VCからメンバーが全て抜けたため退出しました', description=':microphone: ' + str(vc), color=0xff7777)
+                    embed = discord.Embed(title='読み上げを終了しました', description=':microphone: ' + str(vc), color=0xff7777)
                     await var_ctx.send(embed=embed)
                     print('退室：' + str(vc))
 
