@@ -9,9 +9,11 @@ def jtalk(t, filepath='voice_message'):
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
-    speed = ['-r','0.8']
+    speed = ['-r','0.75']
+    halftone = ['-fm','-2']
+    weight = ['-jf','3']
     outwav = ['-ow', filepath+'.wav']
-    cmd = open_jtalk + mech + htsvoice + speed + outwav
+    cmd = open_jtalk + mech + htsvoice + speed + halftone + weight + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     c.stdin.write(t.encode())
     c.stdin.close()
