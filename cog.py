@@ -126,11 +126,12 @@ class Cog(commands.Cog):
         print('===== 読み上げを終了します =====')
         await ctx.send(f'ボイスチャンネルから退室するよ！またね！')
         time.sleep(4)
+        vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了しました', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
-    
+
     ## ジャンケン機能
     # mdnサブコマンド：ジャンケンを実行する
     @mdn.command()

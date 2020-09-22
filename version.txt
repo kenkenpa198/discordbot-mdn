@@ -1,2 +1,2 @@
 ##### discordbot-mdn #####
-ver. 0.4.3
+ver. 0.4.4
