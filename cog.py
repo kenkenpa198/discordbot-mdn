@@ -68,28 +68,25 @@ class Cog(commands.Cog):
     async def mdn(self, ctx):
         # サブコマンドが指定されていない場合、メッセージを送信する
         if ctx.invoked_subcommand is None:
-            help_s = 's：読み上げを開始する\n'
-            help_e = 'e：読み上げを終了する\n'
-            help_j = 'j：もだねちゃんとジャンケンをする'
-            command_help = help_s + help_e + help_j
-            await ctx.send('やっほー！もだねちゃんだよ！\n\n`!mdn ` の後に、↓のコマンドを入力して指示してねっ！\n例：`!mdn s`')
-            embed = discord.Embed(description=str(command_help), color=0xff7777)
+            await ctx.send('やっほー！もだねちゃんだよ！\n↓のコマンドを入力して指示してね！')
+            embed = discord.Embed(color=0xff7777)
+            embed.add_field(name='🎤 読み上げを開始する', value='```!mdn s```', inline=False)
+            embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
+            embed.add_field(name='ㅤ\n✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
             await ctx.send(embed=embed)
     
     ## 読み上げ機能
     # 読み上げは「### テキストチャンネルに投稿されたテキストへ反応する > # 読み上げ機能用」を使用
-    vc = 'ボイスチャンネル'
 
     # mdnサブコマンド：ボイスチャンネルへ入室させる
     @mdn.command()
     async def s(self, ctx):
         print('===== 読み上げを開始します =====')
-        await ctx.send(f'{ctx.author.mention}\nはーい！読み上げ機能だねっ！\nボイスチャンネルに入室するよ！')
 
         # ボイスチャンネルにコマンド実行者がいるか判定
         if ctx.author.voice is None:
             print('--- VCにコマンド実行者がいないため待機します ---')
-            embed = discord.Embed(title='ボイスチャンネルへの入室を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください')
+            embed = discord.Embed(title='読み上げの実施を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください', color=0xff7777)
             await ctx.send(embed=embed)
 
             # ボイスチャンネルにコマンド実行者がいるかチェックする関数を定義
@@ -100,7 +97,8 @@ class Cog(commands.Cog):
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
-                await ctx.send(f'{ctx.author.mention}\nごめんね、入室先が見つからなかったよ…！\n準備できたらまた呼んでね！')
+                embed = discord.Embed(title='読み上げの開始を中断しました', description='ボイスチャンネルへもだねちゃんが接続できませんでした\n読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してください', color=0xff7777)
+                await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
@@ -113,24 +111,24 @@ class Cog(commands.Cog):
         var_ctx = ctx
         print('接続：' + str(vc))
         # ボイスチャンネルへ接続する
-        embed = discord.Embed(title='読み上げを開始します', description=':microphone: ' + str(vc), color=0xff7777)
+        embed = discord.Embed(title='読み上げを開始します', description=':microphone: ' + str(vc), color=0x44b582)
         await ctx.send(embed=embed)
         time.sleep(1)
         await vc.connect()
         await ctx.send(f'やっほー！もだねちゃんだよ！')
+        
     
     # mdnサブコマンド：ボイスチャンネルから退出させる
     @mdn.command()
     async def e(self, ctx):
         # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
-        await ctx.send(f'ボイスチャンネルから退室するよ！またね！')
-        time.sleep(4)
         vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了しました', description=':microphone: ' + str(vc), color=0xff7777)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
+
 
     ## ジャンケン機能
     # mdnサブコマンド：ジャンケンを実行する
@@ -191,16 +189,27 @@ class Cog(commands.Cog):
     ### テキストチャンネルに投稿されたテキストへ反応する
     @commands.Cog.listener()
     async def on_message(self, message): # メッセージが投稿された時のイベント
-        if message.content.startswith('!') or message.content.startswith('?'): # !が先頭に入っていたら無視
+        if message.content == 'やっほー！もだねちゃんだよ！' or 'ってなーに？' in message.content:
+            if message.guild.voice_client: # 読み上げ機能用
+                spk_msg = message.clean_content
+                print('整形前：' + spk_msg) # 置換前のテキストを出力
+                spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
+                print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
+                openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
+                source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
+                message.guild.voice_client.play(source)
+            else:
+                return
+        elif message.content.startswith('!') or message.content.startswith('?') or message.author.bot: # !が先頭に入っていたら無視
             return
         else:
             if message.guild.voice_client: # 読み上げ機能用
                 spk_msg = message.clean_content
-                print('整形前：' + spk_msg) #置換前のテキストを出力
+                print('整形前：' + spk_msg) # 置換前のテキストを出力
                 spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
-                print('整形後：' + spk_msg_fmt) #置換後のテキストを出力
+                print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
                 openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
-                source = discord.FFmpegPCMAudio('voice_message.mp3') #wavファイルを出力
+                source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
                 message.guild.voice_client.play(source)
             else:
                 return
@@ -226,8 +235,6 @@ class Cog(commands.Cog):
                 vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
                 if vcl and vcl.is_connected():
                     print('===== 読み上げを終了します =====')
-                    await var_ctx.send(f'あっ！私が最後のひとりだね！\nボイスチャンネルから退室するよ！バイバイ！')
-                    time.sleep(.5)
                     await vcl.disconnect()
                     embed = discord.Embed(title='読み上げを終了しました', description=':microphone: ' + str(vc), color=0xff7777)
                     await var_ctx.send(embed=embed)

@@ -7,6 +7,7 @@ import traceback # エラー表示のためにインポート
 # Discordモジュール
 import discord
 from discord.ext import commands
+print('discord.py ' + discord.__version__)
 
 # 自作モジュール
 
