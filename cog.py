@@ -8,8 +8,8 @@ import re
 import asyncio
 
 # 外部モジュール
-import discord #discord.py
-from discord.ext import commands # Bot Commands Frameworkのインポート
+import discord
+from discord.ext import commands
 
 # 自作モジュール
 import utils
@@ -28,7 +28,7 @@ class Cog(commands.Cog):
     
     # コマンドの作成 コマンドはcommandデコレータで必ず就職する
     @commands.command()
-    async def ping(self, ctx):
+    async def p(self, ctx):
         print('===== ping! =====')
         await ctx.send('pong!')
         print(ctx)
@@ -44,9 +44,9 @@ class Cog(commands.Cog):
         print(ctx.guild.voice_client.channel)
         print(ctx.guild.voice_client.channel.members)
         print(ctx.guild.voice_client.channel.id)
-    
+
     @commands.command()
-    async def what(self, ctx, what):
+    async def w(self, ctx, what):
         print('===== whatってなーに？ =====')
         what_txt = f'{what}ってなーに？'
         await ctx.send(what_txt)
@@ -63,9 +63,9 @@ class Cog(commands.Cog):
     #     await ctx.send(f'初期設定を行ったよ！これからよろしくねっ！')
 
 
-    ### メインとなるmdnコマンド
-    @commands.group()
-    async def mdn(self, ctx):
+    ## ヘルプを表示する
+    @commands.command()
+    async def h(self, ctx):
         # サブコマンドが指定されていない場合、メッセージを送信する
         if ctx.invoked_subcommand is None:
             await ctx.send('やっほー！もだねちゃんだよ！\n↓のコマンドを入力して指示してね！')
@@ -73,13 +73,13 @@ class Cog(commands.Cog):
             embed.add_field(name='🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
             embed.add_field(name='ㅤ\n✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
+            embed.add_field(name='ㅤ\n❓ ヘルプ（コレ）を表示する', value='```!mdn h```', inline=False)
             await ctx.send(embed=embed)
     
     ## 読み上げ機能
     # 読み上げは「### テキストチャンネルに投稿されたテキストへ反応する > # 読み上げ機能用」を使用
-
-    # mdnサブコマンド：ボイスチャンネルへ入室させる
-    @mdn.command()
+    # 読み上げを開始する
+    @commands.command()
     async def s(self, ctx):
         print('===== 読み上げを開始します =====')
 
@@ -102,7 +102,7 @@ class Cog(commands.Cog):
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
-                pass #time.sleep(.5)
+                pass #await asyncio.sleep(.5)
         else:
             pass
 
@@ -113,13 +113,13 @@ class Cog(commands.Cog):
         # ボイスチャンネルへ接続する
         embed = discord.Embed(title='読み上げを開始します', description=':microphone: ' + str(vc), color=0x44b582)
         await ctx.send(embed=embed)
-        time.sleep(1)
+        await asyncio.sleep(1)
         await vc.connect()
         await ctx.send(f'やっほー！もだねちゃんだよ！')
         
     
-    # mdnサブコマンド：ボイスチャンネルから退出させる
-    @mdn.command()
+    # 読み上げを終了する
+    @commands.command()
     async def e(self, ctx):
         # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
@@ -130,9 +130,8 @@ class Cog(commands.Cog):
         print('退室：' + str(vc))
 
 
-    ## ジャンケン機能
-    # mdnサブコマンド：ジャンケンを実行する
-    @mdn.command()
+    ## もだねちゃんとジャンケンをする
+    @commands.command()
     async def j(self, ctx):
         print('===== ジャンケンを開始します =====')
         # ジャンケンの説明文
@@ -140,7 +139,7 @@ class Cog(commands.Cog):
 
         # ジャンケンの実行
         await ctx.send(f'{ctx.author.mention}\nジャンケンだね！負けないよ！')
-        time.sleep(1)
+        await asyncio.sleep(1)
         await ctx.send(f'{ctx.author.mention}\nじゃあいくよっ！\nさいしょはグー！ジャンケン……')
         embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0xff7777)
         await ctx.send(embed=embed)
@@ -172,7 +171,7 @@ class Cog(commands.Cog):
 
             # アイコだったらメッセージを送信してもう一回
             if player_hand == computer_hand:
-                time.sleep(1.5)
+                await asyncio.sleep(1.5)
                 result = utils.judge_aiko(player_hand, computer_hand)
                 await ctx.send(f'{ctx.author.mention}\n' + result)
                 embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0xff7777)
@@ -181,7 +180,7 @@ class Cog(commands.Cog):
                 break #勝敗が決まった場合whileを抜ける
 
         # 勝敗の結果を表示して終了
-        time.sleep(1.5)
+        await asyncio.sleep(1.5)
         result = utils.judge(player_hand, computer_hand)
         await ctx.send(f'{ctx.author.mention}\n' + result + '\n\n楽しかった〜！またやろうね！')
         print('===== ジャンケンを終了します =====')
@@ -213,7 +212,7 @@ class Cog(commands.Cog):
                 message.guild.voice_client.play(source)
             else:
                 return
-    
+
     @commands.Cog.listener()
     async def on_voice_state_update(self,
                                     member: discord.Member,
@@ -221,9 +220,6 @@ class Cog(commands.Cog):
                                     after: discord.VoiceState):
 
         print('--- VCステータスの変更を検知 ---')
-        # print(member)
-        # print(before)
-        # print(after)
         if not before.channel and after.channel: # ユーザーの前と後のVCの状態を比較して、値が有る状態だったら（入室したら）
             print('--- VCへ入室 ---')
             vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)

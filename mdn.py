@@ -45,19 +45,13 @@ class MyBot(commands.Bot):
         print(self.user.name)
         print(self.user.id)
 
-##### コマンド #####
-## あいさつ
-# @bot.command(name='mdn h')
-# async def hello(ctx):
-# 	await ctx.send(f'{ctx.message.author.mention}\nやっほー！もだねちゃんだよ！')
-
 
 ##### Botの起動とDiscordサーバーへの接続 #####
 if __name__ == '__main__':
-    bot = MyBot(command_prefix='!') #コマンド実行を示す「!」を指定
+    bot = MyBot(command_prefix='!mdn ') #コマンド実行を示す「!」を指定
     TOKEN = 'NzU0NDExODkzNDAxMTkwNDEw.X10W0w._1PBisR0GF1bN6ETHIELGkU1EVY' # トークン
 
     # 開発
-    # bot = MyBot(command_prefix='?') #コマンド実行を示す「?」を指定
+    # bot = MyBot(command_prefix='?mdn ') #コマンド実行を示す「?」を指定
     # TOKEN = 'NzU0NDE2NjU5NjIzNzA2ODQ1.X10bRA.0oWkYlYppLNwh9VUKstKvDG4fmM' # トークン
     bot.run(TOKEN)
