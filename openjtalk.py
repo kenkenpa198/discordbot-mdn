@@ -12,7 +12,7 @@ def jtalk(t, filepath='voice_message'):
     speed = ['-r','0.75']
     halftone = ['-fm','-2']
     weight = ['-jf','3']
-    volume = ['-g', '-12.5']
+    volume = ['-g', '-10']
     outwav = ['-ow', filepath+'.wav']
     cmd = open_jtalk + mech + htsvoice + speed + halftone + weight + volume + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
