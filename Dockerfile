@@ -14,6 +14,7 @@ RUN set -x && \
 COPY mdn.py /discordbot-mdn
 COPY utils.py /discordbot-mdn
 COPY openjtalk.py /discordbot-mdn
+COPY config.py /discordbot-mdn
 COPY cogs /discordbot-mdn
 WORKDIR /discordbot-mdn
 CMD python3 mdn.py
