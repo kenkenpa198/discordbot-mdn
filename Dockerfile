@@ -8,6 +8,7 @@ RUN set -x && \
     pip3 install jtalkbot==0.5.0 && \
     pip3 install pydub && \
     mkdir /discordbot-mdn && \
+    mkdir /discordbot-mdn/cogs && \
     mkdir -p /usr/local/Cellar/open-jtalk/1.11 && \
     ln -s /usr/local/lib/open_jtalk/dic /usr/local/Cellar/open-jtalk/1.11 && \
     ln -s /usr/local/lib/open_jtalk/voice /usr/local/Cellar/open-jtalk/1.11
@@ -15,6 +16,6 @@ COPY mdn.py /discordbot-mdn
 COPY utils.py /discordbot-mdn
 COPY openjtalk.py /discordbot-mdn
 COPY config.py /discordbot-mdn
-COPY cogs/ /discordbot-mdn
+COPY cogs/ /discordbot-mdn/cogs/
 WORKDIR /discordbot-mdn
 CMD python3 mdn.py
