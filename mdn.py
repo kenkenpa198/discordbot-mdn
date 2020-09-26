@@ -2,6 +2,9 @@
 from discord.ext import commands
 import discord
 import config
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 
 print('===== もだねちゃん起動 =====')
 print('discord.py ' + discord.__version__)
@@ -22,5 +25,11 @@ bot.load_extension('cogs.help')
 bot.load_extension('cogs.petite')
 bot.load_extension('cogs.reload')
 
+# .envファイルの読み込み
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+TOKEN = os.environ.get("TOKEN")
+
 # Botの起動とDiscordサーバーへの接続
-bot.run(config.TOKEN)
+bot.run(TOKEN)

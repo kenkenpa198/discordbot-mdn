@@ -2,4 +2,5 @@ __pycache__/
 cogs/__pycache__/
 .vscode/
 voice_message.mp3
-# config.py
+.env
+.config.py
