@@ -7,6 +7,7 @@ RUN set -x && \
 RUN set -x && \
     pip3 install jtalkbot==0.5.0 && \
     pip3 install pydub && \
+    pip3 install pipenv && \
     mkdir /discordbot-mdn && \
     mkdir /discordbot-mdn/cogs && \
     mkdir -p /usr/local/Cellar/open-jtalk/1.11 && \
