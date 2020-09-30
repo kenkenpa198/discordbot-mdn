@@ -10,6 +10,7 @@ print('discord.py ' + discord.__version__)
 
 bot = commands.Bot(command_prefix='!mdn ') # コマンド実行を示す「!mdn 」を指定
 # bot = commands.Bot(command_prefix='?mdn ') # 開発用
+bot.remove_command('help')
 
 # 起動時に動作する処理
 @bot.event

@@ -43,8 +43,8 @@ class Read(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command()
-    async def s(self, ctx):
+    @commands.command(aliases=['s'])
+    async def start(self, ctx):
         print('===== 読み上げを開始します =====')
 
         # ボイスチャンネルにコマンド実行者がいるか判定
@@ -82,8 +82,8 @@ class Read(commands.Cog):
         await ctx.send(f'やっほー！もだねちゃんだよ！')
 
     # 読み上げを終了する
-    @commands.command()
-    async def e(self, ctx):
+    @commands.command(aliases=['e'])
+    async def end(self, ctx):
         # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
         # vc = ctx.voice_client.channel

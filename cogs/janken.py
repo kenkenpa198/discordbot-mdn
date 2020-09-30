@@ -43,8 +43,8 @@ class Janken(commands.Cog):
         self.bot = bot
 
         ## もだねちゃんとジャンケンをする
-    @commands.command()
-    async def j(self, ctx):
+    @commands.command(aliases=['j'])
+    async def janken(self, ctx):
         print('===== ジャンケンを開始します =====')
         # ジャンケンの説明文
         janken_list = ':fist:：0　:v:：1　:hand_splayed:：2'

@@ -7,8 +7,8 @@ class Petite(commands.Cog):
         self.bot = bot
 
     # pingコマンド
-    @commands.command()
-    async def p(self, ctx):
+    @commands.command(aliases=['p'])
+    async def ping(self, ctx):
         print('===== ping! =====')
         await ctx.send('pong!')
         print(ctx)
@@ -26,8 +26,8 @@ class Petite(commands.Cog):
         print(ctx.guild.voice_client.channel.id)
 
     # whatコマンド
-    @commands.command()
-    async def w(self, ctx, what):
+    @commands.command(aliases=['w'])
+    async def what(self, ctx, what):
         print('===== whatってなーに？ =====')
         what_txt = f'{what}ってなーに？'
         await ctx.send(what_txt)
