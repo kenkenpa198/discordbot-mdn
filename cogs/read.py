@@ -2,8 +2,43 @@
 import discord
 from discord.ext import commands
 import asyncio
-import openjtalk
 
+##### openjtalk関数 #####
+import os
+import subprocess
+import re
+from pydub import AudioSegment
+
+# open-jtalk
+def jtalk(t, filepath='voice_message'):
+    open_jtalk = ['open_jtalk']
+    mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
+    htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
+    speed = ['-r','0.75']
+    halftone = ['-fm','-2']
+    weight = ['-jf','3']
+    volume = ['-g', '-10']
+    outwav = ['-ow', filepath+'.wav']
+    cmd = open_jtalk + mech + htsvoice + speed + halftone + weight + volume + outwav
+    c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+    c.stdin.write(t.encode())
+    c.stdin.close()
+    c.wait()
+    audio_segment = AudioSegment.from_wav(filepath+'.wav')
+    os.remove(filepath+'.wav')
+    audio_segment.export(filepath+'.mp3', format='mp3')
+    return filepath+'.mp3'
+
+# メンションを省略
+def abb_msg(t):
+    rep = r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?' # 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
+    return re.sub(rep, 'URL省略', t)
+
+if __name__ == '__main__':
+    pass # say_datetime()
+
+
+##### コグ #####
 class Read(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -64,9 +99,9 @@ class Read(commands.Cog):
             if message.guild.voice_client: # 読み上げ機能用
                 spk_msg = message.clean_content
                 print('整形前：' + spk_msg) # 置換前のテキストを出力
-                spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
+                spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
                 print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-                openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
+                jtalk(spk_msg_fmt) # jtalkの実行
                 source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
                 message.guild.voice_client.play(source)
             else:
@@ -77,9 +112,9 @@ class Read(commands.Cog):
             if message.guild.voice_client: # 読み上げ機能用
                 spk_msg = message.clean_content
                 print('整形前：' + spk_msg) # 置換前のテキストを出力
-                spk_msg_fmt = openjtalk.abb_msg(spk_msg) # 置換後のテキストを変数へ格納
+                spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
                 print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-                openjtalk.jtalk(spk_msg_fmt) # jtalkの実行
+                jtalk(spk_msg_fmt) # jtalkの実行
                 source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
                 message.guild.voice_client.play(source)
             else:

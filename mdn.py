@@ -8,8 +8,8 @@ from dotenv import load_dotenv
 print('===== もだねちゃん起動 =====')
 print('discord.py ' + discord.__version__)
 
-bot = commands.Bot(command_prefix='!mdn ') # コマンド実行を示す「!mdn 」を指定
-# bot = commands.Bot(command_prefix='?mdn ') # 開発用
+# bot = commands.Bot(command_prefix='!mdn ') # コマンド実行を示す「!mdn 」を指定
+bot = commands.Bot(command_prefix='?mdn ') # 開発用
 
 # 起動時に動作する処理
 @bot.event
