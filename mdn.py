@@ -1,7 +1,6 @@
 # coding: utf-8
 from discord.ext import commands
 import discord
-import config
 import os
 from os.path import join, dirname
 from dotenv import load_dotenv
