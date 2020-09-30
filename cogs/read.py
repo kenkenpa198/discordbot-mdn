@@ -29,10 +29,12 @@ def jtalk(t, filepath='voice_message'):
     audio_segment.export(filepath+'.mp3', format='mp3')
     return filepath+'.mp3'
 
-# メンションを省略
+# 正規表現で読み上げメッセージを置換する
 def abb_msg(t):
-    rep = r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?' # 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
-    return re.sub(rep, 'URL省略', t)
+    rep = r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?' # URLを置換する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
+    t = re.sub(rep, 'URL省略', t)
+    rep = r'\d{8,255}' # 8桁以上の数値を置換する
+    return re.sub(rep, '数値省略', t)
 
 if __name__ == '__main__':
     pass # say_datetime()
