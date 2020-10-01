@@ -136,15 +136,15 @@ class Read(commands.Cog):
             print(vcl)
         elif before.channel and not after.channel: # ユーザーの前と後のVCの状態を比較して、値が無い状態だったら（退室したら）
             print('--- VCから退室 ---')
-            vch = before.channel
-            if len(vch.members) == 1 and vch.members[0] == self.bot.user: # 
-                vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-                if vcl and vcl.is_connected():
-                    print('===== 読み上げを終了します =====')
-                    await vcl.disconnect()
-                    embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xff7777)
-                    await var_ctx.send(embed=embed)
-                    print('退室：' + str(vc))
+            # vch = before.channel
+            # if len(vch.members) == 1 and vch.members[0] == self.bot.user: # 
+            #     vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
+            #     if vcl and vcl.is_connected():
+            #         print('===== 読み上げを終了します =====')
+            #         await vcl.disconnect()
+            #         embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xff7777)
+            #         await var_ctx.send(embed=embed)
+            #         print('退室：' + str(vc))
 
 
 def setup(bot):
