@@ -4,12 +4,13 @@ from discord.ext import commands
 import asyncio
 
 ##### openjtalk関数 #####
+# jtalk関数用のモジュールをインポート
 import os
 import subprocess
 import re
 from pydub import AudioSegment
 
-# open-jtalk
+# jtalk関数を定義
 def jtalk(t, filepath='voice_message'):
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
@@ -17,7 +18,7 @@ def jtalk(t, filepath='voice_message'):
     speed = ['-r','0.75']
     halftone = ['-fm','-2']
     weight = ['-jf','3']
-    volume = ['-g', '-10']
+    volume = ['-g', '-5']
     outwav = ['-ow', filepath+'.wav']
     cmd = open_jtalk + mech + htsvoice + speed + halftone + weight + volume + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
@@ -29,19 +30,30 @@ def jtalk(t, filepath='voice_message'):
     audio_segment.export(filepath+'.mp3', format='mp3')
     return filepath+'.mp3'
 
-# 正規表現で読み上げメッセージを置換する
-def abb_msg(t):
-    rep = r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?' # URLを置換する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
-    t = re.sub(rep, 'URL省略', t)
-    rep = r'\d{8,255}' # 8桁以上の数値を置換する
-    return re.sub(rep, '数値省略', t)
 
-if __name__ == '__main__':
-    pass # say_datetime()
+##### テキスト置換関数 #####
+# 辞書を作成
+abb_dic = {}
+# abb_dic[r'置換前のテキスト'] = '置換後のテキスト'
+abb_dic[r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?'] = 'URL省略' # URLを置換する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
+abb_dic[r'<:.{1,255}:\d{8,255}>'] = '' # カスタム絵文字を置換する
+abb_dic[r'[w|ｗ]{2,255}'] = ' わらわら' # 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
+abb_dic[r'[w|ｗ]'] = ' わら' # 「w」「ｗ」を「わら」に置換する
+abb_dic[r'\d{9,255}'] = '数値省略' # 9桁以上の数値を置換する
+print(abb_dic)
+
+# 正規表現で読み上げテキストを置換する関数を定義
+def abb_msg(t):
+    for abb_dic_key in abb_dic:
+        t = re.sub(abb_dic_key, abb_dic[abb_dic_key], t)
+    return t
 
 
 ##### コグ #####
 class Read(commands.Cog):
+
+    # var_ctx: discord.ext.commands.Context = None
+
     def __init__(self, bot):
         self.bot = bot
 
@@ -68,13 +80,13 @@ class Read(commands.Cog):
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
-                pass #await asyncio.sleep(.5)
+                await asyncio.sleep(1)
         else:
             pass
 
-        global vc, var_ctx
+
         vc = ctx.author.voice.channel
-        var_ctx = ctx
+        # self.var_ctx = ctx
         print('接続：' + str(vc))
         # ボイスチャンネルへ接続する
         await vc.connect()
@@ -88,7 +100,7 @@ class Read(commands.Cog):
     async def end(self, ctx):
         # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
-        # vc = ctx.voice_client.channel
+        vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました', color=0xff7777)
         await ctx.send(embed=embed)
@@ -128,23 +140,36 @@ class Read(commands.Cog):
                                     member: discord.Member,
                                     before: discord.VoiceState,
                                     after: discord.VoiceState):
+        if self.bot.voice_clients:
+            print('--- VCステータスの変更を検知 ---')
 
-        print('--- VCステータスの変更を検知 ---')
-        if not before.channel and after.channel: # ユーザーの前と後のVCの状態を比較して、値が有る状態だったら（入室したら）
-            print('--- VCへ入室 ---')
-            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-            print(vcl)
-        elif before.channel and not after.channel: # ユーザーの前と後のVCの状態を比較して、値が無い状態だったら（退室したら）
-            print('--- VCから退室 ---')
-            # vch = before.channel
-            # if len(vch.members) == 1 and vch.members[0] == self.bot.user: # 
-            #     vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-            #     if vcl and vcl.is_connected():
-            #         print('===== 読み上げを終了します =====')
-            #         await vcl.disconnect()
-            #         embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xff7777)
-            #         await var_ctx.send(embed=embed)
-            #         print('退室：' + str(vc))
+            # VCへ誰かが入室したら（ユーザーの前と後のVCの状態を比較して、値が有る状態だったら）
+            if not before.channel and after.channel:
+                print('--- VCへ入室 ---')
+                vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
+                print(vcl)
+                print('VC人数：' + str(len(after.channel.members))) # VC人数を表示
+
+            # VCから誰かが退出したら（ユーザーの前と後のVCの状態を比較して、値が無い状態だったら）
+            elif before.channel and not after.channel:
+                print('--- VCから退室 ---')
+                vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
+                print(vcl)
+                print('VC人数：' + str(len(before.channel.members))) # VC人数を表示
+
+                # botが最後の一人になったら自動退出する
+                bch = before.channel
+                if len(bch.members) == 1 and bch.members[0] == self.bot.user:
+                    vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
+                    if vcl and vcl.is_connected():
+                        print('===== 読み上げを終了します =====')
+                        await asyncio.sleep(1)
+                        await vcl.disconnect()
+                        # embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xff7777)
+                        # await self.var_ctx.send(embed=embed)
+                        print('退室：' + str(vcl))
+        else:
+            return
 
 
 def setup(bot):
