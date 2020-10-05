@@ -1,6 +1,8 @@
 # coding: utf-8
 from discord.ext import commands
 
+
+##### コグ #####
 class Reload(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -15,6 +17,7 @@ class Reload(commands.Cog):
         except (commands.errors.ExtensionNotLoaded, commands.errors.ExtensionNotFound, commands.errors.NoEntryPointError, commands.errors.ExtensionFailed) as e:
             await ctx.send(f" モジュール {module_name} の再読み込みに失敗しました 理由:{e}")
             return
+
 
 def setup(bot):
     bot.add_cog(Reload(bot))

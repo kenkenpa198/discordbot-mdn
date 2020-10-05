@@ -9,7 +9,6 @@ print('===== もだねちゃん起動 =====')
 print('discord.py ' + discord.__version__)
 
 bot = commands.Bot(command_prefix='!mdn ') # コマンド実行を示す「!mdn 」を指定
-# bot = commands.Bot(command_prefix='? ') # 開発用
 bot.remove_command('help')
 
 # 起動時に動作する処理
@@ -19,9 +18,10 @@ async def on_ready():
     print('===== ログインしました =====')
 
 # Cogの読み込み
-bot.load_extension('cogs.read')
+bot.load_extension('cogs.talk')
 bot.load_extension('cogs.janken')
 bot.load_extension('cogs.help')
+bot.load_extension('cogs.hello')
 bot.load_extension('cogs.petite')
 bot.load_extension('cogs.reload')
 

@@ -2,6 +2,8 @@
 import discord
 from discord.ext import commands
 
+
+##### コグ #####
 class Petite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -43,6 +45,7 @@ class Petite(commands.Cog):
     #     print('--- 役職の色を変更しました ---')
     #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
     #     await ctx.send(f'初期設定を行ったよ！これからよろしくねっ！')
+
 
 def setup(bot):
     bot.add_cog(Petite(bot))
