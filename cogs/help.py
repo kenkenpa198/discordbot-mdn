@@ -11,7 +11,7 @@ class Help(commands.Cog):
     @commands.command(aliases=['h'])
     async def help(self, ctx):
         await ctx.send('やっほー！もだねちゃんだよ！\n↓のコマンドを入力して指示してね！')
-        embed = discord.Embed(color=0x8bda76)
+        embed = discord.Embed(color=0xf1bedf)
         embed.add_field(name='🎤 読み上げを開始する', value='```!mdn s```', inline=False)
         embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
         embed.add_field(name='ㅤ\n✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)

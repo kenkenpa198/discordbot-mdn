@@ -57,7 +57,7 @@ class Janken(commands.Cog):
         await ctx.send(f'{ctx.author.mention}\nジャンケンだね！負けないよ！')
         await asyncio.sleep(1)
         await ctx.send(f'{ctx.author.mention}\nじゃあいくよっ！\nさいしょはグー！ジャンケン……')
-        embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0x8bda76)
+        embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0xf1bedf)
         await ctx.send(embed=embed)
 
         # while文で使う変数と関数を定義
@@ -80,7 +80,7 @@ class Janken(commands.Cog):
 
             # 出した手の表示
             await ctx.send(f'{ctx.author.mention}\nぽんっ！')
-            embed = discord.Embed(color=0x8bda76)
+            embed = discord.Embed(color=0xf1bedf)
             embed.add_field(name=str(ctx.author.name) + 'さんが出した手', value=rise_hand(player_hand), inline=False)
             embed.add_field(name='ㅤ\nもだねちゃんが出した手', value=rise_hand(computer_hand), inline=False)
             await ctx.send(embed=embed)
@@ -90,7 +90,7 @@ class Janken(commands.Cog):
                 await asyncio.sleep(1.5)
                 result = judge_aiko(player_hand, computer_hand)
                 await ctx.send(f'{ctx.author.mention}\n' + result)
-                embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0x8bda76)
+                embed = discord.Embed(title='出したい手を数字で入力してね', description=str(janken_list), color=0xf1bedf)
                 await ctx.send(embed=embed)
             else:
                 break #勝敗が決まった場合whileを抜ける
