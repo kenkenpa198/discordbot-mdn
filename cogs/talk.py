@@ -79,7 +79,7 @@ class Talk(commands.Cog):
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='読み上げの開始を中断しました', description='ボイスチャンネルへ接続できませんでした\n読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してください', color=0xffd0d7)
+                embed = discord.Embed(title='読み上げの開始を中断しました', description='ボイスチャンネルへ接続できませんでした\n読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してください', color=0xf1bedf)
                 await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
                 return
@@ -98,7 +98,7 @@ class Talk(commands.Cog):
         read_tch = discord.utils.get(ctx.guild.channels, id=self.to_read[ctx.guild.id])
         print(read_tch)
 
-        embed = discord.Embed(title='読み上げを開始します',description='以下のチャンネルで実行します', color=0xffd0d7)
+        embed = discord.Embed(title='読み上げを開始します',description='以下のチャンネルで実行します', color=0xf1bedf)
         embed.add_field(name='ㅤ\n:microphone: 入室', value=vc)
         embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.to_read[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
@@ -112,7 +112,7 @@ class Talk(commands.Cog):
         print('===== 読み上げを終了します =====')
         vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました', color=0xffd0d7)
+        embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました', color=0xf1bedf)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
         del self.to_read[ctx.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
@@ -185,7 +185,7 @@ class Talk(commands.Cog):
                         print('===== 読み上げを終了します =====')
                         await asyncio.sleep(1)
                         await vcl.disconnect()
-                        embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xffd0d7)
+                        embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xf1bedf)
                         send_tch = discord.utils.get(member.guild.channels, id=self.to_read[member.guild.id])
                         print(send_tch)
                         await send_tch.send(embed=embed)
