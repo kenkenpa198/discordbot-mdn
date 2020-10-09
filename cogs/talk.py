@@ -47,6 +47,8 @@ abb_dict = {
     r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?': 'URL省略', # URLを省略する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
     r'<:.{1,}:\d{8,}>': ' ', # カスタム絵文字を「 」に置換する
     r'\,|、|\.|。|\!|！|\?|？|\:|：|\;|；|\+|＋|\=|＝|\*|＊|\-|\~|\_|_|\[|「|\]|」|・|…': ' ', # 記号を「 」に置換する
+    r'(d|D)iscord': 'ディスコード',
+    r'(s|S)platoon': 'スプラトゥーン',
     r'(w|ｗ){2,}': ' わらわら', # 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
     r'w|ｗ': ' わら', # 「w」「ｗ」を「わら」に置換する
     r'\d{9,}': '数値省略' # 9桁以上の数値を省略する
@@ -63,7 +65,7 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.to_read = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
+        self.talk_tc_dict = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
 
     @commands.command(aliases=['s'])
     async def start(self, ctx):
@@ -93,14 +95,14 @@ class Talk(commands.Cog):
         # ボイスチャンネルへ接続する
         await vc.connect()
 
-        self.to_read[ctx.guild.id] = ctx.channel.id # 読み上げテキストチャンネル辞書へIDを登録
-        print('読み上げtch：' + str(self.to_read))
-        read_tch = discord.utils.get(ctx.guild.channels, id=self.to_read[ctx.guild.id])
+        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # 読み上げテキストチャンネル辞書へIDを登録
+        print('読み上げtch：' + str(self.talk_tc_dict))
+        read_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
         print(read_tch)
 
         embed = discord.Embed(title='読み上げを開始します',description='以下のチャンネルで実行します', color=0xf1bedf)
         embed.add_field(name='ㅤ\n:microphone: 入室', value=vc)
-        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.to_read[ctx.guild.id]) + '>')
+        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
         await ctx.send(f'やっほー！もだねちゃんだよ！')
@@ -115,15 +117,15 @@ class Talk(commands.Cog):
         embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました', color=0xf1bedf)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
-        del self.to_read[ctx.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
-        print('読み上げtch：' + str(self.to_read))
+        del self.talk_tc_dict[ctx.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
+        print('読み上げtch：' + str(self.talk_tc_dict))
 
     # テキストチャンネルに投稿されたテキストを読み上げる
     @commands.Cog.listener()
     async def on_message(self, message): # メッセージが投稿された時のイベント
         if message.content == 'やっほー！もだねちゃんだよ！' or 'ってなーに？' in message.content:
             if message.guild.voice_client:
-                if not message.channel.id == self.to_read[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
+                if not message.channel.id == self.talk_tc_dict[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
                     return
                 spk_msg = message.clean_content
                 print('整形前：' + spk_msg) # 置換前のテキストを出力
@@ -138,7 +140,7 @@ class Talk(commands.Cog):
             return
         else:
             if message.guild.voice_client:
-                if not message.channel.id == self.to_read[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
+                if not message.channel.id == self.talk_tc_dict[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
                     return
                 spk_msg = message.clean_content
                 print('整形前：' + spk_msg) # 置換前のテキストを出力
@@ -186,12 +188,12 @@ class Talk(commands.Cog):
                         await asyncio.sleep(1)
                         await vcl.disconnect()
                         embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xf1bedf)
-                        send_tch = discord.utils.get(member.guild.channels, id=self.to_read[member.guild.id])
+                        send_tch = discord.utils.get(member.guild.channels, id=self.talk_tc_dict[member.guild.id])
                         print(send_tch)
                         await send_tch.send(embed=embed)
                         print('退室：' + str(vcl))
-                        del self.to_read[member.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
-                        print('読み上げtch：' + str(self.to_read))
+                        del self.talk_tc_dict[member.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
+                        print('読み上げtch：' + str(self.talk_tc_dict))
         else:
             return
 
