@@ -1,6 +1,7 @@
 # coding: utf-8
 import discord
 from discord.ext import commands
+import asyncio
 
 
 ##### コグ #####
@@ -31,6 +32,8 @@ class Petite(commands.Cog):
     @commands.command(aliases=['w'])
     async def what(self, ctx, what):
         print('===== whatってなーに？ =====')
+        async with ctx.channel.typing():
+            await asyncio.sleep(1)
         what_txt = f'{what}ってなーに？'
         await ctx.send(what_txt)
         print(what_txt)
