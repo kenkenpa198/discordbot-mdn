@@ -47,11 +47,13 @@ abb_dict = {
     r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?': 'URL省略', # URLを省略する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
     r'<:.{1,}:\d{8,}>': ' ', # カスタム絵文字を「 」に置換する
     r'\,|、|\.|。|\!|！|\?|？|\:|：|\;|；|\+|＋|\=|＝|\*|＊|\-|\~|\_|_|\[|「|\]|」|・|…': ' ', # 記号を「 」に置換する
+    r'\d{9,}': '数値省略', # 9桁以上の数値を省略する
     r'(d|D)iscord': 'ディスコード',
     r'(s|S)platoon': 'スプラトゥーン',
-    r'(w|ｗ){2,}': ' わらわら', # 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
-    r'w|ｗ': ' わら', # 「w」「ｗ」を「わら」に置換する
-    r'\d{9,}': '数値省略' # 9桁以上の数値を省略する
+    r'(t|T)witter': 'ツイッター',
+    r'(w|ｗ){2,}': ' わらぁわらぁ', # 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
+    r'w|ｗ': ' わらぁ', # 「w」「ｗ」を「わら」に置換する
+    r'^\s': '' # 文頭の空白を削除する
 }
 
 # 置換用の関数を定義
@@ -67,6 +69,8 @@ class Talk(commands.Cog):
         self.bot = bot
         self.talk_tc_dict = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
 
+
+    # 読み上げを開始する
     @commands.command(aliases=['s'])
     async def start(self, ctx):
         print('===== 読み上げを開始します =====')
@@ -74,14 +78,14 @@ class Talk(commands.Cog):
         # ボイスチャンネルにコマンド実行者がいるか判定
         if ctx.author.voice is None:
             print('--- VCにコマンド実行者がいないため待機します ---')
-            embed = discord.Embed(title='読み上げの開始を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください', color=0xe3e5e8)
+            embed = discord.Embed(title='読み上げの実施を待機します', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してください。', color=0xe3e5e8)
             await ctx.send(embed=embed)
 
             # 10秒まで待機 ボイスチャンネルにコマンド実行者が入ったら変数へVCの情報を渡す
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='読み上げの開始を中断しました', description='ボイスチャンネルへ接続できませんでした\n読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してください', color=0xf1bedf)
+                embed = discord.Embed(title='読み上げの実施を中断しました', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してください。', color=0xeaa55c)
                 await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
                 return
@@ -90,67 +94,103 @@ class Talk(commands.Cog):
         else:
             pass
 
+        # 入室するボイスチャンネルを変数へ格納
         vc = ctx.author.voice.channel
-        print('接続：' + str(vc))
-        # ボイスチャンネルへ接続する
-        await vc.connect()
 
-        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # 読み上げテキストチャンネル辞書へIDを登録
+        # 読み上げ対象のテキストチャンネルを設定
+        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
         print('読み上げtch：' + str(self.talk_tc_dict))
-        read_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
-        print(read_tch)
+        talk_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
+        print(talk_tch)
 
-        embed = discord.Embed(title='読み上げを開始します',description='以下のチャンネルで実行します', color=0xf1bedf)
-        embed.add_field(name='ㅤ\n:microphone: 入室', value=vc)
-        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
+        embed = discord.Embed(title='読み上げを開始します',description='以下の内容で読み上げを行います。', color=0xf1bedf)
+        embed.add_field(name='ㅤ\n🎤 入室', value=vc)
+        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
+        embed.set_footer(text='ㅤ\nヒント：読み上げ対象を変更したい時は、そのテキストチャンネルで「!mdn c」を実行してください')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
+
+        # ボイスチャンネルへ接続する
+        await vc.connect()
+        print('接続：' + str(vc))
+        await asyncio.sleep(.5)
         await ctx.send(f'やっほー！もだねちゃんだよ！')
+
+
+    # 読み上げ対象のテキストチャンネルを変更する
+    @commands.command(aliases=['c'])
+    async def change(self, ctx):
+        print ('===== 読み上げ対象のテキストチャンネルを変更します =====')
+
+        # botがボイスチャンネルにいるか判定
+        if not ctx.guild.voice_client:
+            print('--- エラーコード：001 ---')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、もだねちゃんがボイスチャンネルへ入室している時のみ使用できます。\n以下のコマンドを実行してください。', color=0xeaa55c)
+            embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
+            await ctx.send(embed=embed)
+            return
+
+        # 読み上げ対象のテキストチャンネルを設定
+        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
+        print('読み上げtch：' + str(self.talk_tc_dict))
+        talk_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
+        print(talk_tch)
+    
+        embed = discord.Embed(title='読み上げ対象を変更しました',description='以下のテキストチャンネルを読み上げ対象に再設定しました。', color=0xf1bedf)
+        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
+        await ctx.send(embed=embed)
+
 
     # 読み上げを終了する
     @commands.command(aliases=['e'])
     async def end(self, ctx):
-        # ボイスチャンネルから退出する
         print('===== 読み上げを終了します =====')
+
+        # botがボイスチャンネルにいるか判定
+        if not ctx.guild.voice_client:
+            print('--- エラーコード：001 ---')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、もだねちゃんがボイスチャンネルへ入室している時のみ使用できます。\n以下のコマンドを実行してください。', color=0xeaa55c)
+            embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
+            await ctx.send(embed=embed)
+            return
+
+        # ボイスチャンネルから退出する
         vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを終了しました', description='ボイスチャンネルから退出しました。', color=0xf1bedf)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
-        del self.talk_tc_dict[ctx.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
+
+        # talk_tc_dictからギルドIDを削除
+        del self.talk_tc_dict[ctx.guild.id]
         print('読み上げtch：' + str(self.talk_tc_dict))
+
 
     # テキストチャンネルに投稿されたテキストを読み上げる
     @commands.Cog.listener()
     async def on_message(self, message): # メッセージが投稿された時のイベント
-        if message.content == 'やっほー！もだねちゃんだよ！' or 'ってなーに？' in message.content:
-            if message.guild.voice_client:
-                if not message.channel.id == self.talk_tc_dict[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
-                    return
-                spk_msg = message.clean_content
-                print('整形前：' + spk_msg) # 置換前のテキストを出力
-                spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
-                print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-                jtalk(spk_msg_fmt) # jtalkの実行
-                source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
-                message.guild.voice_client.play(source)
-            else:
-                return
-        elif message.content.startswith('!') or message.content.startswith('?') or message.author.bot: # !が先頭に入っていたら無視
+
+        # コマンド実行者がサーバーのボイスチャンネルにいなかったら無視
+        if not message.guild.voice_client:
             return
-        else:
-            if message.guild.voice_client:
-                if not message.channel.id == self.talk_tc_dict[message.guild.id]: # 読み上げテキストチャンネル辞書にIDが入っていなかったら無視
-                    return
-                spk_msg = message.clean_content
-                print('整形前：' + spk_msg) # 置換前のテキストを出力
-                spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
-                print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-                jtalk(spk_msg_fmt) # jtalkの実行
-                source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
-                message.guild.voice_client.play(source)
-            else:
+
+        # talk_tc_dictにテキストチャンネルのIDが入っていなかったら無視
+        if not message.channel.id == self.talk_tc_dict[message.guild.id]:
+            return
+
+        # !が先頭に入っていたら or botだったら無視
+        if message.content.startswith('!') or message.author.bot:
+            if not 'やっほー！もだねちゃんだよ！' in message.content or 'ってなーに？' in message.content: # 指定テキストの場合以外に中断する
                 return
+
+        spk_msg = message.clean_content
+        print('整形前：' + spk_msg) # 置換前のテキストを出力
+        spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
+        print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
+        jtalk(spk_msg_fmt) # jtalkの実行
+        source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
+        message.guild.voice_client.play(source)
+
 
     # 人がいなくなったら自動で退出する
     @commands.Cog.listener()
@@ -174,10 +214,8 @@ class Talk(commands.Cog):
                 vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
                 print(vcl)
                 print('VC人数：' + str(len(before.channel.members))) # VC人数を表示
-                # if not self.bot.user in after.channel.members:
-                #     print('読み上げtch：')
-
-
+                # if not self.bot in vcl:
+                #      print('aaa')
 
                 # botが最後の一人になったら自動退出する
                 bch = before.channel
@@ -187,12 +225,14 @@ class Talk(commands.Cog):
                         print('===== 読み上げを終了します =====')
                         await asyncio.sleep(1)
                         await vcl.disconnect()
-                        embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました', color=0xf1bedf)
+                        embed = discord.Embed(title='読み上げを終了しました', description='誰もいなくなったので、ボイスチャンネルから退出しました。', color=0xf1bedf)
                         send_tch = discord.utils.get(member.guild.channels, id=self.talk_tc_dict[member.guild.id])
                         print(send_tch)
                         await send_tch.send(embed=embed)
                         print('退室：' + str(vcl))
-                        del self.talk_tc_dict[member.guild.id] # 読み上げテキストチャンネル辞書からギルドIDを削除
+
+                        # talk_tc_dictからギルドIDを削除
+                        del self.talk_tc_dict[member.guild.id]
                         print('読み上げtch：' + str(self.talk_tc_dict))
         else:
             return

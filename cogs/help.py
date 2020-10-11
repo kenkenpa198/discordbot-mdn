@@ -10,11 +10,16 @@ class Help(commands.Cog):
     
     @commands.command(aliases=['h'])
     async def help(self, ctx):
-        await ctx.send('やっほー！もだねちゃんだよ！\n↓のコマンドを入力して指示してね！')
-        embed = discord.Embed(color=0xf1bedf)
+        await ctx.send('やっほー！もだねちゃんだよ！\n以下のコマンドを入力して指示してね！')
+        embed = discord.Embed(title='読み上げコマンド', color=0xf1bedf)
         embed.add_field(name='🎤 読み上げを開始する', value='```!mdn s```', inline=False)
+        embed.add_field(name='ㅤ\n🎤 読み上げ対象のテキストチャンネルを変更する', value='```!mdn c```', inline=False)
         embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
-        embed.add_field(name='ㅤ\n✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
+        embed.set_footer(text='ㅤ\nヒント：開始・変更 は読み上げ対象にしたいテキストチャンネルで実行してください')
+        await ctx.send(embed=embed)
+
+        embed = discord.Embed(title='その他', color=0xf1bedf)
+        embed.add_field(name='✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
         embed.add_field(name='ㅤ\n❓ ヘルプ（コレ）を表示する', value='```!mdn h```', inline=False)
         await ctx.send(embed=embed)
 
