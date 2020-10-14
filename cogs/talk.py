@@ -21,11 +21,11 @@ import re
 from pydub import AudioSegment
 
 # jtalk関数を定義
-def jtalk(t, filepath='voice_message'):
+def jtalk(t, filepath='voice'):
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
-    speed = ['-r','0.75']
+    speed = ['-r','0.7']
     halftone = ['-fm','-2']
     volume = ['-g', '-5']
     outwav = ['-ow', filepath+'.wav']
@@ -60,6 +60,10 @@ abb_dict = {
 def abb_msg(t):
     for abb_dict_key in abb_dict:
         t = re.sub(abb_dict_key, abb_dict[abb_dict_key], t)
+    # 30文字を超えたら省略する
+    if len(t) > 30:
+        t = t[:30]
+        t += ' 以下略'
     return t
 
 
@@ -187,8 +191,8 @@ class Talk(commands.Cog):
         print('整形前：' + spk_msg) # 置換前のテキストを出力
         spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
         print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-        jtalk(spk_msg_fmt) # jtalkの実行
-        source = discord.FFmpegPCMAudio('voice_message.mp3') # mp3ファイルを指定
+        jtalk(spk_msg_fmt, 'voice_' + str(message.guild.id)) # jtalkの実行
+        source = discord.FFmpegPCMAudio('voice_' + str(message.guild.id) + '.mp3') # mp3ファイルを指定
         message.guild.voice_client.play(source)
 
 
