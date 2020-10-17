@@ -73,14 +73,14 @@ class Janken(commands.Cog):
         while player_hand == computer_hand:
             # プレイヤーが送信したメッセージをチェック用関数でチェックする    
             # 0, 1, 2 のどれかだったらOK それら意外であれば待機
-            player_reaction = await self.bot.wait_for('reaction_add', check=janken_check) #メッセージを変数へ格納する
+            reaction, user = await self.bot.wait_for('reaction_add', check=janken_check) #メッセージを変数へ格納する
 
             async with ctx.channel.typing():
                 await asyncio.sleep(1.5)
                 # プレイヤーの手を算出
-                if player_reaction == '✊':
+                if reaction.emoji == '✊':
                     player_hand = 0
-                elif player_reaction == '✌️':
+                elif reaction.emoji == '✌️':
                     player_hand = 1
                 else:
                     player_hand = 2
