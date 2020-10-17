@@ -60,9 +60,9 @@ abb_dict = {
 def abb_msg(t):
     for abb_dict_key in abb_dict:
         t = re.sub(abb_dict_key, abb_dict[abb_dict_key], t)
-    # 30文字を超えたら省略する
-    if len(t) > 30:
-        t = t[:30]
+    # 40文字を超えたら省略する
+    if len(t) > 40:
+        t = t[:40]
         t += ' 以下略'
     return t
 
