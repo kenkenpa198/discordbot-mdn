@@ -26,7 +26,7 @@ def jtalk(t, filepath='voice'):
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.7']
-    halftone = ['-fm','-2']
+    halftone = ['-fm','-3']
     volume = ['-g', '-5']
     outwav = ['-ow', filepath+'.wav']
     cmd = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
@@ -71,13 +71,21 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.talk_tc_dict = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
+        self.talk_tch_dict = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
 
 
     # 読み上げを開始する
     @commands.command(aliases=['s'])
-    async def start(self, ctx):
+    async def start(self, ctx, tch: discord.TextChannel=None):
         print('===== 読み上げを開始します =====')
+
+        # botが既にボイスチャンネルへ入室していないか判定
+        if ctx.guild.voice_client:
+            print('--- エラーコード：002 ---')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xeaa55c)
+            embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
+            await ctx.send(embed=embed)
+            return
 
         # ボイスチャンネルにコマンド実行者がいるか判定
         if ctx.author.voice is None:
@@ -102,15 +110,23 @@ class Talk(commands.Cog):
         vc = ctx.author.voice.channel
 
         # 読み上げ対象のテキストチャンネルを設定
-        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
-        print('読み上げtch：' + str(self.talk_tc_dict))
-        talk_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
-        print(talk_tch)
+        if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
+            print(tch)
+            talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            print(talk_tch)
+            self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
+            print('読み上げtch：' + str(self.talk_tch_dict))
+
+        else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+            self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
+            print('読み上げtch：' + str(self.talk_tch_dict))
+            talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
+            print(talk_tch)
 
         embed = discord.Embed(title='読み上げを開始するよ！',description='以下の内容で読み上げを行うね。', color=0xf1bedf)
         embed.add_field(name='ㅤ\n🎤 入室', value=vc)
-        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
-        embed.set_footer(text='ㅤ\nヒント：読み上げ対象を変更したい時は、そのテキストチャンネルで「!mdn c」を実行してください')
+        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
+        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、そのテキストチャンネルで「!mdn c」を実行してください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -123,25 +139,33 @@ class Talk(commands.Cog):
 
     # 読み上げ対象のテキストチャンネルを変更する
     @commands.command(aliases=['c'])
-    async def change(self, ctx):
+    async def change(self, ctx, tch: discord.TextChannel=None):
         print ('===== 読み上げ対象のテキストチャンネルを変更します =====')
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
-            print('--- エラーコード：001 ---')
-            embed = discord.Embed(title='コマンドを受け付けられなかったよ…！',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\n以下のコマンドを実行してね。', color=0xeaa55c)
+            print('--- エラーコード：002 ---')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\n以下のコマンドを先に実行してね。', color=0xeaa55c)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
 
         # 読み上げ対象のテキストチャンネルを設定
-        self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
-        print('読み上げtch：' + str(self.talk_tc_dict))
-        talk_tch = discord.utils.get(ctx.guild.channels, id=self.talk_tc_dict[ctx.guild.id])
-        print(talk_tch)
+        if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
+            print(tch)
+            talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            print(talk_tch)
+            self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
+            print('読み上げtch：' + str(self.talk_tch_dict))
+
+        else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+            self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
+            print('読み上げtch：' + str(self.talk_tch_dict))
+            talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
+            print(talk_tch)
     
         embed = discord.Embed(title='読み上げ対象を変更したよ！',description='以下のテキストチャンネルを読み上げ対象に再設定したよ。', color=0xf1bedf)
-        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
+        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
 
 
@@ -152,8 +176,8 @@ class Talk(commands.Cog):
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
-            print('--- エラーコード：001 ---')
-            embed = discord.Embed(title='コマンドを受け付けられなかったよ…！',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\n以下のコマンドを実行してね。', color=0xeaa55c)
+            print('--- エラーコード：002 ---')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\n以下のコマンドを先に実行してね。', color=0xeaa55c)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -165,9 +189,9 @@ class Talk(commands.Cog):
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
 
-        # talk_tc_dictからギルドIDを削除
-        del self.talk_tc_dict[ctx.guild.id]
-        print('読み上げtch：' + str(self.talk_tc_dict))
+        # talk_tch_dictからギルドIDを削除
+        del self.talk_tch_dict[ctx.guild.id]
+        print('読み上げtch：' + str(self.talk_tch_dict))
 
 
     # テキストチャンネルに投稿されたテキストを読み上げる
@@ -178,8 +202,8 @@ class Talk(commands.Cog):
         if not message.guild.voice_client:
             return
 
-        # talk_tc_dictにテキストチャンネルのIDが入っていなかったら無視
-        if not message.channel.id == self.talk_tc_dict[message.guild.id]:
+        # talk_tch_dictにテキストチャンネルのIDが入っていなかったら無視
+        if not message.channel.id == self.talk_tch_dict[message.guild.id]:
             return
 
         # !が先頭に入っていたら or botだったら無視
@@ -230,14 +254,14 @@ class Talk(commands.Cog):
                         await asyncio.sleep(1)
                         await vcl.disconnect()
                         embed = discord.Embed(title='読み上げを終了したよ', description='誰もいなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
-                        send_tch = discord.utils.get(member.guild.channels, id=self.talk_tc_dict[member.guild.id])
-                        print(send_tch)
-                        await send_tch.send(embed=embed)
+                        talk_tch = discord.utils.get(member.guild.text_channels, id=self.talk_tch_dict[member.guild.id])
+                        print(talk_tch)
+                        await talk_tch.send(embed=embed)
                         print('退室：' + str(vcl))
 
-                        # talk_tc_dictからギルドIDを削除
-                        del self.talk_tc_dict[member.guild.id]
-                        print('読み上げtch：' + str(self.talk_tc_dict))
+                        # talk_tch_dictからギルドIDを削除
+                        del self.talk_tch_dict[member.guild.id]
+                        print('読み上げtch：' + str(self.talk_tch_dict))
         else:
             return
 
