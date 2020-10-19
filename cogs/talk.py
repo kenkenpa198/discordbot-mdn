@@ -116,12 +116,14 @@ class Talk(commands.Cog):
             print(talk_tch)
             self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
             print('読み上げtch：' + str(self.talk_tch_dict))
+            send_hello = False
 
         else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
             self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
             print('読み上げtch：' + str(self.talk_tch_dict))
             talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
             print(talk_tch)
+            send_hello = True
 
         embed = discord.Embed(title='読み上げを開始するよ！',description='以下の内容で読み上げを行うね。', color=0xf1bedf)
         embed.add_field(name='ㅤ\n🎤 入室', value=vc)
@@ -134,7 +136,8 @@ class Talk(commands.Cog):
         await vc.connect()
         print('接続：' + str(vc))
         await asyncio.sleep(.5)
-        await ctx.send(f'やっほー！もだねちゃんだよ！')
+        if send_hello:
+            await ctx.send(f'やっほー！もだねちゃんだよ！')
 
 
     # 読み上げ対象のテキストチャンネルを変更する
