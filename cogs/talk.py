@@ -43,17 +43,30 @@ def jtalk(t, filepath='voice'):
 ##### 読み上げ対象のメッセージを置換 #####
 # 置換用の辞書を作成
 abb_dict = {
-    r'\n': '', # 改行を削除する
-    r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?': 'URL省略', # URLを省略する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
-    r'<:.{1,}:\d{8,}>': ' ', # カスタム絵文字を「 」に置換する
+    r'\n': ' ',                                                                                 # 改行を「 」に置換する
+    r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?': 'URL省略',                                   # URLを省略する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
+    r'<:.{1,}:\d{8,}>': ' ',                                                                    # カスタム絵文字を「 」に置換する
     r'\,|、|\.|。|\!|！|\?|？|\:|：|\;|；|\+|＋|\=|＝|\*|＊|\-|\~|\_|_|\[|「|\]|」|・|…': ' ', # 記号を「 」に置換する
-    r'\d{9,}': '数値省略', # 9桁以上の数値を省略する
-    r'(d|D)iscord': 'ディスコード',
-    r'(s|S)platoon': 'スプラトゥーン',
-    r'(t|T)witter': 'ツイッター',
-    r'(w|ｗ){2,}': ' わらぁわらぁ', # 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
-    r'w|ｗ': ' わらぁ', # 「w」「ｗ」を「わら」に置換する
-    r'^\s': '' # 文頭の空白を削除する
+    r'\d{9,}': '数値省略',                                                                      # 9桁以上の数値を省略する
+    r'(D|d)iscord': 'ディスコード',                                                             # 辞書変換
+    r'64': 'ロクヨン',                                                                          # 辞書変換
+    r'(G|g)(C|c)コン': 'ジーシーコン',                                                          # 辞書変換
+    r'(G|g)(C|c)': 'ゲームキューブ',                                                            # 辞書変換
+    r'(W|w)ii': 'ウィー',                                                                       # 辞書変換
+    r'(S|s)witch': 'スイッチ',                                                                  # 辞書変換
+    r'(G|g)(B|b)(A|a)': 'アドバンス',                                                           # 辞書変換
+    r'(G|g)(B|b)': 'ゲームボーイ',                                                              # 辞書変換
+    r'3(D|d)(S|s)': 'スリーディーエス',                                                         # 辞書変換
+    r'(D|d)(S|s)': 'ディーエス',                                                                # 辞書変換
+    r'(S|s)platoon': 'スプラトゥーン',                                                          # 辞書変換
+    r'(D|d)(X|x)': 'デラックス',                                                                # 辞書変換
+    r'(S|s)(P|p)': 'スペシャル',                                                                # 辞書変換
+    r'(D|d)(B|b)(D|d)': 'デッドバイデイライト',                                                 # 辞書変換
+    r'(T|t)witter': 'ツイッター',                                                               # 辞書変換
+    r'(S|s)hovel': 'シャベル',                                                                  # 辞書変換
+    r'(w|ｗ){2,}': ' わらぁわらぁ',                                                             # 辞書変換 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
+    r'w|ｗ': ' わらぁ',                                                                         # 辞書変換 「w」「ｗ」を「わら」に置換する
+    r'^\s': ''                                                                                  # 文頭の空白を削除する
 }
 
 # 置換用の関数を定義
@@ -71,7 +84,7 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.talk_tch_dict = {} # 読み上げテキストチャンネルIDを格納する空の辞書（キーは Guild ID）を作成
+        self.talk_tch_dict = {} # 読み上げ対象テキストチャンネルのIDを格納する空の辞書（キーは Guild ID）を作成
 
 
     # 読み上げを開始する
@@ -88,12 +101,13 @@ class Talk(commands.Cog):
             return
 
         # ボイスチャンネルにコマンド実行者がいるか判定
-        if ctx.author.voice is None:
+        if not ctx.author.voice:
             print('--- VCにコマンド実行者がいないため待機します ---')
             embed = discord.Embed(title='読み上げの実施を待機するよ', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してね。', color=0xe3e5e8)
             await ctx.send(embed=embed)
 
-            # 10秒まで待機 ボイスチャンネルにコマンド実行者が入ったら変数へVCの情報を渡す
+            # 10秒まで待機
+            # ボイスチャンネルにコマンド実行者が入ったら変数へVCの情報を渡す
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
@@ -102,9 +116,7 @@ class Talk(commands.Cog):
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
-                await asyncio.sleep(1)
-        else:
-            pass
+                await asyncio.sleep(.5)
 
         # 入室するボイスチャンネルを変数へ格納
         vc = ctx.author.voice.channel
@@ -115,12 +127,12 @@ class Talk(commands.Cog):
             talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
             print(talk_tch)
             self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
-            print('読み上げtch：' + str(self.talk_tch_dict))
+            print('読み上げ対象：' + str(self.talk_tch_dict))
             send_hello = False
 
         else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
             self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
-            print('読み上げtch：' + str(self.talk_tch_dict))
+            print('読み上げ対象：' + str(self.talk_tch_dict))
             talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
             print(talk_tch)
             send_hello = True
@@ -159,11 +171,11 @@ class Talk(commands.Cog):
             talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
             print(talk_tch)
             self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
-            print('読み上げtch：' + str(self.talk_tch_dict))
+            print('読み上げ対象：' + str(self.talk_tch_dict))
 
         else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
             self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
-            print('読み上げtch：' + str(self.talk_tch_dict))
+            print('読み上げ対象：' + str(self.talk_tch_dict))
             talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
             print(talk_tch)
     
@@ -175,7 +187,7 @@ class Talk(commands.Cog):
     # 読み上げを終了する
     @commands.command(aliases=['e'])
     async def end(self, ctx):
-        print('===== 読み上げを終了します =====')
+        print('===== 読み上げを終了します：コマンド受付 =====')
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
@@ -191,10 +203,6 @@ class Talk(commands.Cog):
         embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xf1bedf)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
-
-        # talk_tch_dictからギルドIDを削除
-        del self.talk_tch_dict[ctx.guild.id]
-        print('読み上げtch：' + str(self.talk_tch_dict))
 
 
     # テキストチャンネルに投稿されたテキストを読み上げる
@@ -223,50 +231,54 @@ class Talk(commands.Cog):
         message.guild.voice_client.play(source)
 
 
-    # 人がいなくなったら自動で退出する
+    # ボイスチャンネルへユーザーが入退室した時の処理
     @commands.Cog.listener()
     async def on_voice_state_update(self,
                                     member: discord.Member,
                                     before: discord.VoiceState,
                                     after: discord.VoiceState):
-        if self.bot.voice_clients:
-            print('--- VCステータスの変更を検知 ---')
 
-            # VCへ誰かが入室したら（ユーザーの前と後のVCの状態を比較して、値が有る状態だったら）
-            if not before.channel and after.channel:
-                print('--- VCへ入室 ---')
-                vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-                print(vcl)
-                print('VC人数：' + str(len(after.channel.members))) # VC人数を表示
+        print('===== VCステータスの変更を検知 =====')
 
-            # VCから誰かが退出したら（ユーザーの前と後のVCの状態を比較して、値が無い状態だったら）
-            elif before.channel and not after.channel:
-                print('--- VCから退室 ---')
-                vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-                print(vcl)
-                print('VC人数：' + str(len(before.channel.members))) # VC人数を表示
-                # if not self.bot in vcl:
-                #      print('aaa')
+        # VCへ誰かが入室した時の処理（ユーザーの前と後のVCの状態を比較して、値が有る状態だったら）
+        if not before.channel and after.channel:
+            print('--- VCへ入室 ---')
+            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
+            print(vcl)
+            print('VC人数：' + str(len(after.channel.members))) # VC人数を表示
 
-                # botが最後の一人になったら自動退出する
-                bch = before.channel
-                if len(bch.members) == 1 and bch.members[0] == self.bot.user:
-                    vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-                    if vcl and vcl.is_connected():
-                        print('===== 読み上げを終了します =====')
-                        await asyncio.sleep(1)
-                        await vcl.disconnect()
-                        embed = discord.Embed(title='読み上げを終了したよ', description='誰もいなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
-                        talk_tch = discord.utils.get(member.guild.text_channels, id=self.talk_tch_dict[member.guild.id])
-                        print(talk_tch)
-                        await talk_tch.send(embed=embed)
-                        print('退室：' + str(vcl))
+        # VCから誰かが退出した時の処理（ユーザーの前と後のVCの状態を比較して、値が無い状態だったら）
+        elif before.channel and not after.channel:
+            print('--- VCから退室 ---')
+            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
+            print(vcl)
+            print('VC人数：' + str(len(before.channel.members))) # VC人数を表示
 
-                        # talk_tch_dictからギルドIDを削除
-                        del self.talk_tch_dict[member.guild.id]
-                        print('読み上げtch：' + str(self.talk_tch_dict))
-        else:
-            return
+            # bot退出時の処理
+            if member == self.bot.user: # もし抜けた人がもだねちゃんだったら
+                await asyncio.sleep(1)
+                print('===== 読み上げ終了時の処理を行います =====')
+                # 音声データを削除
+                print('--- 音声データを削除 ---')
+                os.remove('voice_' + str(member.guild.id) + '.mp3')
+                # talk_tch_dictからギルドIDを削除
+                print('--- 読み上げ対象辞書からギルドIDを削除 ---')
+                del self.talk_tch_dict[member.guild.id]
+                print('読み上げ対象：' + str(self.talk_tch_dict))
+
+            # botが最後の一人になったら自動退出する
+            bch = before.channel
+            if len(bch.members) == 1 and bch.members[0] == self.bot.user:
+                vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
+                if vcl and vcl.is_connected():
+                    await asyncio.sleep(1)
+                    print('===== 読み上げを終了します：自動退出 =====')
+                    await vcl.disconnect()
+                    embed = discord.Embed(title='読み上げを終了したよ', description='皆んないなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
+                    talk_tch = discord.utils.get(member.guild.text_channels, id=self.talk_tch_dict[member.guild.id])
+                    print(talk_tch)
+                    await talk_tch.send(embed=embed)
+                    print('退室：' + str(vcl))
 
 
 def setup(bot):

@@ -35,16 +35,16 @@ class Janken(commands.Cog):
         def judge(player, computer):
             if player == 0 and computer == 1:
                 print('勝敗：プレイヤーの勝ち')
-                return 'わっ！負けちゃった！', ctx.author.name + 'さん'
+                return 'わっ！負けちゃった！', ctx.author.name + 'さん', ctx.author.avatar_url
             elif player == 1 and computer == 2:
                 print('勝敗：プレイヤーの勝ち')
-                return 'あー！完敗だ！', ctx.author.name + 'さん'
+                return 'あー！完敗だ！', ctx.author.name + 'さん', ctx.author.avatar_url
             elif player == 2 and computer == 0:
                 print('勝敗：プレイヤーの勝ち')
-                return 'うーっ！私の負け…！', ctx.author.name + 'さん'
+                return 'うーっ！私の負け…！', ctx.author.name + 'さん', ctx.author.avatar_url
             else:
                 print('勝敗：コンピュータの勝ち')
-                return 'やったー！わたしの勝ち！', 'もだねちゃん'
+                return 'やったー！わたしの勝ち！', 'もだねちゃん', self.bot.user.avatar_url
         
         # 入力されたリストの番号（0, 1, 2）を受け取り、番号に対応した手を出力する
         def rise_hand(hand):
@@ -58,7 +58,7 @@ class Janken(commands.Cog):
         
         # ジャンケンスタート
         await ctx.send(f'じゃあいくよっ！さいしょはグー！')
-        embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね', color=0xf1bedf)
+        embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね。', color=0xf1bedf)
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('✊')
         await msg.add_reaction('✌️')
@@ -71,9 +71,19 @@ class Janken(commands.Cog):
         computer_hand = 0
 
         while player_hand == computer_hand:
+            
+            # 20秒まで待機
             # プレイヤーが送信したメッセージをチェック用関数でチェックする    
             # 0, 1, 2 のどれかだったらOK それら意外であれば待機
-            reaction, user = await self.bot.wait_for('reaction_add', check=janken_check) #メッセージを変数へ格納する
+            try:
+                reaction, user = await self.bot.wait_for('reaction_add', check=janken_check, timeout=20)
+            except asyncio.TimeoutError:
+                embed = discord.Embed(title='ジャンケンを中断したよ', description='さいしょはグーのポーズをずっとするの疲れちゃった！\n出したい手は20秒以内に選んでね！', color=0xeaa55c)
+                await ctx.send(embed=embed)
+                print('===== ジャンケンを中断しました =====')
+                return
+            else:
+                pass
 
             async with ctx.channel.typing():
                 await asyncio.sleep(.5)
@@ -128,8 +138,9 @@ class Janken(commands.Cog):
         # 勝敗の結果を表示して終了
         await asyncio.sleep(1.5)
         
-        result_msg, result_winner = judge(player_hand, computer_hand)
+        result_msg, result_winner, result_winner_img = judge(player_hand, computer_hand)
         embed = discord.Embed(title='勝者は…', description='🎉 ' + result_winner + '！', color=0xf1bedf)
+        embed.set_thumbnail(url=result_winner_img)
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
         async with ctx.channel.typing():
