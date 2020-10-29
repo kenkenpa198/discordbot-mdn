@@ -137,7 +137,7 @@ class Talk(commands.Cog):
             print(talk_tch)
             send_hello = True
 
-        embed = discord.Embed(title='読み上げを開始するよ！',description='以下の内容で読み上げを行うね。', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを開始するよ',description='以下の内容で読み上げを行うね。', color=0xf1bedf)
         embed.add_field(name='ㅤ\n🎤 入室', value=vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
         embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、そのテキストチャンネルで「!mdn c」を実行してください。')
@@ -179,7 +179,7 @@ class Talk(commands.Cog):
             talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
             print(talk_tch)
     
-        embed = discord.Embed(title='読み上げ対象を変更したよ！',description='以下のテキストチャンネルを読み上げ対象に再設定したよ。', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げ対象を変更したよ',description='以下のテキストチャンネルを読み上げ対象に再設定したよ。', color=0xf1bedf)
         embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
 
@@ -274,7 +274,7 @@ class Talk(commands.Cog):
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
                     await vcl.disconnect()
-                    embed = discord.Embed(title='読み上げを終了したよ', description='皆んないなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
+                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
                     talk_tch = discord.utils.get(member.guild.text_channels, id=self.talk_tch_dict[member.guild.id])
                     print(talk_tch)
                     await talk_tch.send(embed=embed)
