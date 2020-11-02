@@ -142,7 +142,7 @@ class Janken(commands.Cog):
         embed = discord.Embed(title='勝者は…', description='🎉 ' + result_winner + '！', color=0xf1bedf)
         embed.set_thumbnail(url=result_winner_img)
         await ctx.send(embed=embed)
-        await asyncio.sleep(1)
+        await asyncio.sleep(2)
         async with ctx.channel.typing():
             await asyncio.sleep(.5)
         await ctx.send(result_msg + f'\n\n楽しかった〜！またやろうね！')
