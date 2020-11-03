@@ -47,7 +47,7 @@ class Petite(commands.Cog):
     #     print('変更対象：' + str(role))
     #     print('--- 役職の色を変更しました ---')
     #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
-    #     await ctx.send(f'初期設定を行ったよ！これからよろしくねっ！')
+    #     await ctx.send(f'ロール「もだねちゃん」の色を変更しました。')
 
 
 def setup(bot):

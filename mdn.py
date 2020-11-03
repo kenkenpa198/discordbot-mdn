@@ -5,17 +5,26 @@ import os
 from os.path import join, dirname
 from dotenv import load_dotenv
 
-print('===== もだねちゃん起動 =====')
+print('===== もだねちゃんを起動します =====')
 print('discord.py ' + discord.__version__)
 
 bot = commands.Bot(command_prefix='!mdn ') # コマンド実行を示す「!mdn 」を指定
-bot.remove_command('help')
+bot.remove_command('help') # デフォルトの help を削除
 
-# 起動時に動作する処理
+# bot 起動時に動作する処理
 @bot.event
 async def on_ready():
-    # 起動したらターミナルにログイン通知が表示される
+    # 起動したらターミナルへログイン通知を表示
     print('===== ログインしました =====')
+    print('===== bot 起動時の処理を実行します =====')
+
+    # アクティビティ表示を変更
+    print('--- アクティビティ表示を変更 ---')
+    client = bot
+    act = discord.Game('「 !mdn h 」でヘルプを表示するよ！             ') # \U0001f338: 🌸
+    await client.change_presence(status=None, activity=act)
+
+    print('===== bot 起動時の処理を完了しました =====')
 
 @bot.event
 async def on_command_error(ctx, error):
