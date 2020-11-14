@@ -20,6 +20,7 @@ class Help(commands.Cog):
 
         embed = discord.Embed(title='その他', color=0xf1bedf)
         embed.add_field(name='✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
+        embed.add_field(name='ㅤ\n🔮 もだねちゃん占い', value='```!mdn u```', inline=False)
         embed.add_field(name='ㅤ\n❓ ヘルプ（コレ）を表示する', value='```!mdn h```', inline=False)
         await ctx.send(embed=embed)
 
