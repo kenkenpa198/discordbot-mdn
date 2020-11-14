@@ -5,7 +5,8 @@ RUN set -x && \
     apt-get install -y libopus-dev python3-pip ffmpeg alsa && \
     apt-get clean -y && rm -rf /var/lib/apt/lists/*
 RUN set -x && \
-    pip3 install jtalkbot==0.5.0 && \
+    pip3 install discord.py==1.5.1 && \
+    pip3 install jtalkbot==0.6.0 && \
     pip3 install pydub && \
     pip3 install python-dotenv && \
     mkdir /discordbot-mdn && \

@@ -86,7 +86,7 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.talk_tch_dict = {} # 読み上げ対象テキストチャンネルのIDを格納する空の辞書（キーは Guild ID）を作成
+        self.talk_tc_dict = {} # 読み上げ対象テキストチャンネルのIDを格納する空の辞書（キーは Guild ID）を作成
 
 
     # 読み上げを開始する
@@ -118,6 +118,8 @@ class Talk(commands.Cog):
                 print('===== VCへの接続を中断しました =====')
                 return
             else:
+                print('--- VCにコマンド実行者が入室しました ---')
+                print('--- 処理を再開します ---')
                 await asyncio.sleep(.5)
 
         # 入室するボイスチャンネルを変数へ格納
@@ -126,23 +128,23 @@ class Talk(commands.Cog):
         # 読み上げ対象のテキストチャンネルを設定
         if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
             print(tch)
-            talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
-            print(talk_tch)
-            self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
-            print('読み上げ対象：' + str(self.talk_tch_dict))
+            talk_tc = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            print(talk_tc)
+            self.talk_tc_dict[ctx.guild.id] = talk_tc.id # talk_tc_dictへIDを登録
+            print('読み上げ対象：' + str(self.talk_tc_dict))
             send_hello = False
 
         else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
-            self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
-            print('読み上げ対象：' + str(self.talk_tch_dict))
-            talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
-            print(talk_tch)
+            self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
+            print('読み上げ対象：' + str(self.talk_tc_dict))
+            talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
+            print(talk_tc)
             send_hello = True
 
-        embed = discord.Embed(title='読み上げを開始するよ',description='以下の内容で読み上げを行うね。', color=0xf1bedf)
-        embed.add_field(name='ㅤ\n🎤 入室', value=vc)
-        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
-        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、そのテキストチャンネルで「!mdn c」を実行してください。')
+        embed = discord.Embed(title='読み上げを開始するよ',description='以下の内容でおしゃべりを始めるね！', color=0xf1bedf)
+        embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=vc)
+        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
+        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、「 !mdn c 」コマンドを使用してください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -170,19 +172,19 @@ class Talk(commands.Cog):
         # 読み上げ対象のテキストチャンネルを設定
         if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
             print(tch)
-            talk_tch = discord.utils.get(ctx.guild.text_channels, name=tch.name)
-            print(talk_tch)
-            self.talk_tch_dict[ctx.guild.id] = talk_tch.id # talk_tch_dictへIDを登録
-            print('読み上げ対象：' + str(self.talk_tch_dict))
+            talk_tc = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            print(talk_tc)
+            self.talk_tc_dict[ctx.guild.id] = talk_tc.id # talk_tc_dictへIDを登録
+            print('読み上げ対象：' + str(self.talk_tc_dict))
 
         else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
-            self.talk_tch_dict[ctx.guild.id] = ctx.channel.id # talk_tch_dictへIDを登録
-            print('読み上げ対象：' + str(self.talk_tch_dict))
-            talk_tch = discord.utils.get(ctx.guild.text_channels, id=self.talk_tch_dict[ctx.guild.id])
-            print(talk_tch)
+            self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
+            print('読み上げ対象：' + str(self.talk_tc_dict))
+            talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
+            print(talk_tc)
     
         embed = discord.Embed(title='読み上げ対象を変更したよ',description='以下のテキストチャンネルを読み上げ対象に再設定したよ。', color=0xf1bedf)
-        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tch_dict[ctx.guild.id]) + '>')
+        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
 
 
@@ -215,8 +217,8 @@ class Talk(commands.Cog):
         if not message.guild.voice_client:
             return
 
-        # talk_tch_dictにテキストチャンネルのIDが入っていなかったら無視
-        if not message.channel.id == self.talk_tch_dict[message.guild.id]:
+        # talk_tc_dictにテキストチャンネルのIDが入っていなかったら無視
+        if not message.channel.id == self.talk_tc_dict[message.guild.id]:
             return
 
         # !が先頭に入っていたら or botだったら無視
@@ -239,48 +241,59 @@ class Talk(commands.Cog):
                                     member: discord.Member,
                                     before: discord.VoiceState,
                                     after: discord.VoiceState):
-
-        print('===== VCステータスの変更を検知 =====')
-
-        # VCへ誰かが入室した時の処理（ユーザーの前と後のVCの状態を比較して、値が有る状態だったら）
+        # before と after に変化がなければ無視
+        if before.channel == after.channel:
+            return
+        
+        print('===== VC人数の変更を検知 =====')
+        # VCへ誰かが入室した時の処理（VoiceState の before が 値無し / after が 値有り だったら）
         if not before.channel and after.channel:
             print('--- VCへ入室 ---')
-            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-            print(vcl)
-            print('VC人数：' + str(len(after.channel.members))) # VC人数を表示
+            vc = after.channel
+            # print(vc)
+            # print('VC人数：' + str(len(vc.members))) # VC人数を表示
+            # print(vc.members)
 
-        # VCから誰かが退出した時の処理（ユーザーの前と後のVCの状態を比較して、値が無い状態だったら）
+        # VCから誰かが退出した時の処理（VoiceState の before が 値有り / after が 値無し だったら）
         elif before.channel and not after.channel:
             print('--- VCから退室 ---')
-            vcl = discord.utils.get(self.bot.voice_clients, channel=after.channel)
-            print(vcl)
-            print('VC人数：' + str(len(before.channel.members))) # VC人数を表示
-
-            # bot退出時の処理
-            if member == self.bot.user: # もし抜けた人がもだねちゃんだったら
-                await asyncio.sleep(1)
-                print('===== 読み上げ終了時の処理を行います =====')
-                # 音声データを削除
-                print('--- 音声データを削除 ---')
-                os.remove('voice_' + str(member.guild.id) + '.mp3')
-                # talk_tch_dictからギルドIDを削除
-                print('--- 読み上げ対象辞書からギルドIDを削除 ---')
-                del self.talk_tch_dict[member.guild.id]
-                print('読み上げ対象：' + str(self.talk_tch_dict))
-
+            vc = before.channel
+            # print(vc)
+            # print('VC人数：' + str(len(vc.members))) # VC人数を表示
+            # print(vc.members)
+            
             # botが最後の一人になったら自動退出する
-            bch = before.channel
-            if len(bch.members) == 1 and bch.members[0] == self.bot.user:
-                vcl = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-                if vcl and vcl.is_connected():
+            if (
+                len(vc.members) == 1
+                and vc.members[0] == self.bot.user
+            ):
+                vc = discord.utils.get(self.bot.voice_clients, channel=before.channel)
+                # print(vc)
+                if vc and vc.is_connected():
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
-                    await vcl.disconnect()
+                    await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
-                    talk_tch = discord.utils.get(member.guild.text_channels, id=self.talk_tch_dict[member.guild.id])
-                    print(talk_tch)
-                    await talk_tch.send(embed=embed)
-                    print('退室：' + str(vcl))
+                    talk_tc = discord.utils.get(member.guild.text_channels, id=self.talk_tc_dict[member.guild.id])
+                    print(talk_tc)
+                    await talk_tc.send(embed=embed)
+                    print('退室：' + str(vc))
+
+        # bot が VC から退出した時の処理
+        if (
+            before.channel
+            and not after.channel
+            and member == self.bot.user
+        ):
+            await asyncio.sleep(1)
+            print('===== 読み上げ終了時の処理を行います =====')
+            # 音声データを削除
+            print('--- 音声データを削除 ---')
+            os.remove('voice_' + str(member.guild.id) + '.mp3')
+            # talk_tc_dictからギルドIDを削除
+            print('--- 読み上げ対象辞書からギルドIDを削除 ---')
+            del self.talk_tc_dict[member.guild.id]
+            print('読み上げ対象：' + str(self.talk_tc_dict))
 
 
 def setup(bot):
