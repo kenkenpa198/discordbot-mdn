@@ -38,6 +38,7 @@ bot.load_extension('cogs.talk')
 bot.load_extension('cogs.janken')
 bot.load_extension('cogs.help')
 bot.load_extension('cogs.hello')
+bot.load_extension('cogs.uranai')
 bot.load_extension('cogs.petite')
 bot.load_extension('cogs.reload')
 

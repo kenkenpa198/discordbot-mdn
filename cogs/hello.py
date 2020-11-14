@@ -35,7 +35,7 @@ class Hello(commands.Cog):
             print(hello_msg_fmt)
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(hello_msg_fmt + f'、えらーい！')
+            await message.channel.send(f'{hello_msg_fmt}、えらーい！')
             return
         if 'って知ってる' in message.clean_content or 'ってしってる' in message.clean_content:
             hello_msg = message.clean_content
@@ -43,7 +43,7 @@ class Hello(commands.Cog):
             print(hello_msg_fmt)
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(hello_msg_fmt + f'ってなーに？')
+            await message.channel.send(f'{hello_msg_fmt}ってなーに？')
             return
         async with message.channel.typing():
             await asyncio.sleep(1)
@@ -52,4 +52,3 @@ class Hello(commands.Cog):
 
 def setup(bot):
     bot.add_cog(Hello(bot))
-
