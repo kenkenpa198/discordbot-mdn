@@ -46,7 +46,7 @@ bot.load_extension('cogs.reload')
 dotenv_path = join(dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
-TOKEN = os.environ.get("TOKEN")
+BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
 # Botの起動とDiscordサーバーへの接続
-bot.run(TOKEN)
+bot.run(BOT_TOKEN)
