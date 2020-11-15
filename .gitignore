@@ -2,5 +2,6 @@ __pycache__/
 .venv/
 .vscode/
 cogs/__pycache__/
+cogs/template.py
 .env
 *.mp3
