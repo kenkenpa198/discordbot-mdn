@@ -31,7 +31,7 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     print('--- エラーコード：001 ---')
-    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xeaa55c)
+    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
     await ctx.send(embed=embed)
 

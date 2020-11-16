@@ -78,7 +78,7 @@ class Janken(commands.Cog):
             try:
                 reaction, user = await self.bot.wait_for('reaction_add', check=janken_check, timeout=20)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='ジャンケンを中断したよ', description='さいしょはグーのポーズをずっとするの疲れちゃった！\n出したい手は20秒以内に選んでね！', color=0xeaa55c)
+                embed = discord.Embed(title='ジャンケンを中断したよ', description='さいしょはグーのポーズをずっとするの疲れちゃった！\n出したい手は20秒以内に選んでね！', color=0xffab6f)
                 await ctx.send(embed=embed)
                 print('===== ジャンケンを中断しました =====')
                 return

@@ -97,7 +97,7 @@ class Talk(commands.Cog):
         # botが既にボイスチャンネルへ入室していないか判定
         if ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\nこちらのコマンドを実行して、使い方を確認してみてね！', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\nこちらのコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
             embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -113,7 +113,7 @@ class Talk(commands.Cog):
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xeaa55c)
+                embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xffab6f)
                 await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
                 return
@@ -164,7 +164,7 @@ class Talk(commands.Cog):
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -196,7 +196,7 @@ class Talk(commands.Cog):
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return

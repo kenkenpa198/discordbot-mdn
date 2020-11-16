@@ -104,7 +104,7 @@ class Uranai(commands.Cog):
         # played_list にユーザーIDがあるか判定
         if ctx.author.id in played_list:
             print('--- 遊んだ人リストにIDがあるため中断 ---')
-            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xeaa55c)
+            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
             print('===== もだねちゃん占いを終了します =====')
             return
