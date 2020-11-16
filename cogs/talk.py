@@ -223,8 +223,8 @@ class Talk(commands.Cog):
 
         # !が先頭に入っていたら or botだったら無視
         if message.content.startswith('!') or message.author.bot:
-            # 指定テキストの場合以外に中断する
-            if not 'やっほー！もだねちゃんだよ！' in message.content:
+            # もだねちゃんのセリフは通す
+            if not 'やっほー！もだねちゃんだよ！' in message.content: # if not message.author == self.bot.user:
                 return
 
         spk_msg = message.clean_content

@@ -35,13 +35,13 @@ class Janken(commands.Cog):
         def judge(player, computer):
             if player == 0 and computer == 1:
                 print('勝敗：プレイヤーの勝ち')
-                return 'わっ！負けちゃった！', ctx.author.name, ctx.author.avatar_url
+                return 'わっ！負けちゃった！', f'{ctx.author.name}さん', ctx.author.avatar_url
             elif player == 1 and computer == 2:
                 print('勝敗：プレイヤーの勝ち')
-                return 'あー！完敗だ！', ctx.author.name, ctx.author.avatar_url
+                return 'あー！完敗だ！', f'{ctx.author.name}さん', ctx.author.avatar_url
             elif player == 2 and computer == 0:
                 print('勝敗：プレイヤーの勝ち')
-                return 'うーっ！私の負け…！', ctx.author.name, ctx.author.avatar_url
+                return 'うーっ！私の負け…！', f'{ctx.author.name}さん', ctx.author.avatar_url
             else:
                 print('勝敗：コンピュータの勝ち')
                 return 'やったー！わたしの勝ち！', 'もだねちゃん', self.bot.user.avatar_url
@@ -139,7 +139,7 @@ class Janken(commands.Cog):
         await asyncio.sleep(1.5)
         
         result_msg, result_winner, result_winner_img = judge(player_hand, computer_hand)
-        embed = discord.Embed(title='勝者は…', description=f'🎉 {result_winner}さん！', color=0xf1bedf)
+        embed = discord.Embed(title='勝者は…', description=f'🎉 {result_winner}！', color=0xf1bedf)
         embed.set_thumbnail(url=result_winner_img)
         await ctx.send(embed=embed)
         await asyncio.sleep(2)
