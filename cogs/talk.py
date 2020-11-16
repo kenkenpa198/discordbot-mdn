@@ -141,7 +141,7 @@ class Talk(commands.Cog):
             print(talk_tc)
             send_hello = True
 
-        embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、「 !mdn c 」コマンドを使用してください。')
@@ -183,7 +183,7 @@ class Talk(commands.Cog):
             talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
             print(talk_tc)
     
-        embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
 
@@ -204,7 +204,7 @@ class Talk(commands.Cog):
         # ボイスチャンネルから退出する
         vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
 
@@ -274,7 +274,7 @@ class Talk(commands.Cog):
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
                     await vc.disconnect()
-                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
+                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
                     talk_tc = discord.utils.get(member.guild.text_channels, id=self.talk_tc_dict[member.guild.id])
                     print(talk_tc)
                     await talk_tc.send(embed=embed)

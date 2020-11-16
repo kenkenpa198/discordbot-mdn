@@ -91,7 +91,7 @@ class Uranai(commands.Cog):
     async def loop():
         # 現在の時刻
         now = datetime.now().strftime('%H:%M')
-        if now == '00:00':
+        if now == '06:25':
             clear_played_list()
     # ループ処理を実行
     loop.start()
@@ -132,7 +132,7 @@ class Uranai(commands.Cog):
         print('ラッキーアイテム：' + lucky_value)
 
         # メッセージ送信
-        embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.name}さんの今日の運勢だよ！', color=0xf1bedf)
+        embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.name}さんの今日の運勢だよ！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n' + unsei_list[0], value=unsei_value_1)
         embed.add_field(name='ㅤ\n' + unsei_list[1], value=unsei_value_2)
         embed.add_field(name='ㅤ\n' + unsei_list[2], value=unsei_value_3)

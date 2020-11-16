@@ -58,7 +58,7 @@ class Janken(commands.Cog):
         
         # ジャンケンスタート
         await ctx.send(f'じゃあいくよっ！さいしょはグー！')
-        embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね。', color=0xf1bedf)
+        embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね。', color=0xffd6e9)
         msg = await ctx.send(embed=embed)
         await msg.add_reaction('✊')
         await msg.add_reaction('✌️')
@@ -113,7 +113,7 @@ class Janken(commands.Cog):
                 print('コンピュータの手：' + str(computer_hand)) # コンピュータの手を出力
 
             # 出した手の表示
-            embed = discord.Embed(title='ぽんっ！', color=0xf1bedf)
+            embed = discord.Embed(title='ぽんっ！', color=0xffd6e9)
             embed.add_field(name='もだねちゃんの手', value=rise_hand(computer_hand), inline=False)
             embed.add_field(name=f'ㅤ\n{ctx.author.name}さんの手', value=rise_hand(player_hand), inline=False)
             await ctx.send(embed=embed)
@@ -127,7 +127,7 @@ class Janken(commands.Cog):
                 await ctx.send(result_msg)
 
                 # ジャンケンスタート
-                embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね', color=0xf1bedf)
+                embed = discord.Embed(title='ジャンケン……', description='出したい手のリアクションを押してね', color=0xffd6e9)
                 msg = await ctx.send(embed=embed)
                 await msg.add_reaction('✊')
                 await msg.add_reaction('✌️')
@@ -139,7 +139,7 @@ class Janken(commands.Cog):
         await asyncio.sleep(1.5)
         
         result_msg, result_winner, result_winner_img = judge(player_hand, computer_hand)
-        embed = discord.Embed(title='勝者は…', description=f'🎉 {result_winner}！', color=0xf1bedf)
+        embed = discord.Embed(title='勝者は…', description=f'🎉 {result_winner}！', color=0xffd6e9)
         embed.set_thumbnail(url=result_winner_img)
         await ctx.send(embed=embed)
         await asyncio.sleep(2)
