@@ -1,18 +1,24 @@
 # Docker image を pull
 FROM emptypage/open_jtalk:20.4_1.11
 
-# python3 などのインストール
+# 実行環境の構築
 RUN set -x && \
     apt-get update -y && \
+    # tz database のインストール（タイムゾーンの自動設定のため）
     apt-get install -y tzdata && \
-    apt-get install -y libopus-dev python3-pip ffmpeg alsa && \
+    # Ubuntu 版 pip のインストール
+    apt-get install -y python3-pip && \
+    # 読み上げ機能用ソフトのインストール
+    apt-get install -y libopus-dev ffmpeg alsa && \
+    # アーカイブファイルの削除
     apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
-# discordbot-mdn ディレクトリの準備
+# discordbot-mdn ディレクトリの構築
 RUN set -x && \
     mkdir /discordbot-mdn && \
     mkdir /discordbot-mdn/cogs && \
     mkdir -p /usr/local/Cellar/open-jtalk/1.11 && \
+    # シンボリックリンクの作成
     ln -s /usr/local/lib/open_jtalk/dic /usr/local/Cellar/open-jtalk/1.11 && \
     ln -s /usr/local/lib/open_jtalk/voice /usr/local/Cellar/open-jtalk/1.11
 WORKDIR /discordbot-mdn
@@ -21,7 +27,7 @@ WORKDIR /discordbot-mdn
 COPY mdn.py /discordbot-mdn
 COPY cogs/ /discordbot-mdn/cogs/
 
-# パッケージのインストール
+# pip パッケージのインストール
 COPY requirements.txt /discordbot-mdn
 RUN set -x && \
     pip3 install -r requirements.txt
