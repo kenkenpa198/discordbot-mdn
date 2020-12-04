@@ -1,0 +1,18 @@
+version: "3.7"
+services:
+  my_app:
+    # CD にある Dockerfile で build
+    build:
+      context: .
+      dockerfile: Dockerfile
+      # .env に記載している環境変数（値は ホストOS から）を Dockerfile へ渡す
+      args:
+        BOT_TOKEN: $BOT_TOKEN
+
+    # .env に記載している環境変数（値は ホストOS から）をコンテナへ渡す
+    environment:
+      BOT_TOKEN: $BOT_TOKEN
+
+    # image と実行するコマンドの指定
+    image: discordbot-mdn
+    command: python3 -u mdn.py # -u: python のログを表示するようにする

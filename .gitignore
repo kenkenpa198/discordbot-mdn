@@ -2,6 +2,5 @@ __pycache__/
 .venv/
 .vscode/
 cogs/__pycache__/
-cogs/template.py
-.env
+secret.txt
 *.mp3

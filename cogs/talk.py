@@ -97,7 +97,7 @@ class Talk(commands.Cog):
         # botが既にボイスチャンネルへ入室していないか判定
         if ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\nこちらのコマンドを実行して、使い方を確認してみてね！', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\nこちらのコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
             embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -113,7 +113,7 @@ class Talk(commands.Cog):
             try:
                 await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xeaa55c)
+                embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xffab6f)
                 await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
                 return
@@ -141,7 +141,7 @@ class Talk(commands.Cog):
             print(talk_tc)
             send_hello = True
 
-        embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、「 !mdn c 」コマンドを使用してください。')
@@ -164,7 +164,7 @@ class Talk(commands.Cog):
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -183,7 +183,7 @@ class Talk(commands.Cog):
             talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
             print(talk_tc)
     
-        embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
         await ctx.send(embed=embed)
 
@@ -196,7 +196,7 @@ class Talk(commands.Cog):
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
             print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xeaa55c)
+            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -204,7 +204,7 @@ class Talk(commands.Cog):
         # ボイスチャンネルから退出する
         vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xf1bedf)
+        embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
         await ctx.send(embed=embed)
         print('退室：' + str(vc))
 
@@ -223,8 +223,8 @@ class Talk(commands.Cog):
 
         # !が先頭に入っていたら or botだったら無視
         if message.content.startswith('!') or message.author.bot:
-            # 指定テキストの場合以外に中断する
-            if not 'やっほー！もだねちゃんだよ！' in message.content:
+            # もだねちゃんのセリフは通す
+            if not 'やっほー！もだねちゃんだよ！' in message.content: # if not message.author == self.bot.user:
                 return
 
         spk_msg = message.clean_content
@@ -274,7 +274,7 @@ class Talk(commands.Cog):
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
                     await vc.disconnect()
-                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xf1bedf)
+                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
                     talk_tc = discord.utils.get(member.guild.text_channels, id=self.talk_tc_dict[member.guild.id])
                     print(talk_tc)
                     await talk_tc.send(embed=embed)
