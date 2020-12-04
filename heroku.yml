@@ -2,4 +2,4 @@ build:
   docker:
     worker: Dockerfile
 run:
-  worker: python3 mdn.py
+  worker: python3 -u mdn.py # -u: python のログを表示するようにする

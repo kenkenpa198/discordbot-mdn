@@ -4,7 +4,6 @@ import discord
 import os
 import platform
 from os.path import join, dirname
-from dotenv import load_dotenv
 
 print('===== もだねちゃんを起動します =====')
 print('python ' + platform.python_version())
@@ -44,11 +43,8 @@ bot.load_extension('cogs.uranai')
 bot.load_extension('cogs.petite')
 bot.load_extension('cogs.reload')
 
-# .envファイルの読み込み
-dotenv_path = join(dirname(__file__), '.env')
-load_dotenv(dotenv_path)
-
-BOT_TOKEN = os.environ.get("BOT_TOKEN")
+# 環境変数に格納したトークンを取得
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
 # Botの起動とDiscordサーバーへの接続
 bot.run(BOT_TOKEN)

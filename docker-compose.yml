@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  my_app:
+    build: . # CD にある Dockerfile で build
+    image: discordbot-mdn
+    env_file: .env # .env に記述された ホストOS の環境変数を読み込み
+    command: python3 -u mdn.py # -u: python のログを表示するようにする
