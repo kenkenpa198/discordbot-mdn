@@ -3,4 +3,4 @@ __pycache__/
 .vscode/
 cogs/__pycache__/
 secret.txt
-*.mp3
+*.wav

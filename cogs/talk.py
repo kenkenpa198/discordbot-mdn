@@ -1,7 +1,10 @@
-# coding: utf-8
 import discord
 from discord.ext import commands
 import asyncio
+import os
+import subprocess
+import re
+from jtalkbot import openjtalk
 
 ##### チェック用関数 #####
 # ボイスチャンネルにコマンド実行者がいるか判定
@@ -13,34 +16,33 @@ def playing_check(m):
     if m.guild.voice_client:
         return m.guild.voice_client.is_playing() is False
 
-##### openjtalk関数 #####
-# jtalk関数用のモジュールをインポート
-import os
-import subprocess
-import re
-from pydub import AudioSegment
-
-# jtalk関数を定義
-def jtalk(t, filepath='voice'):
+##### jtalk関数 #####
+def jtalk(t, guild_id):
+    # 音声データの作成
+    voice_pass = 'voice_' + str(guild_id) + '.wav' # 音声ファイル名を変数へ格納
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.7']
     halftone = ['-fm','-3']
     volume = ['-g', '-5']
-    outwav = ['-ow', filepath+'.wav']
+    outwav = ['-ow', voice_pass]
     cmd = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     c.stdin.write(t.encode())
     c.stdin.close()
     c.wait()
-    audio_segment = AudioSegment.from_wav(filepath+'.wav')
-    os.remove(filepath+'.wav')
-    audio_segment.export(filepath+'.mp3', format='mp3')
-    return filepath+'.mp3'
 
+    # 音声データをモノラルからステレオへ変換
+    voice_fmt_src = openjtalk.mono_to_stereo(voice_pass)
+    os.remove(voice_pass)
+    with open(voice_pass, 'wb') as f:
+        f.write(voice_fmt_src)
+    
+    return voice_pass
+   
 
-##### 読み上げ対象のメッセージを置換 #####
+##### メッセージの置換関数 #####
 # 置換用の辞書を作成
 abb_dict = {
     r'\n': ' ',                                                                                 # 改行を「 」に置換する
@@ -144,7 +146,7 @@ class Talk(commands.Cog):
         embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(self.talk_tc_dict[ctx.guild.id]) + '>')
-        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を変更したい時は、「 !mdn c 」コマンドを使用してください。')
+        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時は、「 !mdn c 」コマンドを使用してください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -156,7 +158,7 @@ class Talk(commands.Cog):
             await ctx.send(f'やっほー！もだねちゃんだよ！')
 
 
-    # 読み上げ対象のテキストチャンネルを変更する
+    # 読み上げ対象のテキストチャンネルを再設定する
     @commands.command(aliases=['c'])
     async def change(self, ctx, tch: discord.TextChannel=None):
         print ('===== 読み上げ対象のテキストチャンネルを再設定します =====')
@@ -231,9 +233,9 @@ class Talk(commands.Cog):
         # print('整形前：' + spk_msg) # 置換前のテキストを出力
         spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
         # print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-        jtalk(spk_msg_fmt, 'voice_' + str(message.guild.id)) # jtalkの実行
-        source = discord.FFmpegPCMAudio('voice_' + str(message.guild.id) + '.mp3') # mp3ファイルを指定
-        message.guild.voice_client.play(source)
+        talk_voice = jtalk(spk_msg_fmt, message.guild.id) # 音声データを作成
+        talk_source = discord.FFmpegPCMAudio(talk_voice) # 音声ファイルを音声ソースとして変数に格納
+        message.guild.voice_client.play(talk_source) # ボイスチャンネルで再生
 
 
     # ボイスチャンネルへユーザーが入退室した時の処理
@@ -290,7 +292,7 @@ class Talk(commands.Cog):
             print('===== 読み上げ終了時の処理を行います =====')
             # 音声データを削除
             print('--- 音声データを削除 ---')
-            os.remove('voice_' + str(member.guild.id) + '.mp3')
+            os.remove('voice_' + str(member.guild.id) + '.wav')
             # talk_tc_dictからギルドIDを削除
             print('--- 読み上げ対象辞書からギルドIDを削除 ---')
             del self.talk_tc_dict[member.guild.id]

@@ -1,4 +1,3 @@
-# coding: utf-8
 import discord
 from discord.ext import commands
 import asyncio
@@ -6,7 +5,7 @@ import re
 
 abb_dict = {
     r'@もだねちゃん': '', # @もだねちゃん を削除
-    r'@develop-chan': '', # @develop-chan を削除
+    r'@develop-mdnchan': '', # @develop-chan を削除
     r'えらい(\?|？|)': '', # えらい？を削除
     r'って(知|し)ってる(\?|？|)': '', # って知ってる？を削除
 }

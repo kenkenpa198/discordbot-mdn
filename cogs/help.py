@@ -1,4 +1,3 @@
-# coding: utf-8
 from discord.ext import commands
 import discord
 
@@ -10,18 +9,21 @@ class Help(commands.Cog):
     
     @commands.command(aliases=['h'])
     async def help(self, ctx):
-        await ctx.send('もだねちゃんのコマンド一覧だよ！\n以下のコマンドを入力して指示してね！')
-        embed = discord.Embed(title='読み上げコマンド', color=0xffd6e9)
-        embed.add_field(name='🎤 読み上げを開始する', value='```!mdn s```', inline=False)
-        embed.add_field(name='ㅤ\n🎤 読み上げ対象のテキストチャンネルを変更する', value='```!mdn c```', inline=False)
-        embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
-        embed.set_footer(text='ㅤ\nヒント：\n開始 / 変更 コマンドは、お好みのテキストチャンネルを読み上げ対象として設定することもできます。\n（コマンド例）!mdn s 雑談部屋')
-        await ctx.send(embed=embed)
+        print('===== もだねちゃんヘルプを表示します =====')
+        embed = discord.Embed(title='もだねちゃんヘルプ', description='もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は[ 📙 ガイドブック ](https://github.com/kenkenpa198/discordbot-mdn/blob/master/README.md)を確認してみてね！', color=0xffd6e9)
 
-        embed = discord.Embed(title='その他', color=0xffd6e9)
-        embed.add_field(name='✌️ もだねちゃんとジャンケンをする', value='```!mdn j```', inline=False)
-        embed.add_field(name='ㅤ\n🔮 もだねちゃん占い', value='```!mdn u```', inline=False)
-        embed.add_field(name='ㅤ\n❓ ヘルプ（コレ）を表示する', value='```!mdn h```', inline=False)
+        help_talk = f'ㅤ\n\n■ 読み上げコマンド'
+        mdn_s = f'ㅤ\n🎤 読み上げを開始する```!mdn s```'
+        mdn_c = f'ㅤ\n🎤 読み上げ対象のテキストチャンネルを再設定する```!mdn c```'
+        mdn_e = f'ㅤ\n🎤 読み上げを終了する```!mdn e```'
+        embed.add_field(name=help_talk, value=mdn_s + mdn_c + mdn_e, inline=False)
+
+        help_ohter = f'ㅤ\n■ その他'
+        mdn_j = f'ㅤ\n✌️ ジャンケンで遊ぶ```!mdn j```'
+        mdn_u = f'ㅤ\n🔮 もだねちゃん占い```!mdn u```'
+        mdn_h = f'ㅤ\n❓ ヘルプを表示する```!mdn h```'
+        embed.add_field(name=help_ohter, value=mdn_j + mdn_u + mdn_h, inline=False)
+
         await ctx.send(embed=embed)
 
 

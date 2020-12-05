@@ -1,4 +1,3 @@
-# coding: utf-8
 import discord
 from discord.ext import commands
 import asyncio
@@ -10,6 +9,7 @@ class Petite(commands.Cog):
         self.bot = bot
 
     # pingコマンド
+    @commands.is_owner()
     @commands.command(aliases=['p'])
     async def ping(self, ctx):
         print('===== ping! =====')
