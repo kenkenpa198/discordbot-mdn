@@ -34,13 +34,13 @@ class Janken(commands.Cog):
         def judge(player, computer):
             if player == 0 and computer == 1:
                 print('勝敗：プレイヤーの勝ち')
-                return 'わっ！負けちゃった！', f'{ctx.author.name}さん', ctx.author.avatar_url
+                return 'わっ！負けちゃった！', f'{ctx.author.display_name}さん', ctx.author.avatar_url
             elif player == 1 and computer == 2:
                 print('勝敗：プレイヤーの勝ち')
-                return 'あー！完敗だ！', f'{ctx.author.name}さん', ctx.author.avatar_url
+                return 'あー！完敗だ！', f'{ctx.author.display_name}さん', ctx.author.avatar_url
             elif player == 2 and computer == 0:
                 print('勝敗：プレイヤーの勝ち')
-                return 'うーっ！私の負け…！', f'{ctx.author.name}さん', ctx.author.avatar_url
+                return 'うーっ！私の負け…！', f'{ctx.author.display_name}さん', ctx.author.avatar_url
             else:
                 print('勝敗：コンピュータの勝ち')
                 return 'やったー！わたしの勝ち！', 'もだねちゃん', self.bot.user.avatar_url
@@ -114,7 +114,7 @@ class Janken(commands.Cog):
             # 出した手の表示
             embed = discord.Embed(title='ぽんっ！', color=0xffd6e9)
             embed.add_field(name='もだねちゃんの手', value=rise_hand(computer_hand), inline=False)
-            embed.add_field(name=f'ㅤ\n{ctx.author.name}さんの手', value=rise_hand(player_hand), inline=False)
+            embed.add_field(name=f'ㅤ\n{ctx.author.display_name}さんの手', value=rise_hand(player_hand), inline=False)
             await ctx.send(embed=embed)
 
             # アイコだったらメッセージを送信してもう一回

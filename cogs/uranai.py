@@ -131,7 +131,7 @@ class Uranai(commands.Cog):
         # played_list にユーザーIDがあるか判定
         if ctx.author.id in played_list:
             print('--- 遊んだ人リストにIDがあるため中断 ---')
-            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
+            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
             print('===== もだねちゃん占いを終了します =====')
             return
@@ -159,7 +159,7 @@ class Uranai(commands.Cog):
 
         print('===== 結果を送信します =====')
         # メッセージ送信
-        embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.name}さんの今日の運勢だよ！', color=0xffd6e9)
+        embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.display_name}さんの今日の運勢だよ！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n' + fortune_list[0], value=star_list[star_num_list[0]])
         embed.add_field(name='ㅤ\n' + fortune_list[1], value=star_list[star_num_list[1]])
         embed.add_field(name='ㅤ\n' + fortune_list[2], value=star_list[star_num_list[2]])
