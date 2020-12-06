@@ -24,7 +24,7 @@
 一番の特徴は読み上げ機能。テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。  
 簡単な紹介動画はこちら！（ Youtube へ移動します）
 
-[<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
+[<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="55%">](https://youtu.be/cRBdej7tsGc)
 
 「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。  
 また、ジャンケンで遊んだりなどのちょっとしたオマケ機能もあります。お気軽にご利用ください！
@@ -52,6 +52,8 @@
 ---
 
 ### **🎤 読み上げ機能**
+<img src="https://user-images.githubusercontent.com/75349575/101275739-6ff37300-37eb-11eb-9d2c-52deacbb2b0f.jpg" alt="読み上げ機能" width="55%">
+
 もだねちゃんのメインのお仕事です。  
 テキストチャンネルに投稿された内容を、参加しているボイスチャンネルで読み上げます。
 
@@ -87,7 +89,7 @@
 
 3. もだねちゃんがボイスチャンネルから退出し、読み上げを終了します。</div></details>
 
-<details><summary><b>もっと詳しく！</b></summary><div>
+<details><summary><b>その他 操作方法など</b></summary><div>
 
 ### **読み上げ対象チャンネルの指定**
 もだねちゃんは、基本的にコマンドが送信されたテキストチャンネルへ投稿されたメッセージのみを読み上げ、他のチャンネルの内容は読み上げません。  
@@ -116,6 +118,8 @@
 ---
 
 ### **✌️ ジャンケンで遊ぶ**
+<img src="https://user-images.githubusercontent.com/75349575/101275749-87326080-37eb-11eb-8271-143bf9fa083c.jpg" alt="ジャンケンで遊ぶ" width="55%">
+
 もだねちゃんとジャンケンで対戦することができます。
 
 <details><summary><b>遊び方</b></summary><div>
@@ -131,6 +135,8 @@
 ---
 
 ### **🔮 もだねちゃん占い**
+<img src="https://user-images.githubusercontent.com/75349575/101275802-e1332600-37eb-11eb-8424-39c1b954b022.jpg" alt="もだねちゃん占い" width="55%">
+
 もだねちゃんが今日の運勢を占ってくれます。
 
 <details><summary><b>遊び方</b></summary><div>
@@ -146,6 +152,8 @@
 ---
 
 ### **❓ ヘルプを表示する**
+<img src="https://user-images.githubusercontent.com/75349575/101275812-f6a85000-37eb-11eb-99b6-21bfce6231e6.jpg" alt="読み上げ機能" width="55%">
+
 ヘルプを表示してコマンドの一覧を確認することができます。
 
 <details><summary><b>操作方法</b></summary><div>
@@ -188,18 +196,6 @@ bot の導入方法や仕様、ライセンスなどに関する情報を掲載�
 ### **💳 ライセンス**
 このアプリケーションは MIT ライセンスの下でリリースされています。  
 [ライセンス全文はこちら](https://github.com/kenkenpa198/discordbot-mdn/blob/develop/LICENSE)
-
-### **🌳 バージョン履歴**
-準備中です。
-- yy/mm/dd v.x.x.x：更新内容
-
-<details><summary><b>過去ログ</b></summary><div>
-
-- yy/mm/dd v.x.x.x：更新内容
-- yy/mm/dd v.x.x.x：更新内容
-- yy/mm/dd v.x.x.x：更新内容
-
-</div></details>
 
 ### **📝 その他**
 
