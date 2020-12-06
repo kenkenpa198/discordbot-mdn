@@ -152,7 +152,7 @@
 ---
 
 ### **❓ ヘルプを表示する**
-<img src="https://user-images.githubusercontent.com/75349575/101275812-f6a85000-37eb-11eb-99b6-21bfce6231e6.jpg" alt="読み上げ機能" width="55%">
+<img src="https://user-images.githubusercontent.com/75349575/101275812-f6a85000-37eb-11eb-99b6-21bfce6231e6.jpg" alt="ヘルプを表示する" width="55%">
 
 ヘルプを表示してコマンドの一覧を確認することができます。
 
