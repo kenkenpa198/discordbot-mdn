@@ -9,4 +9,4 @@ build:
 
 # プログラムを実行する
 run:
-  worker: python3 -u mdn.py # -u: python のログを表示するようにする
+  worker: python3 -u mdn.py # -u: Python のログを表示するようにする
