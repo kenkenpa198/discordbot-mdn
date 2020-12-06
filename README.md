@@ -24,7 +24,7 @@
 一番の特徴は読み上げ機能。テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。  
 働いている様子はこちら！（ Youtube へ移動します）
 
-[<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="65%">](https://youtu.be/cRBdej7tsGc)
+[<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
 「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。  
 また、ジャンケンで遊んだりなどのちょっとしたオマケ機能もあります。お気軽にご利用ください！
@@ -52,7 +52,7 @@
 ---
 
 ### **🎤 読み上げ機能**
-<img src="https://user-images.githubusercontent.com/75349575/101275739-6ff37300-37eb-11eb-9d2c-52deacbb2b0f.jpg" alt="読み上げ機能" width="65%">
+<img src="https://user-images.githubusercontent.com/75349575/101275739-6ff37300-37eb-11eb-9d2c-52deacbb2b0f.jpg" alt="読み上げ機能" width="70%">
 
 もだねちゃんのメインのお仕事です。  
 テキストチャンネルに投稿された内容を、参加しているボイスチャンネルで読み上げます。
@@ -118,7 +118,7 @@
 ---
 
 ### **✌️ ジャンケンで遊ぶ**
-<img src="https://user-images.githubusercontent.com/75349575/101275749-87326080-37eb-11eb-8271-143bf9fa083c.jpg" alt="ジャンケンで遊ぶ" width="65%">
+<img src="https://user-images.githubusercontent.com/75349575/101276502-a2539f00-37f0-11eb-9d10-33b47cc6c81d.jpg" alt="ジャンケンで遊ぶ" width="70%">
 
 もだねちゃんとジャンケンで対戦することができます。
 
@@ -135,7 +135,7 @@
 ---
 
 ### **🔮 もだねちゃん占い**
-<img src="https://user-images.githubusercontent.com/75349575/101275802-e1332600-37eb-11eb-8424-39c1b954b022.jpg" alt="もだねちゃん占い" width="65%">
+<img src="https://user-images.githubusercontent.com/75349575/101276504-a54e8f80-37f0-11eb-8ad1-7d35b5b08555.jpg" alt="もだねちゃん占い" width="70%">
 
 もだねちゃんが今日の運勢を占ってくれます。
 
@@ -152,7 +152,7 @@
 ---
 
 ### **❓ ヘルプを表示する**
-<img src="https://user-images.githubusercontent.com/75349575/101275812-f6a85000-37eb-11eb-99b6-21bfce6231e6.jpg" alt="ヘルプを表示する" width="65%">
+<img src="https://user-images.githubusercontent.com/75349575/101276553-260d8b80-37f1-11eb-9262-90094e09a1cc.jpg" alt="ヘルプを表示する" width="70%">
 
 ヘルプを表示してコマンドの一覧を確認することができます。
 
