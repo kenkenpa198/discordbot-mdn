@@ -5,6 +5,8 @@ import os
 import subprocess
 import re
 from jtalkbot import openjtalk
+import io
+import wave
 
 ##### チェック用関数 #####
 # ボイスチャンネルにコマンド実行者がいるか判定
@@ -19,14 +21,14 @@ def playing_check(m):
 ##### jtalk関数 #####
 def jtalk(t, guild_id):
     # 音声データの作成
-    voice_pass = 'voice_' + str(guild_id) + '.wav' # 音声ファイル名を変数へ格納
+    voice_path = 'voice_' + str(guild_id) + '.wav' # 音声ファイル名を変数へ格納
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
     speed = ['-r','0.7']
     halftone = ['-fm','-3']
     volume = ['-g', '-5']
-    outwav = ['-ow', voice_pass]
+    outwav = ['-ow', voice_path]
     cmd = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
     c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
     c.stdin.write(t.encode())
@@ -34,12 +36,12 @@ def jtalk(t, guild_id):
     c.wait()
 
     # 音声データをモノラルからステレオへ変換
-    voice_fmt_src = openjtalk.mono_to_stereo(voice_pass)
-    os.remove(voice_pass)
-    with open(voice_pass, 'wb') as f:
+    voice_fmt_src = openjtalk.mono_to_stereo(voice_path)
+    os.remove(voice_path)
+    with open(voice_path, 'wb') as f:
         f.write(voice_fmt_src)
     
-    return voice_pass
+    return voice_path
    
 
 ##### メッセージの置換関数 #####
@@ -229,13 +231,30 @@ class Talk(commands.Cog):
             if not 'やっほー！もだねちゃんだよ！' in message.content: # if not message.author == self.bot.user:
                 return
 
-        spk_msg = message.clean_content
-        # print('整形前：' + spk_msg) # 置換前のテキストを出力
-        spk_msg_fmt = abb_msg(spk_msg) # 置換後のテキストを変数へ格納
-        # print('整形後：' + spk_msg_fmt) # 置換後のテキストを出力
-        talk_voice = jtalk(spk_msg_fmt, message.guild.id) # 音声データを作成
-        talk_source = discord.FFmpegPCMAudio(talk_voice) # 音声ファイルを音声ソースとして変数に格納
-        message.guild.voice_client.play(talk_source) # ボイスチャンネルで再生
+        print('===== 読み上げを実行します =====')
+        print('--- メッセージの整形 ---')
+        talk_msg = message.clean_content # 投稿されたメッセージを変数へ格納
+        # print('整形前：' + talk_msg)
+        talk_msg_fmt = abb_msg(talk_msg) # 整形後のテキストを変数へ格納
+        # print('整形後：' + talk_msg_fmt)
+
+        print('--- 音声データの作成 ---')
+        voice_path = jtalk(talk_msg_fmt, message.guild.id) # 音声データを作成してファイルパスを変数へ格納
+        
+        # 音声データを開いて再生する
+        with wave.open(voice_path, 'rb') as wi:
+            voice_src = wi.readframes(-1)
+            stream = io.BytesIO(voice_src) # バイナリファイルとして読み込み
+            talk_src = discord.PCMAudio(stream) # 音声ファイルを音声ソースとして変数に格納
+            print('--- 音声データを再生 ---')
+            message.guild.voice_client.play(talk_src) # ボイスチャンネルで再生
+        
+        # 再生が終わっていたら音声データを削除する
+        while message.guild.voice_client.is_playing():
+            await asyncio.sleep(1)
+        if os.path.isfile(voice_path):
+            print('--- 音声データを削除 ---')
+            os.remove(voice_path)
 
 
     # ボイスチャンネルへユーザーが入退室した時の処理
@@ -290,9 +309,12 @@ class Talk(commands.Cog):
         ):
             await asyncio.sleep(1)
             print('===== 読み上げ終了時の処理を行います =====')
+
             # 音声データを削除
-            print('--- 音声データを削除 ---')
-            os.remove('voice_' + str(member.guild.id) + '.wav')
+            voice_path = 'voice_' + str(member.guild.id) + '.wav'
+            if os.path.isfile(voice_path):
+                print('--- 残っていた音声データを削除 ---')
+                os.remove(voice_path)
             # talk_tc_dictからギルドIDを削除
             print('--- 読み上げ対象辞書からギルドIDを削除 ---')
             del self.talk_tc_dict[member.guild.id]

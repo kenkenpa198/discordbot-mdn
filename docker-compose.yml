@@ -5,12 +5,14 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      # .env に記載している環境変数（値は ホストOS から）を Dockerfile へ渡す
+      # .env から環境変数を Dockerfile へ渡す
       args:
+        TZ: $TZ
         BOT_TOKEN: $BOT_TOKEN
 
-    # .env に記載している環境変数（値は ホストOS から）をコンテナへ渡す
+    # .env から環境変数をコンテナへ渡す
     environment:
+      TZ: $TZ
       BOT_TOKEN: $BOT_TOKEN
 
     # image と実行するコマンドの指定

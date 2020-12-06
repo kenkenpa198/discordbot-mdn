@@ -176,9 +176,7 @@ bot の導入方法や仕様、ライセンスなどに関する情報を掲載�
 - [discord.py](https://discordpy.readthedocs.io/)
 - [jtalkbot](https://pypi.org/project/jtalkbot/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
-- [FFmpeg](https://ffmpeg.org)
 - [Opus](https://opus-codec.org)
-- [ALSA](https://www.alsa-project.org)
 
 
 #### **実行環境**
@@ -188,7 +186,7 @@ bot の導入方法や仕様、ライセンスなどに関する情報を掲載�
     - 使用イメージ：[emptypage/open_jtalk](https://hub.docker.com/r/emptypage/open_jtalk)
 
 ### **💳 ライセンス**
-このソフトウェアは MIT ライセンスの下でリリースされています。  
+このアプリケーションは MIT ライセンスの下でリリースされています。  
 [ライセンス全文はこちら](https://github.com/kenkenpa198/discordbot-mdn/blob/develop/LICENSE)
 
 ### **🌳 バージョン履歴**

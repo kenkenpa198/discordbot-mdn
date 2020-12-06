@@ -2,9 +2,10 @@ from discord.ext import commands
 import discord
 import os
 import platform
-from os.path import join, dirname
+from datetime import datetime
 
 print('===== もだねちゃんを起動します =====')
+print('起動時刻：' + str(datetime.now()))
 print('python ' + platform.python_version())
 print('discord.py ' + discord.__version__)
 
