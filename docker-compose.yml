@@ -17,4 +17,4 @@ services:
 
     # image と実行するコマンドの指定
     image: discordbot-mdn
-    command: python3 -u mdn.py # -u: Python のログを表示するようにする
+    command: python3 -u mdn.py # -u: Python のログを表示する
