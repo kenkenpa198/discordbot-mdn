@@ -116,7 +116,6 @@ class Uranai(commands.Cog):
     # 指定日時に遊んだ人リストの中身を削除する
     @tasks.loop(seconds=60)
     async def loop():
-        # 現在の時刻
         now = datetime.now().strftime('%H:%M')
         if now == '00:00':
             clear_played_list()

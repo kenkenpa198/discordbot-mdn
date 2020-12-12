@@ -25,7 +25,7 @@ class Hello(commands.Cog):
         # メッセージ送信者がBotだった場合は無視する
         if message.author.bot:
             return
-        # もしmessage.mentionsにもだねちゃんが入っていなかったら
+        # もしmessage.mentionsにもだねちゃんが入っていなかったら無視
         if not self.bot.user in message.mentions:
             return
         if 'えらい' in message.clean_content:

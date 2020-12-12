@@ -21,7 +21,7 @@ def playing_check(m):
 ##### jtalk関数 #####
 def jtalk(t, guild_id):
     # 音声データの作成
-    voice_path = 'voice_' + str(guild_id) + '.wav' # 音声ファイル名を変数へ格納
+    voice_path = 'voice_' + str(guild_id) + '.wav'
     open_jtalk = ['open_jtalk']
     mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
     htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
@@ -45,6 +45,7 @@ def jtalk(t, guild_id):
    
 
 ##### メッセージの置換関数 #####
+# TODO: モジュールとして分ける
 # 置換用の辞書を作成
 abb_dict = {
     r'\n': ' ',                                                                                 # 改行を「 」に置換する
@@ -90,7 +91,8 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.talk_tc_dict = {} # 読み上げ対象テキストチャンネルのIDを格納する空の辞書（キーは Guild ID）を作成
+        # 読み上げ対象テキストチャンネルの ID を格納する空の辞書（キーは Guild ID）を作成
+        self.talk_tc_dict = {}
 
 
     # 読み上げを開始する
@@ -130,7 +132,8 @@ class Talk(commands.Cog):
         vc = ctx.author.voice.channel
 
         # 読み上げ対象のテキストチャンネルを設定
-        if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
+        # 引数がある場合は指定のテキストチャンネルを読み上げ
+        if tch:
             print(tch)
             talk_tc = discord.utils.get(ctx.guild.text_channels, name=tch.name)
             print(talk_tc)
@@ -138,7 +141,8 @@ class Talk(commands.Cog):
             print('読み上げ対象：' + str(self.talk_tc_dict))
             send_hello = False
 
-        else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+        # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+        else:
             self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
             print('読み上げ対象：' + str(self.talk_tc_dict))
             talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
@@ -174,14 +178,15 @@ class Talk(commands.Cog):
             return
 
         # 読み上げ対象のテキストチャンネルを設定
-        if tch: # 引数がある場合は指定のテキストチャンネルを読み上げ
+        # 引数がある場合は指定のテキストチャンネルを読み上げ
+        if tch:
             print(tch)
             talk_tc = discord.utils.get(ctx.guild.text_channels, name=tch.name)
             print(talk_tc)
             self.talk_tc_dict[ctx.guild.id] = talk_tc.id # talk_tc_dictへIDを登録
             print('読み上げ対象：' + str(self.talk_tc_dict))
-
-        else: # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+        # 引数がない場合はコマンドを実行したテキストチャンネルを読み上げ
+        else:
             self.talk_tc_dict[ctx.guild.id] = ctx.channel.id # talk_tc_dictへIDを登録
             print('読み上げ対象：' + str(self.talk_tc_dict))
             talk_tc = discord.utils.get(ctx.guild.text_channels, id=self.talk_tc_dict[ctx.guild.id])
@@ -215,7 +220,7 @@ class Talk(commands.Cog):
 
     # テキストチャンネルに投稿されたテキストを読み上げる
     @commands.Cog.listener()
-    async def on_message(self, message): # メッセージが投稿された時のイベント
+    async def on_message(self, message):
 
         # コマンド実行者がサーバーのボイスチャンネルにいなかったら無視
         if not message.guild.voice_client:
@@ -233,9 +238,9 @@ class Talk(commands.Cog):
 
         print('===== 読み上げを実行します =====')
         print('--- メッセージの整形 ---')
-        talk_msg = message.clean_content # 投稿されたメッセージを変数へ格納
+        talk_msg = message.clean_content
         # print('整形前：' + talk_msg)
-        talk_msg_fmt = abb_msg(talk_msg) # 整形後のテキストを変数へ格納
+        talk_msg_fmt = abb_msg(talk_msg) # 置換処理を行ったテキストを変数へ格納
         # print('整形後：' + talk_msg_fmt)
 
         print('--- 音声データの作成 ---')
@@ -248,6 +253,12 @@ class Talk(commands.Cog):
             talk_src = discord.PCMAudio(stream) # 音声ファイルを音声ソースとして変数に格納
             print('--- 音声データを再生 ---')
             message.guild.voice_client.play(talk_src) # ボイスチャンネルで再生
+
+        # 以下だと音声の最初にノイズが走る
+        # stream = open(voice_path, 'rb')
+        # talk_src = discord.PCMAudio(stream)
+        # print('--- 音声データを再生 ---')
+        # message.guild.voice_client.play(talk_src, after=lambda e: stream.close()) # ボイスチャンネルで再生
         
         # 再生が終わっていたら音声データを削除する
         while message.guild.voice_client.is_playing():
