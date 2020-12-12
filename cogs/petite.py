@@ -8,7 +8,7 @@ class Petite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # pingコマンド
+    # ping コマンド
     @commands.is_owner()
     @commands.command(aliases=['p'])
     async def ping(self, ctx):
@@ -28,7 +28,7 @@ class Petite(commands.Cog):
         print(ctx.guild.voice_client.channel.members)
         print(ctx.guild.voice_client.channel.id)
 
-    # whatコマンド
+    # what コマンド
     @commands.command(aliases=['w'])
     async def what(self, ctx, what):
         print('===== whatってなーに？ =====')
@@ -38,7 +38,7 @@ class Petite(commands.Cog):
         await ctx.send(what_txt)
         print(what_txt)
 
-    # 初期設定コマンド
+    # TODO: もだねちゃんのユーザー名の色を設定したい
     # @commands.command()
     # async def set(self, ctx):
     #     print('===== 初期設定を行います =====')
