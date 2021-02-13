@@ -1,8 +1,13 @@
 ##### 実行環境の構築 #####
 FROM emptypage/open_jtalk:20.4_1.11
+
+# tzdata の入力を待たない
+ENV DEBIAN_FRONTEND=noninteractive
+
 RUN set -x && \
     apt-get update -y && \
     apt-get install -y python3-pip libopus-dev && \
+    apt-get install -y tzdata && \
     pip3 install --upgrade pip && \
     pip3 install jtalkbot==0.5.0 discord.py==1.5.1
 # 環境変数の読み込み
