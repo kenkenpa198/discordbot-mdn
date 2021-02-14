@@ -1,1 +1,0 @@
-discord-bot: python3 mdn.py

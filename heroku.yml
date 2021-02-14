@@ -3,10 +3,11 @@ build:
   # Dockerfile の指定
   docker:
     worker: Dockerfile
-  # .env に記載している環境変数（値は ホストOS から）を Dockerfile へ渡す
+  # .env から環境変数を Dockerfile へ渡す
   config:
+    TZ: $TZ
     BOT_TOKEN: $BOT_TOKEN
 
 # プログラムを実行する
 run:
-  worker: python3 -u mdn.py # -u: python のログを表示するようにする
+  worker: python3 -u mdn.py # -u: Python のログを表示する
