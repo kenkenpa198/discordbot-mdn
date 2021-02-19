@@ -28,17 +28,17 @@ class Test(commands.Cog):
         print('===== DBを追加します =====')
         with psql.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute('CREATE DATABASE mydb;')
+                cur.execute("CREATE DATABASE mydb;")
             conn.commit()
 
         print('--- 実行完了 ---')
 
     # テーブルを作成する
-    async def tbl(self, ctx):
+    async def cretb(self, ctx):
         print('===== テーブルを作成します =====')
         with psql.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute('CREATE TABLE sample (id serial PRIMARY KEY, name varchar, num integer);')
+                cur.execute("CREATE TABLE test_tb (id serial PRIMARY KEY,user_id TEXT NOT NULL,display_name TEXT NOT NULL);")
             conn.commit()
 
         print('--- 実行完了 ---')
@@ -49,22 +49,34 @@ class Test(commands.Cog):
         print('===== レコードを追加します =====')
         with psql.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute('INSERT INTO sample VALUES (1, kem198, 1)')
+                cur.execute("INSERT INTO test_tb(user_id, display_name) VALUES ('abc123', 'taro');")
             conn.commit()
 
         print('--- 実行完了 ---')
 
     # 抽出
     @commands.command()
-    async def slt(self, ctx):
-        print('===== ###を開始します =====')
-        conn = psql.get_connection()
-        cur = conn.cursor()
-        cur.execute('SELECT * FROM users')
-        cur.close()
-        conn.close()
-        print('--- ###の実行 ---')
-        pass
+    async def sel(self, ctx):
+        print('===== レコードを抽出します =====')
+        with psql.get_connection() as conn:
+            with conn.cursor() as cur:
+                record = cur.execute("SELECT * FROM test_tb;")
+            conn.commit()
+
+        print(record)
+        print('--- 実行完了 ---')
+
+    # 抽出
+    # @commands.command()
+    # async def sel(self, ctx):
+    #     print('===== レコードを抽出します =====')
+    #     conn = psql.get_connection()
+    #     cur = conn.cursor()
+    #     cur.execute('SELECT * FROM users')
+    #     cur.close()
+    #     conn.close()
+    #     print('--- ###の実行 ---')
+    #     pass
 
 
 def setup(bot):

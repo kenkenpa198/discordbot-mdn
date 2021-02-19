@@ -8,14 +8,17 @@ RUN set -x && \
     apt-get update -y && \
     apt-get install -y python3-pip libopus-dev && \
     apt-get install -y tzdata && \
+    apt-get install -y libpq-dev && \
     pip3 install --upgrade pip && \
-    pip3 install jtalkbot==0.5.0 discord.py==1.5.1
+    pip3 install jtalkbot==0.5.0 discord.py==1.5.1 psycopg2
 # 環境変数の読み込み
 # docker-compose.yml / heroku.yml から渡された値を読み込む
 ARG TZ
 ENV HOME=/${TZ}
 ARG BOT_TOKEN
 ENV HOME=/${BOT_TOKEN}
+ARG DATABASE_URL
+ENV HOME=/${DATABASE_URL}
 
 ##### アプリ環境の構築 #####
 RUN set -x && \
