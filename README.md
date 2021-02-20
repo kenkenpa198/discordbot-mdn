@@ -30,11 +30,13 @@ bot の仕様やライセンスに関する情報を掲載しています。
 - [jtalkbot](https://pypi.org/project/jtalkbot/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)
+- [PostgeSQL](#)
 
 
 #### **実行環境**
 
 - [Heroku](https://www.heroku.com)
+    - [Heroku Postgres](#)
 - [Docker](https://www.docker.com)
     - 使用イメージ：[emptypage/open_jtalk](https://hub.docker.com/r/emptypage/open_jtalk)
 
@@ -56,4 +58,6 @@ bot の仕様やライセンスに関する情報を掲載しています。
     準備中
 ### **😌 参考サイト**
 - aaa
-- bbb
+- PosstgreSQL
+    - [Heroku Postgres | Heroku Dev Center](https://devcenter.heroku.com/ja/articles/heroku-postgresql)
+    - [python postgreSQLのライブラリpsycopg2の使い方メモ - Qiita](https://qiita.com/t20190127/items/0fb944c8679795257e01)

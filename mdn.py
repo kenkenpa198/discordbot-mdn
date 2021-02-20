@@ -3,6 +3,7 @@ import discord
 import os
 import platform
 from datetime import datetime
+import traceback
 
 print('===== もだねちゃんを起動します =====')
 print('起動時刻：' + str(datetime.now()))
@@ -22,7 +23,7 @@ async def on_ready():
     # アクティビティ表示を変更
     print('--- アクティビティ表示を変更 ---')
     client = bot
-    act = discord.Game('「 !mdn h 」でヘルプを表示するよ！             ') # \U0001f338: 🌸
+    act = discord.Game('「 !mdn h 」でヘルプを表示するよ！                          ') # Discord のメンバー欄で「〜をプレイ中」を表示させないため空白をいっぱい入れている
     await client.change_presence(status=None, activity=act)
 
     print('===== bot 起動時の処理を完了しました =====')
@@ -30,6 +31,7 @@ async def on_ready():
 @bot.event
 async def on_command_error(ctx, error):
     print('--- エラーコード：001 ---')
+    print(traceback.format_exc())
     embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
     embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがちゃんと働いてくれていない場合も、このメッセージが表示されることがあります。その際はご連絡いただけると幸いです。')
@@ -43,7 +45,6 @@ bot.load_extension('cogs.hello')
 bot.load_extension('cogs.uranai')
 bot.load_extension('cogs.petite')
 bot.load_extension('cogs.reload')
-bot.load_extension('cogs.test')
 
 # 環境変数に格納したトークンを取得
 BOT_TOKEN = os.environ.get('BOT_TOKEN')

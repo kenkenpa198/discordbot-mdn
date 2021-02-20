@@ -4,6 +4,8 @@ from discord.ext import tasks
 import asyncio
 import random
 from datetime import datetime
+import subprocess
+from .utils import psql
 
 
 ##### 占い用リスト・辞書 #####
@@ -103,9 +105,14 @@ lucky_list = [
 played_list = []
 
 # played_list の中身を削除する関数を定義
-def clear_played_list():
+def delete_played_tb():
+    query = psql.get_query('cogs/sql/uranai/delete_id.sql')
+    with psql.get_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(query)
+        conn.commit()
     played_list.clear()
-    print('===== 遊んだ人リストの中身を削除しました =====')
+    print('===== DB とリストの中身を削除しました =====')
 
 
 ##### コグ #####
@@ -113,12 +120,12 @@ class Uranai(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # 指定日時に遊んだ人リストの中身を削除する
+    # 指定日時に DB uranai_played_tb の中身を削除する
     @tasks.loop(seconds=60)
     async def loop():
         now = datetime.now().strftime('%H:%M')
         if now == '00:00':
-            clear_played_list()
+            delete_played_tb()
     # ループ処理を実行
     loop.start()
 
@@ -126,9 +133,25 @@ class Uranai(commands.Cog):
     @commands.command(aliases=['u'])
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
+        user_id = str(ctx.author.id)
+
+        async with ctx.channel.typing():
+            # DB uranai_played_tb にユーザー ID があるか判定
+            # TODO: クエリの実行まで関数化したい（引数の複数指定がうまくいかない）
+            # TODO: ここの読込で1秒程度待ち時間が発生してしまう
+            print('--- DB の ユーザーID をチェック ---')
+            query = psql.get_query('cogs/sql/uranai/select_id.sql')
+            with psql.get_connection() as conn:
+                with conn.cursor() as cur:
+                    cur.execute(query)
+                    # 取得した ID のリストを作成
+                    played_list.clear() # リストを一旦クリアする
+                    for row in cur:
+                        played_list.append(user_id)
+                conn.commit()
 
         # played_list にユーザーIDがあるか判定
-        if ctx.author.id in played_list:
+        if user_id in played_list:
             print('--- 遊んだ人リストにIDがあるため中断 ---')
             embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
@@ -170,10 +193,14 @@ class Uranai(commands.Cog):
             await asyncio.sleep(.5)
         await ctx.send(f'結果はどうだった？またねー！')
 
-        # 遊んだ人リストへユーザーIDを格納
-        print('--- 遊んだ人リストへ ユーザーID を格納 ---')
-        played_list.append(ctx.author.id)
-        print('遊んだ人リスト：' + str(played_list))
+        # DB uranai_played_tb へユーザーIDを格納する
+        print('--- DB へ ユーザーID を格納 ---')
+        query = psql.get_query('cogs/sql/uranai/insert_id.sql')
+        with psql.get_connection() as conn:
+            with conn.cursor() as cur:
+                cur.execute(query, {'user_id': (user_id)})
+            conn.commit()
+        print('--- DB へ格納完了 ---')
 
         print('===== もだねちゃん占いを終了します =====')
 
