@@ -133,7 +133,6 @@ class Uranai(commands.Cog):
     @commands.command(aliases=['u'])
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
-        user_id = str(ctx.author.id)
 
         async with ctx.channel.typing():
             # DB uranai_played_tb にユーザー ID があるか判定
@@ -147,11 +146,12 @@ class Uranai(commands.Cog):
                     # 取得した ID のリストを作成
                     played_list.clear() # リストを一旦クリアする
                     for row in cur:
-                        played_list.append(user_id)
+                        played_list.append(str(row[0])) # 取得したレコードをリストへ変換
+                    print(played_list)
                 conn.commit()
 
         # played_list にユーザーIDがあるか判定
-        if user_id in played_list:
+        if str(ctx.author.id) in played_list:
             print('--- 遊んだ人リストにIDがあるため中断 ---')
             embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
@@ -198,7 +198,7 @@ class Uranai(commands.Cog):
         query = psql.get_query('cogs/sql/uranai/insert_id.sql')
         with psql.get_connection() as conn:
             with conn.cursor() as cur:
-                cur.execute(query, {'user_id': (user_id)})
+                cur.execute(query, {'user_id': (str(ctx.author.id))})
             conn.commit()
         print('--- DB へ格納完了 ---')
 
