@@ -4,7 +4,7 @@ from os.path import join, dirname
 import psycopg2
 
 
-# DB 接続用関数
+# DB 接続
 def get_connection():
     DATABASE_URL = os.environ.get('DATABASE_URL')
     return psycopg2.connect(DATABASE_URL, sslmode='require')
@@ -15,10 +15,33 @@ def get_query(query_file_path):
         query = f.read()
     return query
 
-# SQL クエリ読込 -> 実行
-def run_query(query_file_path):
-    with psql.get_connection() as conn:
+# SQL クエリ実行
+# 引数2つ目にはバインド変数を指定（使わない場合は無しでも OK ）
+def run_query(query_file_path, bind_var={}):
+    with get_connection() as conn:
         with conn.cursor() as cur:
             query = get_query(query_file_path)
-            cur.execute(query)
+            cur.execute(query % bind_var)
+        conn.commit()
+
+# SQL クエリを実行し、変数へ格納する
+def run_query_to_var(query_file_path, var_name, bind_var={}):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            query = get_query(query_file_path)
+            cur.execute(query % bind_var)
+            # 実行結果を変数へ格納
+            (var_name,) = cur.fetchone()
+        conn.commit()
+    return var_name
+
+# SQL クエリを実行し、行を指定したリストへ格納する
+def run_query_to_list(query_file_path, list_name, bind_var={}):
+    with get_connection() as conn:
+        with conn.cursor() as cur:
+            query = get_query(query_file_path)
+            cur.execute(query % bind_var)
+            # リストへ格納
+            for row in cur:
+                list_name.append(str(row[0])) # 取得したレコードをリストへ変換
         conn.commit()

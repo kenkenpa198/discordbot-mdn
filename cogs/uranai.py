@@ -106,12 +106,8 @@ played_list = []
 
 # played_list の中身を削除する関数を定義
 def delete_played_tb():
-    query = psql.get_query('cogs/sql/uranai/delete_id.sql')
-    with psql.get_connection() as conn:
-        with conn.cursor() as cur:
-            cur.execute(query)
-        conn.commit()
     played_list.clear()
+    psql.run_query('cogs/sql/uranai/delete_user_id.sql')
     print('===== DB とリストの中身を削除しました =====')
 
 
@@ -134,21 +130,11 @@ class Uranai(commands.Cog):
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
 
+        # DB uranai_played_tb にユーザー ID があるか判定
         async with ctx.channel.typing():
-            # DB uranai_played_tb にユーザー ID があるか判定
-            # TODO: クエリの実行まで関数化したい（引数の複数指定がうまくいかない）
-            # TODO: ここの読込で1秒程度待ち時間が発生してしまう
             print('--- DB の ユーザーID をチェック ---')
-            query = psql.get_query('cogs/sql/uranai/select_id.sql')
-            with psql.get_connection() as conn:
-                with conn.cursor() as cur:
-                    cur.execute(query)
-                    # 取得した ID のリストを作成
-                    played_list.clear() # リストを一旦クリアする
-                    for row in cur:
-                        played_list.append(str(row[0])) # 取得したレコードをリストへ変換
-                    print(played_list)
-                conn.commit()
+            played_list.clear() # リストを一旦クリアする
+            psql.run_query_to_list('cogs/sql/uranai/select_user_id.sql', played_list)
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
@@ -195,11 +181,8 @@ class Uranai(commands.Cog):
 
         # DB uranai_played_tb へユーザーIDを格納する
         print('--- DB へ ユーザーID を格納 ---')
-        query = psql.get_query('cogs/sql/uranai/insert_id.sql')
-        with psql.get_connection() as conn:
-            with conn.cursor() as cur:
-                cur.execute(query, {'user_id': (str(ctx.author.id))})
-            conn.commit()
+        user_id = str(ctx.author.id)
+        psql.run_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
         print('--- DB へ格納完了 ---')
 
         print('===== もだねちゃん占いを終了します =====')
