@@ -25,23 +25,25 @@ def run_query(query_file_path, bind_var={}):
         conn.commit()
 
 # SQL クエリを実行し、変数へ格納する
-def run_query_to_var(query_file_path, var_name, bind_var={}):
+def run_query_to_var(query_file_path, bind_var={}):
     with get_connection() as conn:
         with conn.cursor() as cur:
             query = get_query(query_file_path)
             cur.execute(query % bind_var)
             # 実行結果を変数へ格納
-            (var_name,) = cur.fetchone()
+            (output,) = cur.fetchone()
         conn.commit()
-    return var_name
+    return output
 
 # SQL クエリを実行し、行を指定したリストへ格納する
-def run_query_to_list(query_file_path, list_name, bind_var={}):
+def run_query_to_list(query_file_path, bind_var={}):
+    output_list = []
     with get_connection() as conn:
         with conn.cursor() as cur:
             query = get_query(query_file_path)
             cur.execute(query % bind_var)
             # リストへ格納
             for row in cur:
-                list_name.append(str(row[0])) # 取得したレコードをリストへ変換
+                output_list.append(str(row[0])) # 取得したレコードをリストへ変換
         conn.commit()
+    return output_list

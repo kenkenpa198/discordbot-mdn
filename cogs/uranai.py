@@ -133,8 +133,8 @@ class Uranai(commands.Cog):
         # DB uranai_played_tb にユーザー ID があるか判定
         async with ctx.channel.typing():
             print('--- DB の ユーザーID をチェック ---')
-            played_list.clear() # リストを一旦クリアする
-            psql.run_query_to_list('cogs/sql/uranai/select_user_id.sql', played_list)
+            played_list = []
+            played_list = psql.run_query_to_list('cogs/sql/uranai/select_user_id.sql')
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:

@@ -127,7 +127,7 @@ class Janken(commands.Cog):
         # 勝敗の結果を表示する
         await asyncio.sleep(1.5)
         result_msg, result_winner, result_winner_img = judge(player_hand, computer_hand)
-        embed = discord.Embed(title='勝者は…', description=f'🎉 {result_winner}！', color=0xffd6e9)
+        embed = discord.Embed(title='勝者は……', description=f'🎉 {result_winner}！', color=0xffd6e9)
         embed.set_thumbnail(url=result_winner_img)
         await ctx.send(embed=embed)
         await asyncio.sleep(2)

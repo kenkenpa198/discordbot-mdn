@@ -93,13 +93,6 @@ def abb_msg(t):
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        # 読み上げ対象テキストチャンネルの ID を格納する空の辞書（キーは Guild ID）を作成
-        self.talk_channel_list = []
-
-        ##### 自動再接続 #####
-        # DB にレコードが残っている状態で bot が起動した場合に自動で復帰する
-        # Heroku の再起動や、 本番環境にプッシュした際など
-        # TODO: つくる
 
 
     ##### 読み上げを開始する #####
@@ -148,12 +141,9 @@ class Talk(commands.Cog):
                 # 引数がない場合はコマンドを実行したテキストチャンネルを格納
                 talk_channel = ctx.channel
                 send_hello = True
-            # print('対象サーバー              ：' + str(talk_guild))
-            # print('対象ボイスチャンネル      ：' + str(talk_vc))
-            # print('対象テキストチャンネル    ：' + str(talk_channel))
 
             # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
-            print('--- 読み上げ対象の ID を DB へ格納 ---')
+            print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
             guild_id   = str(talk_guild.id)
             vc_id      = str(talk_vc.id)
             channel_id = str(talk_channel.id)
@@ -204,12 +194,9 @@ class Talk(commands.Cog):
             else:
                 # 引数がない場合はコマンドを実行したテキストチャンネルを格納
                 talk_channel = ctx.channel
-            # print('対象サーバー              ：' + str(talk_guild))
-            # print('対象ボイスチャンネル      ：' + str(talk_vc))
-            # print('対象テキストチャンネル    ：' + str(talk_channel))
 
             # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
-            print('--- 読み上げ対象の ID を DB へ格納 ---')
+            print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
             guild_id   = str(talk_guild.id)
             vc_id      = str(talk_vc.id)
             channel_id = str(talk_channel.id)
@@ -242,8 +229,9 @@ class Talk(commands.Cog):
         # ボイスチャンネルから退出する
             guild_id = str(ctx.guild.id)
             talk_id = None
-            talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', talk_id, {'guild_id': guild_id})
-            talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
+            talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
+            talk_channel = ctx.guild.get_channel(int(talk_id))
+            # talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
             talk_vc = ctx.voice_client.channel
             await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
@@ -260,10 +248,8 @@ class Talk(commands.Cog):
             return
 
         # DB にテキストチャンネルのIDが入っていなかったら無視
-        self.talk_channel_list.clear()
-        psql.run_query_to_list('cogs/sql/talk/select_channel_ids.sql', self.talk_channel_list)
-        print(self.talk_channel_list)
-        if not str(message.channel.id) in self.talk_channel_list:
+        talk_channel_list = psql.run_query_to_list('cogs/sql/talk/select_channel_ids.sql')
+        if not str(message.channel.id) in talk_channel_list:
             return
 
         # !が先頭に入っていたら or botだったら無視
@@ -276,9 +262,7 @@ class Talk(commands.Cog):
         print('===== 読み上げを実行します =====')
         print('--- メッセージの整形 ---')
         talk_msg = message.clean_content
-        # print('整形前：' + talk_msg)
         talk_msg_fmt = abb_msg(talk_msg) # 置換処理を行ったテキストを変数へ格納
-        # print('整形後：' + talk_msg_fmt)
 
         print('--- 音声データの作成 ---')
         try:
@@ -323,17 +307,12 @@ class Talk(commands.Cog):
         if not before.channel and after.channel:
             print('--- VC へ入室 ---')
             vc = after.channel
-            # print(vc)
-            # print('VC人数：' + str(len(vc.members))) # VC人数を表示
-            # print(vc.members)
+            # print(vc.members) # VC人数を表示
 
         # VC から誰かが退出した時の処理（VoiceState の before が 値有り / after が 値無し だったら）
         elif before.channel and not after.channel:
             print('--- VC から退室 ---')
             vc = before.channel
-            # print(vc)
-            # print('VC人数：' + str(len(vc.members))) # VC人数を表示
-            # print(vc.members)
             
             # botが最後の一人になったら自動退出する
             if (
@@ -341,14 +320,13 @@ class Talk(commands.Cog):
                 and vc.members[0] == self.bot.user
             ):
                 vc = discord.utils.get(self.bot.voice_clients, channel=before.channel)
-                # print(vc)
                 if vc and vc.is_connected():
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
                     guild_id = str(member.guild.id)
                     talk_id = None
-                    talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', talk_id, {'guild_id': guild_id})
-                    talk_channel = discord.utils.get(member.guild.text_channels, id=int(talk_id))
+                    talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
+                    talk_channel = member.guild.get_channel(int(talk_id))
                     async with talk_channel.typing():
                         await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
@@ -370,7 +348,7 @@ class Talk(commands.Cog):
                 print('--- 残っていた音声データを削除 ---')
                 os.remove(voice_path)
             # DB から読み上げ対象のレコードを削除
-            print('--- DB から読み上げ対象のレコードを削除 ---')
+            print('--- 読み上げ対象 DB から退出した ID のレコードを削除 ---')
             guild_id = str(member.guild.id)
             psql.run_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
             print('レコードを削除：' + guild_id)
