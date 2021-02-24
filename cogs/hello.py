@@ -1,20 +1,11 @@
-import discord
-from discord.ext import commands
 import asyncio
 import re
 
-abb_dict = {
-    r'@もだねちゃん': '', # @もだねちゃん を削除
-    r'@develop-mdnchan': '', # @develop-chan を削除
-    r'えらい(\?|？|)': '', # えらい？を削除
-    r'って(知|し)ってる(\?|？|)': '', # って知ってる？を削除
-}
+from .utils import msg
 
-# 置換用の関数を定義
-def abb_msg(t):
-    for abb_dict_key in abb_dict:
-        t = re.sub(abb_dict_key, abb_dict[abb_dict_key], t)
-    return t
+import discord
+from discord.ext import commands
+
 
 class Hello(commands.Cog):
     def __init__(self, bot):
@@ -25,25 +16,32 @@ class Hello(commands.Cog):
         # メッセージ送信者がBotだった場合は無視する
         if message.author.bot:
             return
+        
         # もしmessage.mentionsにもだねちゃんが入っていなかったら無視
         if not self.bot.user in message.mentions:
             return
-        if 'えらい' in message.clean_content:
-            hello_msg = message.clean_content
-            hello_msg_fmt = abb_msg(hello_msg)
-            print(hello_msg_fmt)
+
+        if 'やっほー' in message.content:
+            fmt_msg = msg.make_msg('', '', 'えへへ、やっほー！')
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(f'{hello_msg_fmt}、えらーい！')
+            await message.channel.send(fmt_msg)
             return
-        if 'って知ってる' in message.clean_content or 'ってしってる' in message.clean_content:
-            hello_msg = message.clean_content
-            hello_msg_fmt = abb_msg(hello_msg)
-            print(hello_msg_fmt)
+
+        if '偉い' in message.content or 'えらい' in message.content:
+            fmt_msg = msg.make_msg(message.clean_content, '', '、えらーい！')
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(f'{hello_msg_fmt}ってなーに？')
+            await message.channel.send(fmt_msg)
             return
+
+        if 'って知ってる' in message.content or 'ってしってる' in message.content:
+            fmt_msg = msg.make_msg(message.clean_content, '', 'ってなーに？')
+            async with message.channel.typing():
+                await asyncio.sleep(1)
+            await message.channel.send(fmt_msg)
+            return
+
         async with message.channel.typing():
             await asyncio.sleep(1)
         await message.channel.send(f'{message.author.mention}\nやっほー！もだねちゃんだよ！')

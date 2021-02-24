@@ -1,6 +1,7 @@
 ##### PostgreSQL 操作用モジュール #####
 import os
 from os.path import join, dirname
+
 import psycopg2
 
 
@@ -16,7 +17,8 @@ def get_query(query_file_path):
     return query
 
 # SQL クエリ実行
-# 引数2つ目にはバインド変数を指定（使わない場合は無しでも OK ）
+# 引数2つ目にはバインド変数を指定
+# バインド変数は省略可能
 def run_query(query_file_path, bind_var={}):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -24,7 +26,7 @@ def run_query(query_file_path, bind_var={}):
             cur.execute(query % bind_var)
         conn.commit()
 
-# SQL クエリを実行し、変数へ格納する
+# SQL クエリを実行し、結果1つを返す
 def run_query_to_var(query_file_path, bind_var={}):
     with get_connection() as conn:
         with conn.cursor() as cur:
@@ -35,7 +37,7 @@ def run_query_to_var(query_file_path, bind_var={}):
         conn.commit()
     return output
 
-# SQL クエリを実行し、行を指定したリストへ格納する
+# SQL クエリを実行し、行をリストの形式で返す
 def run_query_to_list(query_file_path, bind_var={}):
     output_list = []
     with get_connection() as conn:

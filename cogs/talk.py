@@ -1,92 +1,15 @@
-import discord
-from discord.ext import commands
 import asyncio
+import io
 import os
 import subprocess
-import re
-from jtalkbot import openjtalk
-import io
 import wave
+
+from .utils import msg
 from .utils import psql
+from .utils import voice
 
-##### チェック用関数 #####
-# ボイスチャンネルにコマンド実行者がいるか判定
-def vc_check(m, b, a):
-    return m.voice is not None # bool(ctx.author.voice)でもOK
-
-# botが発言中か判定
-def playing_check(m):
-    if m.guild.voice_client:
-        return m.guild.voice_client.is_playing() is False
-
-##### jtalk関数 #####
-def jtalk(t, guild_id):
-    # 音声データの作成
-    voice_path = 'voice_' + str(guild_id) + '.wav'
-    open_jtalk = ['open_jtalk']
-    mech = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
-    htsvoice = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
-    speed = ['-r','0.7']
-    halftone = ['-fm','-3']
-    volume = ['-g', '-5']
-    outwav = ['-ow', voice_path]
-    cmd = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
-    c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-
-    c.stdin.write(t.encode())
-    c.stdin.close()
-    c.wait()
-
-    # 音声データをモノラルからステレオへ変換
-    voice_fmt_src = openjtalk.mono_to_stereo(voice_path)
-    os.remove(voice_path)
-    with open(voice_path, 'wb') as f:
-        f.write(voice_fmt_src)
-    
-    return voice_path
-   
-
-##### メッセージの置換関数 #####
-# TODO: モジュールとして分ける
-# 置換用の辞書を作成
-abb_dict = {
-    r'\n': ' ',                                                                                 # 改行を「 」に置換する
-    r'https?://([-\w]+\.)+[-\w]+(/[-\w./?%&=]*)?': 'URL省略',                                   # URLを省略する 正規表現サンプル r'https?://([\w-]+\.)+[\w-]+(/[\w-./?%&=]*)?$' から変更
-    r'<:.{1,}:\d{8,}>': ' ',                                                                    # カスタム絵文字を「 」に置換する
-    r'\,|、|\.|。|\!|！|\?|？|\:|：|\;|；|\+|＋|\=|＝|\*|＊|\-|\~|\_|_|\[|「|\]|」|・|…': ' ', # 記号を「 」に置換する
-    r'\d{9,}': '数値省略',                                                                      # 9桁以上の数値を省略する
-    r'(D|d)iscord': 'ディスコード',                                                             # 辞書変換
-    r'64': 'ロクヨン',                                                                          # 辞書変換
-    r'(G|g)(C|c)コン': 'ジーシーコン',                                                          # 辞書変換
-    r'(G|g)(C|c)': 'ゲームキューブ',                                                            # 辞書変換
-    r'(W|w)ii': 'ウィー',                                                                       # 辞書変換
-    r'(S|s)witch': 'スイッチ',                                                                  # 辞書変換
-    r'(G|g)(B|b)(A|a)': 'アドバンス',                                                           # 辞書変換
-    r'(G|g)(B|b)': 'ゲームボーイ',                                                              # 辞書変換
-    r'3(D|d)(S|s)': 'スリーディーエス',                                                         # 辞書変換
-    r'(D|d)(S|s)': 'ディーエス',                                                                # 辞書変換
-    r'(S|s)platoon': 'スプラトゥーン',                                                          # 辞書変換
-    r'(D|d)(X|x)': 'デラックス',                                                                # 辞書変換
-    r'(S|s)(P|p)': 'スペシャル',                                                                # 辞書変換
-    r'(D|d)(B|b)(D|d)': 'デッドバイデイライト',                                                 # 辞書変換
-    r'(T|t)witter': 'ツイッター',                                                               # 辞書変換
-    r'(S|s)hovel': 'シャベル',                                                                  # 辞書変換
-    r'(ノシ|ﾉｼ)': 'バイバイ',                                                                   # 辞書変換
-    r'(w|ｗ){2,}': ' わらぁわらぁ',                                                             # 辞書変換 「w」「ｗ」が2つ以上続いたら「わらわら」に置換する
-    r'w|ｗ': ' わらぁ',                                                                         # 辞書変換 「w」「ｗ」を「わら」に置換する
-    r'〜|～': 'ー',                                                                             # 辞書変換 「〜：波ダッシュ（Mac」「～：全角チルダ（Win」を「ー」に置換する
-    r'^\s': ''                                                                                  # 文頭の空白を削除する
-}
-
-# 置換用の関数を定義
-def abb_msg(t):
-    for abb_dict_key in abb_dict:
-        t = re.sub(abb_dict_key, abb_dict[abb_dict_key], t)
-    # 40文字を超えたら省略する
-    if len(t) > 40:
-        t = t[:40]
-        t += ' 以下略'
-    return t
+import discord
+from discord.ext import commands
 
 
 ##### コグ #####
@@ -117,7 +40,7 @@ class Talk(commands.Cog):
             # 10秒まで待機
             # ボイスチャンネルにコマンド実行者が入ったら続行する
             try:
-                await self.bot.wait_for('voice_state_update', check=vc_check, timeout=10)
+                await self.bot.wait_for('voice_state_update', check=voice.vc_check, timeout=10)
             except asyncio.TimeoutError:
                 embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xffab6f)
                 await ctx.send(embed=embed)
@@ -177,7 +100,7 @@ class Talk(commands.Cog):
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
-            print('--- エラーコード：002 ---')
+            print('--- bot が VC にいないため入室を中止 ---')
             embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
@@ -255,18 +178,18 @@ class Talk(commands.Cog):
         # !が先頭に入っていたら or botだったら無視
         if message.content.startswith('!') or message.author.bot:
             # もだねちゃんのセリフは通す
-            # if not 'やっほー！もだねちゃんだよ！' in message.content: # 
+            # if not 'やっほー！もだねちゃんだよ！' in message.content: # あいさつのみ通す時
             if not message.author == self.bot.user:
                 return
 
         print('===== 読み上げを実行します =====')
         print('--- メッセージの整形 ---')
         talk_msg = message.clean_content
-        talk_msg_fmt = abb_msg(talk_msg) # 置換処理を行ったテキストを変数へ格納
+        talk_msg_fmt = msg.abb_msg(talk_msg) # 置換処理を行ったテキストを変数へ格納
 
         print('--- 音声データの作成 ---')
         try:
-            voice_path = jtalk(talk_msg_fmt, message.guild.id) # 音声データを作成してファイルパスを変数へ格納
+            voice_path = voice.jtalk(talk_msg_fmt, message.guild.id) # 音声データを作成してファイルパスを変数へ格納
             
             # 音声データを開いて再生する
             with wave.open(voice_path, 'rb') as wi:
