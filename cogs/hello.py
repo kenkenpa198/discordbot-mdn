@@ -1,10 +1,11 @@
 import asyncio
 import re
 
-from .utils import msg
-
+import alkana
 import discord
 from discord.ext import commands
+
+from .utils import msg
 
 
 class Hello(commands.Cog):
@@ -22,24 +23,24 @@ class Hello(commands.Cog):
             return
 
         if 'やっほー' in message.content:
-            fmt_msg = msg.make_msg('', '', 'えへへ、やっほー！')
+            msg_fmt = msg.make_msg('', '', 'えへへ、やっほー！')
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(fmt_msg)
+            await message.channel.send(msg_fmt)
             return
 
         if '偉い' in message.content or 'えらい' in message.content:
-            fmt_msg = msg.make_msg(message.clean_content, '', '、えらーい！')
+            msg_fmt = msg.make_msg(message.clean_content, '', '、えらーい！')
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(fmt_msg)
+            await message.channel.send(msg_fmt)
             return
 
         if 'って知ってる' in message.content or 'ってしってる' in message.content:
-            fmt_msg = msg.make_msg(message.clean_content, '', 'ってなーに？')
+            msg_fmt = msg.make_msg(message.clean_content, '', 'ってなーに？')
             async with message.channel.typing():
                 await asyncio.sleep(1)
-            await message.channel.send(fmt_msg)
+            await message.channel.send(msg_fmt)
             return
 
         async with message.channel.typing():

@@ -4,12 +4,12 @@ import os
 import subprocess
 import wave
 
+import discord
+from discord.ext import commands
+
 from .utils import msg
 from .utils import psql
 from .utils import voice
-
-import discord
-from discord.ext import commands
 
 
 ##### コグ #####
@@ -184,8 +184,9 @@ class Talk(commands.Cog):
 
         print('===== 読み上げを実行します =====')
         print('--- メッセージの整形 ---')
-        talk_msg = message.clean_content
-        talk_msg_fmt = msg.abb_msg(talk_msg) # 置換処理を行ったテキストを変数へ格納
+        talk_msg_src = message.clean_content
+        talk_msg_fmt = msg.make_talk_src(talk_msg_src)
+        print(talk_msg_fmt)
 
         print('--- 音声データの作成 ---')
         try:

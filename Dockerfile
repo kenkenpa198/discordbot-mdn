@@ -10,7 +10,7 @@ RUN set -x && \
     apt-get install -y tzdata && \
     apt-get install -y libpq-dev && \
     pip3 install --upgrade pip && \
-    pip3 install jtalkbot==0.5.0 discord.py==1.6.0 psycopg2
+    pip3 install jtalkbot==0.5.0 discord.py==1.6.0 psycopg2==2.8.6 alkana.py==0.0.1
 # 環境変数の読み込み
 # docker-compose.yml / heroku.yml から渡された値を読み込む
 ARG TZ

@@ -22,23 +22,28 @@ bot の仕様やライセンスに関する情報を掲載しています。
 ### **💻 使用技術**
 #### **言語**
 
-- [Python 3.8](https://www.python.org)
+- [Python 3.9](https://www.python.org)
+- 外部モジュールは以下を使用させていただいています。
+    - [discord.py](https://discordpy.readthedocs.io/)
+    - [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
+    - [alkana.py](https://github.com/cod-sushi/alkana.py)
+    - [psycopg2](https://github.com/psycopg/psycopg2)
 
-#### **モジュール・ソフトウェア**
+#### **連携ソフトウェア**
 
-- [discord.py](https://discordpy.readthedocs.io/)
-- [jtalkbot](https://pypi.org/project/jtalkbot/)
+
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)
-- [PostgeSQL](#)
+- [PostgeSQL](https://www.postgresql.org)
 
 
 #### **実行環境**
 
 - [Heroku](https://www.heroku.com)
-    - [Heroku Postgres](#)
+    - [Heroku Dynos](https://jp.heroku.com/dynos)
+    - [Heroku Postgres](https://jp.heroku.com/postgres)
 - [Docker](https://www.docker.com)
-    - 使用イメージ：[emptypage/open_jtalk](https://hub.docker.com/r/emptypage/open_jtalk)
+    - ベースイメージ：[emptypage/open_jtalk](https://hub.docker.com/r/emptypage/open_jtalk)
 
 ### **💳 ライセンス**
 このアプリケーションは MIT ライセンスの下でリリースされています。  
@@ -56,8 +61,3 @@ bot の仕様やライセンスに関する情報を掲載しています。
     当 bot の使い方や導入方法をまとめています。
 - [🏳️‍🌈 リリースノート](https://github.com/kenkenpa198/discordbot-mdn/wiki/🏳%EF%B8%8F%E2%80%8D🌈-リリースノート)  
     準備中
-### **😌 参考サイト**
-- aaa
-- PosstgreSQL
-    - [Heroku Postgres | Heroku Dev Center](https://devcenter.heroku.com/ja/articles/heroku-postgresql)
-    - [python postgreSQLのライブラリpsycopg2の使い方メモ - Qiita](https://qiita.com/t20190127/items/0fb944c8679795257e01)
