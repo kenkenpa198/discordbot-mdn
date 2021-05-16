@@ -181,7 +181,7 @@ class Uranai(commands.Cog):
 
         # DB uranai_played_tb へユーザーIDを格納する
         print('--- DB へ ユーザーID を格納 ---')
-        user_id = str(ctx.author.id)
+        user_id = ctx.author.id
         psql.run_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
         print('--- DB へ格納完了 ---')
 

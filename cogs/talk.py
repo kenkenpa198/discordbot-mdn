@@ -67,12 +67,12 @@ class Talk(commands.Cog):
 
             # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
             print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
-            guild_id   = str(talk_guild.id)
-            vc_id      = str(talk_vc.id)
-            channel_id = str(talk_channel.id)
-            print('対象サーバー ID           ：' + guild_id)
-            print('対象ボイスチャンネル ID   ：' + vc_id)
-            print('対象テキストチャンネル ID ：' + channel_id)
+            guild_id   = talk_guild.id
+            vc_id      = talk_vc.id
+            channel_id = talk_channel.id
+            print('対象サーバー ID           ：' + str(guild_id))
+            print('対象ボイスチャンネル ID   ：' + str(vc_id))
+            print('対象テキストチャンネル ID ：' + str(channel_id))
 
             psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('--- DB へ格納完了 ---')
@@ -80,7 +80,7 @@ class Talk(commands.Cog):
         embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
-        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時は、「 !mdn c 」コマンドを使用してください。')
+        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時や、私がうまく動かない時は「 !mdn c 」コマンドを使用してください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -120,12 +120,12 @@ class Talk(commands.Cog):
 
             # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
             print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
-            guild_id   = str(talk_guild.id)
-            vc_id      = str(talk_vc.id)
-            channel_id = str(talk_channel.id)
-            print('対象サーバー ID           ：' + guild_id)
-            print('対象ボイスチャンネル ID   ：' + vc_id)
-            print('対象テキストチャンネル ID ：' + channel_id)
+            guild_id   = talk_guild.id
+            vc_id      = talk_vc.id
+            channel_id = talk_channel.id
+            print('対象サーバー ID           ：' + str(guild_id))
+            print('対象ボイスチャンネル ID   ：' + str(vc_id))
+            print('対象テキストチャンネル ID ：' + str(channel_id))
 
             psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('--- DB へ格納完了 ---')
@@ -150,10 +150,10 @@ class Talk(commands.Cog):
         
         async with ctx.channel.typing():
         # ボイスチャンネルから退出する
-            guild_id = str(ctx.guild.id)
+            guild_id = ctx.guild.id
             talk_id = None
             talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
-            talk_channel = ctx.guild.get_channel(int(talk_id))
+            talk_channel = ctx.guild.get_channel(talk_id)
             # talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
             talk_vc = ctx.voice_client.channel
             await ctx.voice_client.disconnect()
@@ -247,15 +247,15 @@ class Talk(commands.Cog):
                 if vc and vc.is_connected():
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します：自動退出 =====')
-                    guild_id = str(member.guild.id)
+                    guild_id = member.guild.id
                     talk_id = None
                     talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
-                    talk_channel = member.guild.get_channel(int(talk_id))
+                    talk_channel = member.guild.get_channel(talk_id)
                     async with talk_channel.typing():
                         await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
                     await talk_channel.send(embed=embed)
-                    print('退室：' + talk_id)
+                    print('退室：' + str(talk_id))
 
         # bot が VC から退出した時の処理
         if (
@@ -273,9 +273,9 @@ class Talk(commands.Cog):
                 os.remove(voice_path)
             # DB から読み上げ対象のレコードを削除
             print('--- 読み上げ対象 DB から退出した ID のレコードを削除 ---')
-            guild_id = str(member.guild.id)
+            guild_id = member.guild.id
             psql.run_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
-            print('レコードを削除：' + guild_id)
+            print('レコードを削除：' + str(guild_id))
 
 
 def setup(bot):

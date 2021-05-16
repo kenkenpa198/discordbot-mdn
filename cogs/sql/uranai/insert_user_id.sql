@@ -4,6 +4,6 @@ INSERT INTO uranai_played_tb (
 )
 VALUES (
     %(user_id)s,
-    to_char(now(), 'YYYYMMDDHH24MISS')
+    now()
 )
 ;

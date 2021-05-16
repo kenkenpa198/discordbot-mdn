@@ -25,26 +25,26 @@ class Hello(commands.Cog):
         if 'やっほー' in message.content:
             msg_fmt = msg.make_msg('', '', 'えへへ、やっほー！')
             async with message.channel.typing():
-                await asyncio.sleep(1)
+                await asyncio.sleep(4)
             await message.channel.send(msg_fmt)
             return
 
         if '偉い' in message.content or 'えらい' in message.content:
             msg_fmt = msg.make_msg(message.clean_content, '', '、えらーい！')
             async with message.channel.typing():
-                await asyncio.sleep(1)
+                await asyncio.sleep(4)
             await message.channel.send(msg_fmt)
             return
 
         if 'って知ってる' in message.content or 'ってしってる' in message.content:
             msg_fmt = msg.make_msg(message.clean_content, '', 'ってなーに？')
             async with message.channel.typing():
-                await asyncio.sleep(1)
+                await asyncio.sleep(4)
             await message.channel.send(msg_fmt)
             return
 
         async with message.channel.typing():
-            await asyncio.sleep(1)
+            await asyncio.sleep(4)
         await message.channel.send(f'{message.author.mention}\nやっほー！もだねちゃんだよ！')
 
 
