@@ -20,33 +20,13 @@ fortune_list = [
     '🌈 お天気運',
     '🛌 睡眠運',
     '🖌 お絵描き運',
-    '⚽️ スポーツ運'
+    '⚽️ スポーツ運',
+    '💡 ひらめき運',
+    '😭 感動運'
 ]
 
 # 運勢結果リスト
-star_list = [
-    '★',
-    '★★',
-    '★★',
-    '★★',
-    '★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★',
-    '★★★★★'
-]
+star_list = ['★', '★★', '★★★', '★★★★', '★★★★★', '⭐️⭐️⭐️⭐️⭐️⭐️']
 
 # ラッキーアイテムリスト
 lucky_list = [
@@ -98,7 +78,19 @@ lucky_list = [
     '🪟 窓',
     '🏙 お昼',
     '🌇 夕焼け',
-    '🌌 夜空'
+    '🌌 夜空',
+    '🗡 斬撃',
+    '🔨 打撃',
+    '🏹 射撃',
+    '😷 マスク',
+    '🧸 ぬいぐるみ'
+    '🎏 季節モノ',
+    '🎏 季節モノ',
+    '⏳ 3分',
+    '📻 レトロ',
+    '🚽 トイレ',
+    '🛀 お風呂',
+    '🚿 シャワー'
     ]
 
 # 遊んだ人リストを定義
@@ -147,37 +139,41 @@ class Uranai(commands.Cog):
         # 運勢占い処理
         print('--- 運勢 3つを決定 ---')
         random.shuffle(fortune_list)
+        print(fortune_list[0])
+        print(fortune_list[1])
+        print(fortune_list[2])
 
-        print(fortune_list)
-        for i in range(3):
-            print('運勢 ' + str(i) + '：' + fortune_list[i])
-
-        star_num_list = []
-        for i in range(3):
-            star_num_list.append(random.randint(0,len(star_list)-1))
-        print('ソート前：' + str(star_num_list))
-        star_num_list.sort(reverse=True)
-        print('ソート後：' + str(star_num_list))
+        # 運勢用の星を算出してリストに格納
+        print('--- 運勢の星を決定 ---')
+        star_result_list = random.choices(star_list, k=3, weights=[4, 15, 50, 25, 4, 2])
+        star_result_list.sort(reverse=True)
+        print(star_result_list)
+        print(star_result_list[0])
+        print(star_result_list[1])
+        print(star_result_list[2])
 
         # ラッキーアイテム占い処理
         print('--- ラッキーアイテムを決定 ---')
         lucky_num = random.randint(0,len(lucky_list)-1)
         lucky_value = lucky_list[lucky_num]
-        print('ラッキーアイテム：' + lucky_value)
+        print(lucky_value)
 
         print('===== 結果を送信します =====')
         # メッセージ送信
         embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.display_name}さんの今日の運勢だよ！', color=0xffd6e9)
-        embed.add_field(name='ㅤ\n' + fortune_list[0], value=star_list[star_num_list[0]])
-        embed.add_field(name='ㅤ\n' + fortune_list[1], value=star_list[star_num_list[1]])
-        embed.add_field(name='ㅤ\n' + fortune_list[2], value=star_list[star_num_list[2]])
+        embed.add_field(name='ㅤ\n' + fortune_list[0], value=star_result_list[0])
+        embed.add_field(name='ㅤ\n' + fortune_list[1], value=star_result_list[1])
+        embed.add_field(name='ㅤ\n' + fortune_list[2], value=star_result_list[2])
         embed.add_field(name='ㅤ\nラッキーアイテム', value=lucky_value)
 
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
         async with ctx.channel.typing():
             await asyncio.sleep(.5)
-        await ctx.send(f'結果はどうだった？またねー！')
+        if '⭐️⭐️⭐️⭐️⭐️⭐️' in star_result_list:
+            await ctx.send(f'わっ！★6 の運勢があるよ！\n今日はとっても良い日になりそうだね🌸\n\nまたねーっ！')
+        else:
+            await ctx.send(f'結果はどうだった？またねー！')
 
         # DB uranai_played_tb へユーザーIDを格納する
         print('--- DB へ ユーザーID を格納 ---')

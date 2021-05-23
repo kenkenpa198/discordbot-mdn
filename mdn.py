@@ -69,7 +69,7 @@ async def on_command_error(ctx, error):
     print(traceback.format_exc())
     embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
-    embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがちゃんと働いてくれていない場合も、このメッセージが表示されることがあります。')
+    embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがちゃんと働いてくれていない場合も、このメッセージが表示されることがあります。\n読み上げ機能でこのエラーが出ている場合は「!mdn c」コマンドをお試しください。')
     await ctx.send(embed=embed)
 
 
