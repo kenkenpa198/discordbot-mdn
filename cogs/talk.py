@@ -70,9 +70,6 @@ class Talk(commands.Cog):
             guild_id   = talk_guild.id
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
-            print('対象サーバー ID           ：' + str(guild_id))
-            print('対象ボイスチャンネル ID   ：' + str(vc_id))
-            print('対象テキストチャンネル ID ：' + str(channel_id))
 
             psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('--- DB へ格納完了 ---')
@@ -86,7 +83,6 @@ class Talk(commands.Cog):
 
         # ボイスチャンネルへ接続する
         print('--- VC へ接続 ---')
-        print('接続：' + str(talk_vc.id))
         await talk_vc.connect()
         await asyncio.sleep(.5)
         if send_hello:
@@ -123,9 +119,6 @@ class Talk(commands.Cog):
             guild_id   = talk_guild.id
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
-            print('対象サーバー ID           ：' + str(guild_id))
-            print('対象ボイスチャンネル ID   ：' + str(vc_id))
-            print('対象テキストチャンネル ID ：' + str(channel_id))
 
             psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('--- DB へ格納完了 ---')
@@ -159,7 +152,6 @@ class Talk(commands.Cog):
             await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
         await talk_channel.send(embed=embed)
-        print('退室：' + str(talk_vc.id))
 
 
     ##### テキストチャンネルに投稿されたテキストを読み上げる #####
@@ -254,7 +246,6 @@ class Talk(commands.Cog):
                         await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
                     await talk_channel.send(embed=embed)
-                    print('退室：' + str(talk_id))
 
         # bot が VC から退出した時の処理
         if (
@@ -274,7 +265,6 @@ class Talk(commands.Cog):
             print('--- 読み上げ対象 DB から退出した ID のレコードを削除 ---')
             guild_id = member.guild.id
             psql.run_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
-            print('レコードを削除：' + str(guild_id))
 
 
 def setup(bot):

@@ -39,9 +39,6 @@ async def on_ready():
         num = 0
         for guild_id, vc_id, channel_id in zip(guild_id_list, vc_id_list, channel_id_list):
             print('--- VC への接続を実行（'+ str(num) +'） ---')
-            print(guild_id)
-            print(vc_id)
-            print(channel_id)
             talk_guild = bot.get_guild(int(guild_id))
             talk_vc = talk_guild.get_channel(int(vc_id))
             talk_channel = talk_guild.get_channel(int(channel_id))
