@@ -186,7 +186,6 @@ class Talk(commands.Cog):
         print('--- メッセージの整形 ---')
         talk_msg_src = message.clean_content
         talk_msg_fmt = msg.make_talk_src(talk_msg_src)
-        print(talk_msg_fmt)
 
         print('--- 音声データの作成 ---')
         try:
