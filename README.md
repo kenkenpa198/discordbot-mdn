@@ -6,7 +6,7 @@
 ## **1. もだねちゃんとは？**
 もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる Discord bot です 🌸
 
-一番の特徴は読み上げ機能。テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。  
+一番の特徴は読み上げ機能です。テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。  
 働いている様子はこちら！（ Youtube へ移動します）
 
 [<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
@@ -47,7 +47,7 @@ bot の仕様やライセンスに関する情報を掲載しています。
 
 ### **💳 ライセンス**
 このアプリケーションは MIT ライセンスの下でリリースされています。  
-[ライセンス全文はこちら](https://github.com/kenkenpa198/discordbot-mdn/blob/develop/LICENSE)
+[ライセンス全文はこちら](https://github.com/kenkenpa198/discordbot-mdn/blob/main/LICENSE)
 
 ### **📝 その他**
 
@@ -59,5 +59,3 @@ bot の仕様やライセンスに関する情報を掲載しています。
 ### **📖 Wiki**
 - [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)   
     当 bot の使い方や導入方法をまとめています。
-- [🏳️‍🌈 リリースノート](https://github.com/kenkenpa198/discordbot-mdn/wiki/🏳%EF%B8%8F%E2%80%8D🌈-リリースノート)  
-    準備中
