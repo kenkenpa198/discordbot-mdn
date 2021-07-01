@@ -1,4 +1,4 @@
-![おしゃべりぼっと！もだねちゃん](https://user-images.githubusercontent.com/75349575/100892768-0713ae80-34fe-11eb-97d5-ab0a7978cfc3.png)
+![おしゃべりぼっと！もだねちゃん](https://user-images.githubusercontent.com/75349575/120725676-7439e800-c511-11eb-8503-e8a98999a57e.png)
 <p align="center"><b>おしゃべりぼっと！もだねちゃん</b></p>
 
 ---
