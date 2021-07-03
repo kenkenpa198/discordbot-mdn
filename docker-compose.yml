@@ -19,4 +19,9 @@ services:
 
     # image と実行するコマンドの指定
     image: discordbot-mdn
-    command: python3 -u mdn.py # -u: Python のログを表示する
+    command: python3 -u bot.py # -u: Python のログを表示する
+
+    # ホスト側ディレクトリとコンテナをマウント
+    volumes: 
+      - ./discordbot-mdn/:/discordbot-mdn/
+    tty: true

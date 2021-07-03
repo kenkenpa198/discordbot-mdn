@@ -12,7 +12,7 @@ RUN set -x && \
     pip3 install --upgrade pip && \
     pip3 install jtalkbot==0.5.0 discord.py==1.6.0 psycopg2==2.8.6 alkana.py==0.0.1
 # 環境変数の読み込み
-# docker-compose.yml / heroku.yml から渡された値を読み込む
+# docker-compose.yml / heroku.yml から渡されたトークンなどを読み込む
 ARG TZ
 ENV HOME=/${TZ}
 ARG BOT_TOKEN
@@ -29,8 +29,8 @@ RUN set -x && \
     ln -s /usr/local/lib/open_jtalk/dic /usr/local/Cellar/open-jtalk/1.11 && \
     ln -s /usr/local/lib/open_jtalk/voice /usr/local/Cellar/open-jtalk/1.11
 WORKDIR /discordbot-mdn
-COPY mdn.py /discordbot-mdn
-COPY cogs/ /discordbot-mdn/cogs/
+COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
+COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
 
 ##### キャッシュの削除 #####
 # TODO: python モジュールのキャッシュも削除したい
