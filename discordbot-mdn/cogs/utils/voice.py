@@ -21,11 +21,14 @@ def jtalk(t, guild_id):
     # 音声データの作成
     voice_path = 'voice_' + str(guild_id) + '.wav'
     open_jtalk = ['open_jtalk']
-    mech       = ['-x','/usr/local/Cellar/open-jtalk/1.11/dic']
-    htsvoice   = ['-m','/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
-    speed      = ['-r','0.7']
-    halftone   = ['-fm','-3']
-    volume     = ['-g', '-5']
+    mech       = ['-x', '/usr/local/Cellar/open-jtalk/1.11/dic']
+    htsvoice   = ['-m', '/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
+
+    # 声質の設定
+    speed      = ['-r',   '0.7'] # スピーチ速度係数
+    halftone   = ['-fm', '-3.5'] # 追加ハーフトーン（高低）
+    volume     = ['-g',  '-5.0'] # 声の大きさ
+
     outwav     = ['-ow', voice_path]
     cmd        = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
     c          = subprocess.Popen(cmd, stdin=subprocess.PIPE)
