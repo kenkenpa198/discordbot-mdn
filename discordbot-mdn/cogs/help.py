@@ -11,24 +11,33 @@ class Help(commands.Cog):
     async def help(self, ctx):
         print('===== もだねちゃんヘルプを表示します =====')
         embed = discord.Embed(title='もだねちゃんヘルプ', description='もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は[ 📙 ガイドブック ](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)を確認してみてね！', color=0xffd6e9)
+        await ctx.send(embed=embed)
 
-        help_name    = f'ㅤ\n🎤 読み上げ機能'
-        help_value_1 = f'ㅤ- 読み上げを開始する```!mdn s```'
-        help_value_2 = f'ㅤ\nㅤ- 読み上げ対象のテキストチャンネルを再設定する```!mdn c```'
-        help_value_3 = f'ㅤ\nㅤ- 読み上げを終了する```!mdn e```'
-        embed.add_field(name=help_name, value=help_value_1 + help_value_2 + help_value_3, inline=False)
+        embed = discord.Embed(title='読み上げ機能', color=0xffd6e9)
 
-        help_name    = f'ㅤ\n✌️ジャンケンで遊ぶ'
-        help_value_1 = f'```!mdn j```'
-        embed.add_field(name=help_name, value=help_value_1, inline=False)
+        help_name  = f'🎤 読み上げを開始する'
+        help_value = f'```!mdn s```'
+        embed.add_field(name=help_name, value=help_value, inline=False)
 
-        help_name    = f'ㅤ\n🔮 もだねちゃん占い'
-        help_value_1 = f'```!mdn u```'
-        embed.add_field(name=help_name, value=help_value_1, inline=False)
+        help_name  = f'ㅤ\n🎤 読み上げを終了する'
+        help_value = f'```!mdn e```'
+        embed.add_field(name=help_name, value=help_value, inline=False)
 
-        help_name    = f'ㅤ\n❓ ヘルプを表示する'
-        help_value_1 = f'```!mdn h```'
-        embed.add_field(name=help_name, value=help_value_1, inline=False)
+        embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがボイスチャンネルにいる状態で「!mdn s」を送信すると、読み上げ対象チャンネルを再設定できます。\n読み上げたいチャンネルを変更したい時や、もだねちゃんがうまく動かない時にご利用ください。')
+        await ctx.send(embed=embed)
+
+        embed = discord.Embed(title='その他機能', color=0xffd6e9)
+        help_name  = f'✌️ジャンケンで遊ぶ'
+        help_value = f'```!mdn j```'
+        embed.add_field(name=help_name, value=help_value, inline=False)
+
+        help_name  = f'ㅤ\n🔮 もだねちゃん占い'
+        help_value = f'```!mdn u```'
+        embed.add_field(name=help_name, value=help_value, inline=False)
+
+        help_name  = f'ㅤ\n❓ ヘルプを表示する'
+        help_value = f'```!mdn h```'
+        embed.add_field(name=help_name, value=help_value, inline=False)
 
         await ctx.send(embed=embed)
 

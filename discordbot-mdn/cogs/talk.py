@@ -23,11 +23,31 @@ class Talk(commands.Cog):
     async def start(self, ctx, tch: discord.TextChannel=None):
         print('===== 読み上げを開始します =====')
 
-        # botが既にボイスチャンネルへ入室していないか判定
+        # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
         if ctx.guild.voice_client:
-            print('--- エラーコード：002 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='私はもう入室済みだよ…！\nこちらのコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
-            embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
+            async with ctx.channel.typing():
+                # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
+                print('--- 読み上げ対象を設定 ---')
+                talk_guild     = ctx.guild                # サーバー
+                talk_vc        = ctx.author.voice.channel # ボイスチャンネル
+                if tch:
+                    # !mdn s に引数がある場合は指定のテキストチャンネルを格納
+                    talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+                else:
+                    # 引数がない場合はコマンドを実行したテキストチャンネルを格納
+                    talk_channel = ctx.channel
+
+                # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
+                print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
+                guild_id   = talk_guild.id
+                vc_id      = talk_vc.id
+                channel_id = talk_channel.id
+
+                psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
+                print('--- DB へ格納完了 ---')
+        
+            embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
+            embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
             await ctx.send(embed=embed)
             return
 
@@ -65,8 +85,8 @@ class Talk(commands.Cog):
                 talk_channel = ctx.channel
                 send_hello = True
 
-            # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
-            print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
+            # 読み上げるサーバー / ボイスチャンネル / テキストチャンネルの ID を DB へ格納
+            print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
             guild_id   = talk_guild.id
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
@@ -77,7 +97,7 @@ class Talk(commands.Cog):
         embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
-        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時や、私がうまく動かない時は「 !mdn c 」コマンドを使用してください。')
+        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時や、もだねちゃんがうまく動かない時は「 !mdn s 」コマンドの再実行をお試しください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -94,37 +114,8 @@ class Talk(commands.Cog):
     async def change(self, ctx, tch: discord.TextChannel=None):
         print ('===== 読み上げ対象のテキストチャンネルを再設定します =====')
 
-        # botがボイスチャンネルにいるか判定
-        if not ctx.guild.voice_client:
-            print('--- bot が VC にいないため入室を中止 ---')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
-            embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
-            await ctx.send(embed=embed)
-            return
-
-        async with ctx.channel.typing():
-            # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
-            print('--- 読み上げ対象を設定 ---')
-            talk_guild     = ctx.guild                # サーバー
-            talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-            if tch:
-                # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-                talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
-            else:
-                # 引数がない場合はコマンドを実行したテキストチャンネルを格納
-                talk_channel = ctx.channel
-
-            # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
-            print('--- 各 ID を 読み上げ対象 DB へ格納 ---')
-            guild_id   = talk_guild.id
-            vc_id      = talk_vc.id
-            channel_id = talk_channel.id
-
-            psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
-            print('--- DB へ格納完了 ---')
-    
-        embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
-        embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
+        embed = discord.Embed(title='読み上げ対象の再設定方法が変わったよ',description='読み上げ対象チャンネルの再設定の方法が変わりました。\n再設定したいチャンネルで読み上げ開始コマンドをもう一度実行してね！', color=0xffd6e9)
+        embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
         await ctx.send(embed=embed)
 
 

@@ -45,9 +45,7 @@ async def on_ready():
             await talk_vc.connect()
             print('--- VC へ接続完了 ---')
 
-            embed = discord.Embed(title='ボイスチャンネルへ再入室しました',description='もだねちゃんが再起動したので、再接続処理を行いました。\nこちらのチャンネルでおしゃべりを再開するよ！', color=0xffd6e9)
-            embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
-            embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(talk_channel.id) +'>' )
+            embed = discord.Embed(title='ボイスチャンネルへ再入室しました',description='もだねちゃんが再起動したので、再接続処理を行いました。', color=0xffd6e9)
             await talk_channel.send(embed=embed)
             num += 1
     else:
@@ -64,9 +62,9 @@ async def on_command_error(ctx, error):
     print('--- エラー ---')
     print('on_command_error')
     print(traceback.format_exc())
-    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを実行して、使い方を確認してみてね！', color=0xffab6f)
-    embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
-    embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがちゃんと働いてくれていない場合も、このメッセージが表示されることがあります。\n読み上げ機能でこのメッセージが出ている場合は「!mdn c」コマンドをお試しください。')
+    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを試してみてね！', color=0xffab6f)
+    embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='もだねちゃんのコマンド一覧を表示できます。```!mdn h```', inline=False)
+    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='読み上げ機能でこのメッセージが出ている場合は、読み上げ開始コマンドの再実行をお試しください。```!mdn s```', inline=False)
     await ctx.send(embed=embed)
 
 
