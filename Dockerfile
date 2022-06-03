@@ -10,7 +10,7 @@ RUN set -x && \
     apt-get install -y tzdata && \
     apt-get install -y libpq-dev && \
     pip3 install --upgrade pip && \
-    pip3 install jtalkbot==0.5.0 discord.py==1.6.0 psycopg2==2.8.6 alkana.py==0.0.1
+    pip3 install jtalkbot==0.5.0 discord.py==1.7.3 psycopg2==2.8.6 alkana.py==0.0.1
 # 環境変数の読み込み
 # docker-compose.yml / heroku.yml から渡されたトークンなどを読み込む
 ARG TZ
@@ -33,6 +33,5 @@ COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
 COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
 
 ##### キャッシュの削除 #####
-# TODO: python モジュールのキャッシュも削除したい
 RUN set -x && \
     apt-get clean -y && rm -rf /var/lib/apt/lists/*
