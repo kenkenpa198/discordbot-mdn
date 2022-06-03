@@ -2,6 +2,7 @@ import asyncio
 import io
 import os
 import subprocess
+import traceback
 import wave
 
 import discord
@@ -25,27 +26,26 @@ class Talk(commands.Cog):
 
         # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
         if ctx.guild.voice_client:
-            async with ctx.channel.typing():
-                # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
-                print('--- 読み上げ対象を設定 ---')
-                talk_guild     = ctx.guild                # サーバー
-                talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-                if tch:
-                    # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-                    talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
-                else:
-                    # 引数がない場合はコマンドを実行したテキストチャンネルを格納
-                    talk_channel = ctx.channel
+            # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
+            print('--- 読み上げ対象を設定 ---')
+            talk_guild     = ctx.guild                # サーバー
+            talk_vc        = ctx.author.voice.channel # ボイスチャンネル
+            if tch:
+                # !mdn s に引数がある場合は指定のテキストチャンネルを格納
+                talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            else:
+                # 引数がない場合はコマンドを実行したテキストチャンネルを格納
+                talk_channel = ctx.channel
 
-                # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
-                print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
-                guild_id   = talk_guild.id
-                vc_id      = talk_vc.id
-                channel_id = talk_channel.id
+            # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を DB へ格納
+            print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
+            guild_id   = talk_guild.id
+            vc_id      = talk_vc.id
+            channel_id = talk_channel.id
 
-                psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
-                print('--- DB へ格納完了 ---')
-        
+            psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
+            print('--- DB へ格納完了 ---')
+
             embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
             embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
             await ctx.send(embed=embed)
@@ -71,28 +71,27 @@ class Talk(commands.Cog):
                 print('--- 処理を再開します ---')
                 await asyncio.sleep(.5)
 
-        async with ctx.channel.typing():
-            # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
-            print('--- 読み上げ対象を設定 ---')
-            talk_guild     = ctx.guild                # サーバー
-            talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-            if tch:
-                # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-                talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
-                send_hello = False
-            else:
-                # 引数がない場合はコマンドを実行したテキストチャンネルを格納
-                talk_channel = ctx.channel
-                send_hello = True
+        # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
+        print('--- 読み上げ対象を設定 ---')
+        talk_guild     = ctx.guild                # サーバー
+        talk_vc        = ctx.author.voice.channel # ボイスチャンネル
+        if tch:
+            # !mdn s に引数がある場合は指定のテキストチャンネルを格納
+            talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            send_hello = False
+        else:
+            # 引数がない場合はコマンドを実行したテキストチャンネルを格納
+            talk_channel = ctx.channel
+            send_hello = True
 
-            # 読み上げるサーバー / ボイスチャンネル / テキストチャンネルの ID を DB へ格納
-            print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
-            guild_id   = talk_guild.id
-            vc_id      = talk_vc.id
-            channel_id = talk_channel.id
+        # 読み上げるサーバー / ボイスチャンネル / テキストチャンネルの ID を DB へ格納
+        print('--- 読み上げ対象のサーバー / ボイスチャンネル / テキストチャンネル ID を 読み上げ対象 DB へ格納 ---')
+        guild_id   = talk_guild.id
+        vc_id      = talk_vc.id
+        channel_id = talk_channel.id
 
-            psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
-            print('--- DB へ格納完了 ---')
+        psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
+        print('--- DB へ格納完了 ---')
 
         embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
@@ -131,18 +130,17 @@ class Talk(commands.Cog):
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
-        
-        async with ctx.channel.typing():
+
         # ボイスチャンネルから退出する
-            guild_id = ctx.guild.id
-            talk_id = None
-            talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
-            talk_channel = ctx.guild.get_channel(talk_id)
-            # talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
-            talk_vc = ctx.voice_client.channel
-            await ctx.voice_client.disconnect()
+        guild_id = ctx.guild.id
+        talk_id = None
+        talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
+        talk_channel = ctx.guild.get_channel(talk_id)
+        # talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
+        talk_vc = ctx.voice_client.channel
+        await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
-        await talk_channel.send(embed=embed)
+        await ctx.send(embed=embed)
 
 
     ##### テキストチャンネルに投稿されたテキストを読み上げる #####
@@ -173,7 +171,7 @@ class Talk(commands.Cog):
         print('--- 音声データの作成 ---')
         try:
             voice_path = voice.jtalk(talk_msg_fmt, message.guild.id) # 音声データを作成してファイルパスを変数へ格納
-            
+
             # 音声データを開いて再生する
             with wave.open(voice_path, 'rb') as wi:
                 voice_src = wi.readframes(-1)
@@ -182,12 +180,14 @@ class Talk(commands.Cog):
                 print('--- 音声データを再生 ---')
                 message.guild.voice_client.play(talk_src) # ボイスチャンネルで再生
 
-            # 以下だと音声の最初にノイズが走る
-            # stream = open(voice_path, 'rb')
-            # talk_src = discord.PCMAudio(stream)
-            # print('--- 音声データを再生 ---')
-            # message.guild.voice_client.play(talk_src, after=lambda e: stream.close()) # ボイスチャンネルで再生
-            
+            '''
+            NOTE: 以下だと音声の最初にノイズが走る
+            stream = open(voice_path, 'rb')
+            talk_src = discord.PCMAudio(stream)
+            print('--- 音声データを再生 ---')
+            message.guild.voice_client.play(talk_src, after=lambda e: stream.close()) # ボイスチャンネルで再生
+            '''
+
             # 再生が終わっていたら音声データを削除する
             while message.guild.voice_client.is_playing():
                 await asyncio.sleep(1)
@@ -207,7 +207,7 @@ class Talk(commands.Cog):
         # before と after に変化がなければ無視
         if before.channel == after.channel:
             return
-        
+
         print('===== VC人数の変更を検知 =====')
         # VCへ誰かが入室した時の処理（VoiceState の before が 値無し / after が 値有り だったら）
         if not before.channel and after.channel:
@@ -219,7 +219,7 @@ class Talk(commands.Cog):
         elif before.channel and not after.channel:
             print('--- VC から退室 ---')
             vc = before.channel
-            
+
             # botが最後の一人になったら自動退出する
             if (
                 len(vc.members) == 1
@@ -233,10 +233,14 @@ class Talk(commands.Cog):
                     talk_id = None
                     talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
                     talk_channel = member.guild.get_channel(talk_id)
-                    async with talk_channel.typing():
-                        await vc.disconnect()
+                    await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
-                    await talk_channel.send(embed=embed)
+                    try:
+                        await talk_channel.send(embed=embed)
+                    except AttributeError as e:
+                        print('--- メッセージを送信できませんでした ---')
+                        traceback.print_exc()
+                        print(e)
 
         # bot が VC から退出した時の処理
         if (

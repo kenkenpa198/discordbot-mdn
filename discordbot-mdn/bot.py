@@ -46,7 +46,12 @@ async def on_ready():
             print('--- VC へ接続完了 ---')
 
             embed = discord.Embed(title='ボイスチャンネルへ再入室しました',description='もだねちゃんが再起動したので、再接続処理を行いました。', color=0xffd6e9)
-            await talk_channel.send(embed=embed)
+            try:
+                await talk_channel.send(embed=embed)
+            except AttributeError as e:
+                print('--- メッセージを送信できませんでした ---')
+                traceback.print_exc()
+                print(e)
             num += 1
     else:
         print('--- 読み上げ対象 DB にレコードが無かったためスキップ ---')
