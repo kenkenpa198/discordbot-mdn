@@ -3,41 +3,38 @@
 
 ---
 
-## **1. もだねちゃんとは？**
-もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる Discord bot です 🌸
+## 1. もだねちゃんとは？
 
-一番の特徴は読み上げ機能です。テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。  
-働いている様子はこちら！（ Youtube へ移動します）
+もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる読み上げ bot です。  
+テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。
+
+「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由で  
+お声を出しづらい方でも、お友達と楽しく会話することができます。
+
+機能の詳細や使い方・導入方法は [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください。  
+
+## 2. 紹介動画
+
+働いている様子はこちら🌸（ Youtube へ移動します）
 
 [<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
-「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。
+## 3. 招待 URL
 
-その他、機能の詳細や使い方・導入方法は [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください！  
-※ 現在はご協力いただいている少数のサーバーにて試験運用中のため、bot の一般公開は行っておりません。
+[https://example.com/](https://example.com/)
 
-## **2. 各種情報**
-bot の仕様やライセンスに関する情報を掲載しています。
+※ ご協力いただいている少数のサーバーにて試験運用中のため、現在 bot の一般公開は行っておりません。
 
-### **💻 使用技術**
-#### **言語**
+## 4. 使用ソフトウェア
 
-- [Python 3.9](https://www.python.org)
-- 外部モジュールは以下を使用させていただいています。
-    - [discord.py](https://discordpy.readthedocs.io/)
-    - [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
-    - [alkana.py](https://github.com/cod-sushi/alkana.py)
-    - [psycopg2](https://github.com/psycopg/psycopg2)
-
-#### **連携ソフトウェア**
-
-
+- [discord.py](https://discordpy.readthedocs.io/)
+- [alkana.py](https://github.com/cod-sushi/alkana.py)
+- [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)
-- [PostgeSQL](https://www.postgresql.org)
+- [psycopg2](https://github.com/psycopg/psycopg2)
 
-
-#### **実行環境**
+## 5. 実行環境
 
 - [Heroku](https://www.heroku.com)
     - [Heroku Dynos](https://jp.heroku.com/dynos)
@@ -45,17 +42,17 @@ bot の仕様やライセンスに関する情報を掲載しています。
 - [Docker](https://www.docker.com)
     - ベースイメージ：[emptypage/open_jtalk](https://hub.docker.com/r/emptypage/open_jtalk)
 
-### **💳 ライセンス**
-このアプリケーションは MIT ライセンスの下でリリースされています。  
+## 6. ライセンス
+
+このアプリケーションは MIT ライセンスの下リリースされています。  
 [ライセンス全文はこちら](https://github.com/kenkenpa198/discordbot-mdn/blob/main/LICENSE)
 
-### **📝 その他**
+## 7. 補足
 
-- 過去の Commit に bot のトークンの記述が残っていますが、トークンは既に無効化済みです。Git をプライベート設定で運用していた頃の名残です。現在は OS / サーバーの環境変数へ記述したものを yml ファイルから連携する形で管理しています。
+- 過去の Commit に bot のトークンの記述が残っていますが、トークンは既に無効化済みです。Git をプライベート設定で運用していた頃の名残であり、現在はサーバーの環境変数へ記述したものを yml ファイルから連携する形で管理しています。
 - 不具合やご要望など、お気づきの点がありましたらお気軽にご連絡ください。
 
+## 8. リンク
 
-## **3. リンク集**
-### **📖 Wiki**
-- [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)   
+- [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)  
     当 bot の使い方や導入方法をまとめています。
