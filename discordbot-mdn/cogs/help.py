@@ -23,10 +23,10 @@ class Help(commands.Cog):
         help_value = f'```!mdn e```'
         embed.add_field(name=help_name, value=help_value, inline=False)
 
-        embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがボイスチャンネルにいる状態で「!mdn s」を送信すると、読み上げ対象チャンネルを再設定できます。\n読み上げたいチャンネルを変更したい時や、もだねちゃんがうまく動かない時にご利用ください。')
+        embed.set_footer(text='ㅤ\nヒント：\nもだねちゃんがボイスチャンネルにいる状態で「!mdn s」を送信すると、読み上げ対象チャンネルを再設定できます。\n読み上げたいチャンネルを変更したい時にご利用ください。')
         await ctx.send(embed=embed)
 
-        embed = discord.Embed(title='その他機能', color=0xffd6e9)
+        embed = discord.Embed(title='その他の機能', color=0xffd6e9)
         help_name  = f'✌️ジャンケンで遊ぶ'
         help_value = f'```!mdn j```'
         embed.add_field(name=help_name, value=help_value, inline=False)

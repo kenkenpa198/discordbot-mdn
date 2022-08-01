@@ -67,9 +67,10 @@ async def on_command_error(ctx, error):
     print('--- エラー ---')
     print('on_command_error')
     print(traceback.format_exc())
-    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドを試してみてね！', color=0xffab6f)
+    embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドで使い方を確認してみてね！', color=0xffab6f)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='もだねちゃんのコマンド一覧を表示できます。```!mdn h```', inline=False)
-    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='読み上げ機能でこのメッセージが出ている場合は、読み上げ開始コマンドの再実行をお試しください。```!mdn s```', inline=False)
+    embed.set_footer(text='ㅤ\n正しくコマンドを送信している場合でも、サーバー側の仕様によりこのメッセージが表示されることがあります。\n読み上げ終了時にこのメッセージが出てしまい、もだねちゃんを退出させることができない場合は以下の手順をお試しください。\n\n1. 「!mdn s」を送信し、読み上げ対象チャンネルを再設定する。\n2. 「!mdn e」を送信する。\n\n問題が解決されない場合、お手数ですが以下の手順でもだねちゃんを切断してあげてください。\n\n1. ボイスチャンネルのもだねちゃんを右クリックする。\n2.「切断」を選ぶ。')
+
     await ctx.send(embed=embed)
 
 
