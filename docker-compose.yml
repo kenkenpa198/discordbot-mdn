@@ -1,27 +1,18 @@
 version: "3.7"
 services:
   main:
-    # CD にある Dockerfile で build
-    build:
-      context: .
-      dockerfile: Dockerfile
-      # .env から環境変数を Dockerfile へ渡す
-      args:
-        TZ: $TZ
-        BOT_TOKEN: $BOT_TOKEN
-        DATABASE_URL: $DATABASE_URL
+    # Dockerfile で build
+    build: .
 
     # .env から環境変数をコンテナへ渡す
     environment:
-      TZ: $TZ
-      BOT_TOKEN: $BOT_TOKEN
-      DATABASE_URL: $DATABASE_URL
-
-    # image と実行するコマンドの指定
-    image: discordbot-mdn
-    command: python3 -u bot.py # -u: Python のログを表示する
+      - TZ=Asia/Tokyo
+      - BOT_TOKEN
+      - DATABASE_URL
 
     # ホスト側ディレクトリとコンテナをマウント
-    volumes: 
+    volumes:
       - ./discordbot-mdn/:/discordbot-mdn/
-    tty: true
+
+    # 実行するコマンドの指定
+    command: python3 -u bot.py # -u: Python のログを表示する
