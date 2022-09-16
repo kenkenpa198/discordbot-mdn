@@ -1,8 +1,8 @@
-INSERT INTO talk_target_tb (
+INSERT INTO TalkChannels (
     guild_id,
     vc_id,
     channel_id,
-    update_date
+    updated_at
 )
 VALUES (
     %(guild_id)s,
@@ -14,5 +14,5 @@ ON CONFLICT (guild_id)
 DO UPDATE SET
     vc_id = %(vc_id)s,
     channel_id = %(channel_id)s,
-    update_date = now()
+    updated_at = now()
 ;

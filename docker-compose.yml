@@ -1,18 +1,28 @@
 version: "3.7"
 services:
-  main:
-    # Dockerfile で build
-    build: .
 
-    # .env から環境変数をコンテナへ渡す
+  db:
+    image: postgres:14.5-alpine3.16
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d # 初期設定用ディレクトリのマウント。ビルド時に init.sql を実行してテーブル作成などの初期設定を行う
+      - db-volume:/var/lib/postgresql/data       # 名前付きデータボリュームへ PSQL のデータが保存されているディレクトリをマウント。データを永続化する
     environment:
+      - LANG=ja_JP.utf8
+      - POSTGRES_USER=discordbot_mdn
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB=discordbot_mdn
       - TZ=Asia/Tokyo
+
+  main:
+    build: .
+    environment:
       - BOT_TOKEN
       - DATABASE_URL
-
-    # ホスト側ディレクトリとコンテナをマウント
+      - TZ=Asia/Tokyo
     volumes:
-      - ./discordbot-mdn/:/discordbot-mdn/
+      - ./discordbot-mdn/:/discordbot-mdn/ # bot のソースコードをマウント
 
-    # 実行するコマンドの指定
-    command: python3 -u bot.py # -u: Python のログを表示する
+    command: python3 -u bot.py
+
+volumes:
+  db-volume:

@@ -8,7 +8,7 @@ import psycopg2
 # DB 接続
 def get_connection():
     DATABASE_URL = os.environ.get('DATABASE_URL')
-    return psycopg2.connect(DATABASE_URL, sslmode='require')
+    return psycopg2.connect(DATABASE_URL)
 
 # SQL クエリ読込
 def get_query(query_file_path):

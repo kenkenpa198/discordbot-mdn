@@ -133,7 +133,7 @@ class Uranai(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # 指定日時に DB uranai_played_tb の中身を削除する
+    # 指定日時に DB PlayedFortuneUsers の中身を削除する
     @tasks.loop(seconds=60)
     async def loop():
         now = datetime.now().strftime('%H:%M')
@@ -147,7 +147,7 @@ class Uranai(commands.Cog):
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
 
-        # DB uranai_played_tb にユーザー ID があるか判定
+        # DB PlayedFortuneUsers にユーザー ID があるか判定
         async with ctx.channel.typing():
             print('--- DB の ユーザーID をチェック ---')
             played_list = []
@@ -200,7 +200,7 @@ class Uranai(commands.Cog):
         else:
             await ctx.send(f'結果はどうだった？またねー！')
 
-        # DB uranai_played_tb へユーザーIDを格納する
+        # DB PlayedFortuneUsers へユーザーIDを格納する
         print('--- DB へ ユーザーID を格納 ---')
         user_id = ctx.author.id
         psql.run_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
