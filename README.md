@@ -11,19 +11,19 @@
 「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由で  
 お声を出しづらい方でも、お友達と楽しく会話することができます。
 
-機能の詳細や使い方・導入方法は [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください。  
-
-## 2. 紹介動画
-
 働いている様子はこちら🌸（ Youtube へ移動します）
 
 [<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
-## 3. 招待 URL
+## 2. 招待 URL
 
 [https://example.com/](https://example.com/)
 
 ※ ご協力いただいている少数のサーバーにて試験運用中のため、現在 bot の一般公開は行っておりません。
+
+## 3. 使い方
+
+[📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください。
 
 ## 4. 使用ソフトウェア
 
@@ -53,7 +53,9 @@
 
 - 過去の Commit に bot のトークンの記述が残っていますが、トークンは既に無効化済みです（Git をプライベート設定で運用していた頃の名残）。現在の仕様では環境変数の設定ファイル `.env` へ記述を行います。
 
-## 8. リンク
+## 8. 参考文献
 
-- [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)  
-当 bot の使い方や導入方法をまとめています。
+- [discord.py へようこそ。](https://discordpy.readthedocs.io/ja/latest/#)
+- [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
+- [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
+- [Dockerのコンテナ間通信をする方法をまとめる - きり丸の技術日記](https://nainaistar.hatenablog.com/entry/2021/06/14/120000)
