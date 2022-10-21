@@ -16,10 +16,19 @@ RUN set -x && \
     apt clean -y && \
     rm -rf /var/lib/apt/lists/*
 
-# bot のソースコードをコンテナ内へ複製
+# bot 用のディレクトリを作成
 RUN mkdir /discordbot-mdn
+
+# 新規ユーザーを作成・ディレクトリへ所有権と権限を設定
+RUN useradd myuser && \
+    chown -R myuser /discordbot-mdn
+
+# bot のソースコードをコンテナ内へ複製
 COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
 COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
+
+# ユーザーを切り替え
+USER myuser
 
 # 作業ディレクトリを指定
 WORKDIR /discordbot-mdn
