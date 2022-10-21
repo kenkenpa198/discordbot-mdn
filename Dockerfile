@@ -1,37 +1,37 @@
-##### 実行環境の構築 #####
-FROM emptypage/open_jtalk:20.4_1.11
+# ビルド
+FROM emptypage/open_jtalk:22.04-1.11
 
 # tzdata の入力を待たない
 ENV DEBIAN_FRONTEND=noninteractive
 
+# 環境構築
 RUN set -x && \
-    apt-get update -y && \
-    apt-get install -y python3-pip libopus-dev && \
-    apt-get install -y tzdata && \
-    apt-get install -y libpq-dev && \
+    apt update -y && \
+    apt install -y libopus-dev libpq-dev python3-pip tzdata && \
     pip3 install --upgrade pip && \
-    pip3 install jtalkbot==0.5.0 discord.py==1.7.3 psycopg2==2.8.6 alkana.py==0.0.1
-# 環境変数の読み込み
-# docker-compose.yml / heroku.yml から渡されたトークンなどを読み込む
-ARG TZ
-ENV HOME=/${TZ}
-ARG BOT_TOKEN
-ENV HOME=/${BOT_TOKEN}
-ARG DATABASE_URL
-ENV HOME=/${DATABASE_URL}
+    pip3 install alkana==0.0.3 discord.py==1.7.3 jtalkbot==0.6.1.3 psycopg2==2.9.3
 
-##### アプリ環境の構築 #####
+# キャッシュの削除
 RUN set -x && \
-    mkdir /discordbot-mdn && \
-    mkdir /discordbot-mdn/cogs && \
-    mkdir -p /usr/local/Cellar/open-jtalk/1.11 && \
-    # シンボリックリンクの作成
-    ln -s /usr/local/lib/open_jtalk/dic /usr/local/Cellar/open-jtalk/1.11 && \
-    ln -s /usr/local/lib/open_jtalk/voice /usr/local/Cellar/open-jtalk/1.11
-WORKDIR /discordbot-mdn
+    apt clean -y && \
+    rm -rf /var/lib/apt/lists/*
+
+# bot 用のディレクトリを作成
+RUN mkdir /discordbot-mdn
+
+# 新規ユーザーを作成・ディレクトリへ所有権と権限を設定
+RUN useradd myuser && \
+    chown -R myuser /discordbot-mdn
+
+# bot のソースコードをコンテナ内へ複製
 COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
 COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
 
-##### キャッシュの削除 #####
-RUN set -x && \
-    apt-get clean -y && rm -rf /var/lib/apt/lists/*
+# ユーザーを切り替え
+USER myuser
+
+# 作業ディレクトリを指定
+WORKDIR /discordbot-mdn
+
+# コンテナ稼働時の実行コマンドを定義
+CMD /bin/sh -c "python3 -u bot.py"

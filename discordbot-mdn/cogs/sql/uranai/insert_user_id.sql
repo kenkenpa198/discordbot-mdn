@@ -1,6 +1,6 @@
-INSERT INTO uranai_played_tb (
+INSERT INTO PlayedFortuneUsers (
     user_id,
-    update_date
+    updated_at
 )
 VALUES (
     %(user_id)s,

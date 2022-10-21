@@ -21,8 +21,8 @@ def jtalk(t, guild_id):
     # 音声データの作成
     voice_path = 'voice_' + str(guild_id) + '.wav'
     open_jtalk = ['open_jtalk']
-    mech       = ['-x', '/usr/local/Cellar/open-jtalk/1.11/dic']
-    htsvoice   = ['-m', '/usr/local/Cellar/open-jtalk/1.11/voice/mei/mei_happy.htsvoice']
+    mech       = ['-x', '/usr/local/lib/open_jtalk/dic']
+    htsvoice   = ['-m', '/usr/local/lib/open_jtalk/voice/mei/mei_happy.htsvoice']
 
     # 声質の設定
     speed      = ['-r',   '0.7'] # スピーチ速度係数

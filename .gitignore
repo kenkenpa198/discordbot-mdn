@@ -130,5 +130,5 @@ dmypy.json
 
 # discordbot-mdn
 .vscode/
-secret.txt
 *.wav
+.env

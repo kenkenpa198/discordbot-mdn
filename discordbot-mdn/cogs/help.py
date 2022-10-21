@@ -6,7 +6,7 @@ import discord
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @commands.command(aliases=['h'])
     async def help(self, ctx):
         print('===== もだねちゃんヘルプを表示します =====')
