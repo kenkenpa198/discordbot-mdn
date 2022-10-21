@@ -27,8 +27,11 @@
 
 ## 4. 使用ソフトウェア
 
-- [discord.py](https://discordpy.readthedocs.io/)
 - [alkana.py](https://github.com/cod-sushi/alkana.py)
+- [discord.py](https://discordpy.readthedocs.io/)
+- [Docker](https://www.docker.com)
+    - [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
+    - [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore) ※開発環境でのみ使用
 - [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)
@@ -36,14 +39,17 @@
 
 ## 5. 実行環境
 
-- ~[Heroku](https://www.heroku.com)~
-    - ~[Heroku Dynos](https://jp.heroku.com/dynos)~
-    - ~[Heroku Postgres](https://jp.heroku.com/postgres)~
-- [Docker](https://www.docker.com)
-    - Bot: [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
-    - Database: [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore)
+### 5.1. 2022年10月21日まで
 
-（2022年10月追記）利用していた [Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、実行環境を [Railway](https://railway.app/) に移行しました（仮）。  
+- [Heroku](https://www.heroku.com)
+    - [Heroku Dynos](https://jp.heroku.com/dynos)
+    - [Heroku Postgres](https://jp.heroku.com/postgres)
+
+### 5.2. 2022年10月22日から
+
+[Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、実行環境を [Railway](https://railway.app/) に移行しました（仮）。  
+
+- [Railway](https://railway.app/)
 
 ## 6. ライセンス
 
@@ -51,7 +57,8 @@
 
 ## 7. その他
 
-- 過去の Commit に bot のトークンの記述が残っていますが、トークンは既に無効化済みです（Git をプライベート設定で運用していた頃の名残）。現在の仕様では環境変数の設定ファイル `.env` へ記述を行います。
+- 古いコミットに bot のトークンの記述が残っていますが既に無効化済みです。Git をプライベート設定で運用していた頃の名残です。
+    - 現在の仕様ではホスト OS の環境変数もしくは設定ファイル `.env` へ記述を行っています。
 
 ## 8. 参考文献
 
