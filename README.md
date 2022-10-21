@@ -43,7 +43,7 @@
     - Bot: [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
     - Database: [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore)
 
-（2022年09月追記）利用していた [Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、実行環境を [Railway](https://railway.app/) に移行しました（仮）。  
+（2022年10月追記）利用していた [Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、実行環境を [Railway](https://railway.app/) に移行しました（仮）。  
 
 ## 6. ライセンス
 
