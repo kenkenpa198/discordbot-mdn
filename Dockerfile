@@ -16,6 +16,13 @@ RUN set -x && \
     apt clean -y && \
     rm -rf /var/lib/apt/lists/*
 
-# bot の作業ディレクトリを作成
+# bot のソースコードをコンテナ内へ複製
 RUN mkdir /discordbot-mdn
+COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
+COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
+
+# 作業ディレクトリを指定
 WORKDIR /discordbot-mdn
+
+# コンテナ稼働時の実行コマンドを定義
+CMD /bin/sh -c "python3 -u bot.py"
