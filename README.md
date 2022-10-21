@@ -59,3 +59,4 @@
 - [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
 - [Dockerのコンテナ間通信をする方法をまとめる - きり丸の技術日記](https://nainaistar.hatenablog.com/entry/2021/06/14/120000)
+- [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
