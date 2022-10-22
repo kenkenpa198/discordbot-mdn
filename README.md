@@ -34,7 +34,7 @@
 - [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)
-- [psycopg2](https://github.com/psycopg/psycopg2)
+- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/)
 
 ## 5. 実行環境
 
@@ -66,3 +66,4 @@
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
 - [Dockerのコンテナ間通信をする方法をまとめる - きり丸の技術日記](https://nainaistar.hatenablog.com/entry/2021/06/14/120000)
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
+- [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
