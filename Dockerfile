@@ -7,9 +7,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # 環境構築
 RUN set -x && \
     # apt インストール
-    apt update -y && \
-    apt install -y --no-install-recommends libopus-dev python3-pip tzdata && \
-    apt clean -y && rm -rf /var/lib/apt/lists/* && \
+    apt-get update -y && \
+    apt-get install -y --no-install-recommends libopus-dev python3-pip tzdata && \
+    apt-get clean -y && rm -rf /var/lib/apt/lists/* && \
     # pip インストール
     pip3 install --upgrade pip && \
     pip3 install alkana==0.0.3 discord.py==1.7.3 jtalkbot==0.6.1.3 psycopg2-binary==2.9.4 && \
