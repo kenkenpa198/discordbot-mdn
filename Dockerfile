@@ -6,21 +6,18 @@ ENV DEBIAN_FRONTEND=noninteractive
 
 # 環境構築
 RUN set -x && \
+    # apt インストール
     apt update -y && \
-    apt install -y libopus-dev libpq-dev python3-pip tzdata && \
+    apt install -y --no-install-recommends libopus-dev python3-pip tzdata && \
+    apt clean -y && rm -rf /var/lib/apt/lists/* && \
+    # pip インストール
     pip3 install --upgrade pip && \
-    pip3 install alkana==0.0.3 discord.py==1.7.3 jtalkbot==0.6.1.3 psycopg2==2.9.3
-
-# キャッシュの削除
-RUN set -x && \
-    apt clean -y && \
-    rm -rf /var/lib/apt/lists/*
-
-# bot 用のディレクトリを作成
-RUN mkdir /discordbot-mdn
-
-# 新規ユーザーを作成・ディレクトリへ所有権と権限を設定
-RUN useradd myuser && \
+    pip3 install alkana==0.0.3 discord.py==1.7.3 jtalkbot==0.6.1.3 psycopg2-binary==2.9.4 && \
+    # bot 用のディレクトリを作成
+    mkdir /discordbot-mdn && \
+    # 新規ユーザーを作成
+    useradd myuser && \
+    # ディレクトリへ所有権と権限を設定
     chown -R myuser /discordbot-mdn
 
 # bot のソースコードをコンテナ内へ複製

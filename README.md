@@ -8,8 +8,7 @@
 もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる読み上げ bot です。  
 テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。
 
-「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由で  
-お声を出しづらい方でも、お友達と楽しく会話することができます。
+「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。
 
 働いている様子はこちら🌸（ Youtube へ移動します）
 
@@ -31,7 +30,7 @@
 - [discord.py](https://discordpy.readthedocs.io/)
 - [Docker](https://www.docker.com)
     - [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
-    - [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore) ※開発環境でのみ使用
+    - [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore) ※ 開発環境でのみ使用
 - [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
 - [Open JTalk](http://open-jtalk.sourceforge.net)
 - [Opus](https://opus-codec.org)

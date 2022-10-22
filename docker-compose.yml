@@ -8,9 +8,9 @@ services:
       - db-volume:/var/lib/postgresql/data          # 名前付きデータボリュームへ PSQL のデータが保存されているディレクトリをマウント。DB 上のデータを永続化する
     environment:
       - LANG=ja_JP.utf8
-      - POSTGRES_USER=discordbot_mdn
+      - POSTGRES_DB
       - POSTGRES_PASSWORD
-      - POSTGRES_DB=discordbot_mdn
+      - POSTGRES_USER
       - TZ=Asia/Tokyo
     restart: always
 
