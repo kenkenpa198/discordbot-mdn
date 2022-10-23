@@ -1,5 +1,5 @@
 SELECT
     guild_id
 FROM
-    TalkChannels
+    talk_channels
 ;

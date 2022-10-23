@@ -20,7 +20,7 @@ class Petite(commands.Cog):
         print(ctx.message.content)
         print(ctx.message.clean_content)
         if ctx.author.voice is None: # ボイスチャンネルにコマンド実行者がいるか判定
-            print('--- VCにコマンド実行者がいません ---')
+            print('VCにコマンド実行者がいません')
             return
         print(ctx.guild.voice_channels)
         print(ctx.guild.voice_client)
@@ -45,7 +45,7 @@ class Petite(commands.Cog):
     #     guild = ctx.message.guild
     #     role = discord.utils.get(guild.roles, name='develop')
     #     print('変更対象：' + str(role))
-    #     print('--- 役職の色を変更しました ---')
+    #     print('役職の色を変更しました')
     #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
     #     await ctx.send(f'ロール「もだねちゃん」の色を変更しました。')
 

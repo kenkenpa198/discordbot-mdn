@@ -19,18 +19,18 @@ bot.remove_command('help') # デフォルトの help を削除
 @bot.event
 async def on_ready():
     # 起動したらターミナルへログイン通知を表示
-    print('--- ログイン成功 ---')
+    print('ログイン成功')
     print('===== bot 起動時の処理を実行します =====')
 
     # アクティビティ表示を変更
-    print('--- アクティビティ表示を変更 ---')
+    print('アクティビティ表示を変更')
     client = bot
     act = discord.Game('「 !mdn h 」でヘルプを表示するよ！                          ') # Discord のメンバー欄で「〜をプレイ中」を表示させないため空白をいっぱい入れている
     await client.change_presence(status=None, activity=act)
 
     # 読み上げ機能：自動再接続処理
-    print('--- 読み上げ機能：自動再接続処理を開始 ---')
-    print('--- 読み上げ対象 DB を取得 ---')
+    print('読み上げ機能：自動再接続処理を開始')
+    print('読み上げ対象チャンネルの情報を talk_channels テーブルから取得')
     guild_id_list    = psql.run_query_to_list('cogs/sql/talk/select_guild_ids.sql')
     vc_id_list       = psql.run_query_to_list('cogs/sql/talk/select_vc_ids.sql')
     channel_id_list  = psql.run_query_to_list('cogs/sql/talk/select_channel_ids.sql')
@@ -38,23 +38,23 @@ async def on_ready():
     if guild_id_list:
         num = 0
         for guild_id, vc_id, channel_id in zip(guild_id_list, vc_id_list, channel_id_list):
-            print('--- VC への接続を実行（'+ str(num) +'） ---')
+            print('VC への接続を実行（'+ str(num) +'）')
             talk_guild = bot.get_guild(int(guild_id))
             talk_vc = talk_guild.get_channel(int(vc_id))
             talk_channel = talk_guild.get_channel(int(channel_id))
             await talk_vc.connect()
-            print('--- VC へ接続完了 ---')
+            print('VC へ接続完了')
 
             embed = discord.Embed(title='ボイスチャンネルへ再入室しました',description='もだねちゃんが再起動したので、再接続処理を行いました。', color=0xffd6e9)
             try:
                 await talk_channel.send(embed=embed)
             except AttributeError as e:
-                print('--- メッセージを送信できませんでした ---')
+                print('メッセージを送信できませんでした')
                 traceback.print_exc()
                 print(e)
             num += 1
     else:
-        print('--- 読み上げ対象 DB にレコードが無かったためスキップ ---')
+        print('読み上げ対象チャンネルが存在しなかったためスキップ')
 
 
     print('===== bot 起動時の処理を完了しました =====')
@@ -64,7 +64,7 @@ async def on_ready():
 ##### イベント発生時に動作する処理 #####
 @bot.event
 async def on_command_error(ctx, error):
-    print('--- エラー ---')
+    print('エラー')
     print('on_command_error')
     print(traceback.format_exc())
     embed = discord.Embed(title='コマンドを受け付けられませんでした',description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドで使い方を確認してみてね！', color=0xffab6f)

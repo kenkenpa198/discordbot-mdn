@@ -125,7 +125,7 @@ played_list = []
 def delete_played_tb():
     played_list.clear()
     psql.run_query('cogs/sql/uranai/delete_user_id.sql')
-    print('===== DB とリストの中身を削除しました =====')
+    print('===== played_fortune_users テーブルとリストの中身を削除しました =====')
 
 
 ##### コグ #####
@@ -133,7 +133,7 @@ class Uranai(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # 指定日時に DB PlayedFortuneUsers の中身を削除する
+    # 指定日時に played_fortune_users テーブルの中身を削除する
     @tasks.loop(seconds=60)
     async def loop():
         now = datetime.now().strftime('%H:%M')
@@ -147,29 +147,29 @@ class Uranai(commands.Cog):
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
 
-        # DB PlayedFortuneUsers にユーザー ID があるか判定
+        # played_fortune_users テーブルにユーザー ID があるか判定
         async with ctx.channel.typing():
-            print('--- DB の ユーザーID をチェック ---')
+            print('played_fortune_users テーブルのユーザーID をチェック')
             played_list = []
             played_list = psql.run_query_to_list('cogs/sql/uranai/select_user_id.sql')
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
-            print('--- 遊んだ人リストにIDがあるため中断 ---')
+            print('遊んだ人リストにIDがあるため中断')
             embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
             print('===== もだねちゃん占いを終了します =====')
             return
 
         # 運勢占い処理
-        print('--- 運勢 3つを決定 ---')
+        print('運勢 3つを決定')
         random.shuffle(fortune_list)
         print(fortune_list[0])
         print(fortune_list[1])
         print(fortune_list[2])
 
         # 運勢用の星を算出してリストに格納
-        print('--- 運勢の星を決定 ---')
+        print('運勢の星を決定')
         star_result_list = random.choices(star_list, k=3, weights=[4, 15, 50, 25, 4, 2])
         star_result_list.sort(reverse=True)
         print(star_result_list)
@@ -178,7 +178,7 @@ class Uranai(commands.Cog):
         print(star_result_list[2])
 
         # ラッキーアイテム占い処理
-        print('--- ラッキーアイテムを決定 ---')
+        print('ラッキーアイテムを決定')
         lucky_num = random.randint(0,len(lucky_list)-1)
         lucky_value = lucky_list[lucky_num]
         print(lucky_value)
@@ -200,11 +200,11 @@ class Uranai(commands.Cog):
         else:
             await ctx.send(f'結果はどうだった？またねー！')
 
-        # DB PlayedFortuneUsers へユーザーIDを格納する
-        print('--- DB へ ユーザーID を格納 ---')
+        # played_fortune_users テーブルへユーザーIDを格納する
+        print('played_fortune_users テーブルへ ユーザーID を格納')
         user_id = ctx.author.id
         psql.run_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
-        print('--- DB へ格納完了 ---')
+        print('完了')
 
         print('===== もだねちゃん占いを終了します =====')
 

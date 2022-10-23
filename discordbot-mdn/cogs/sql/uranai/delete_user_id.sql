@@ -1,4 +1,4 @@
 DELETE
 FROM
-    PlayedFortuneUsers
+    played_fortune_users
 ;

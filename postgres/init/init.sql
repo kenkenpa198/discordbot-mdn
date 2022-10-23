@@ -2,7 +2,7 @@
 \c discordbot_mdn_db
 
 -- 読み上げチャンネルテーブルの作成
-CREATE TABLE TalkChannels (
+CREATE TABLE talk_channels (
     guild_id   CHAR(18) NOT NULL,
     vc_id      CHAR(18) NOT NULL,
     channel_id CHAR(18) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE TalkChannels (
 );
 
 -- 占い済みユーザーテーブルの作成
-CREATE TABLE PlayedFortuneUsers (
+CREATE TABLE played_fortune_users (
     user_id CHAR(18) NOT NULL,
     updated_at timestamp without time zone NOT NULL,
 
