@@ -1,5 +1,5 @@
 -- データベースの切り替え
-\c discordbot_mdn
+\c discordbot_mdn_db
 
 -- 読み上げチャンネルテーブルの作成
 CREATE TABLE TalkChannels (
