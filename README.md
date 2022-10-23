@@ -67,3 +67,4 @@
 - [Dockerのコンテナ間通信をする方法をまとめる - きり丸の技術日記](https://nainaistar.hatenablog.com/entry/2021/06/14/120000)
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
 - [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
+- [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)
