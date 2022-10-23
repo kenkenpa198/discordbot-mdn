@@ -6,6 +6,8 @@ services:
     volumes:
       - ./postgres/init:/docker-entrypoint-initdb.d # 初期設定用ディレクトリのバインドマウント。ビルド時に init.sql を実行してテーブル作成などの初期設定を行う
       - db-volume:/var/lib/postgresql/data          # 名前付きデータボリュームへ PSQL のデータが保存されているディレクトリをマウント。DB 上のデータを永続化する
+    ports:
+      - 55432:5432
     environment:
       - LANG=ja_JP.utf8
       - POSTGRES_DB
