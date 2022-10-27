@@ -3,9 +3,6 @@ services:
 
   db:
     image: postgres:14.5-alpine3.16
-    volumes:
-      - ./postgres/init:/docker-entrypoint-initdb.d # 初期設定用ディレクトリのバインドマウント。ビルド時に init.sql を実行してテーブル作成などの初期設定を行う
-      - db-volume:/var/lib/postgresql/data          # 名前付きデータボリュームへ PSQL のデータが保存されているディレクトリをマウント。DB 上のデータを永続化する
     environment:
       - LANG=ja_JP.utf8
       - TZ=Asia/Tokyo
@@ -14,6 +11,15 @@ services:
       - POSTGRES_DB
       - POSTGRES_HOST_AUTH_METHOD=scram-sha-256        # パスワードの認証方式を scram-sha-256 で設定
       - POSTGRES_INITDB_ARGS=--auth-host=scram-sha-256 # パスワードの認証方式を scram-sha-256 で初期化
+    volumes:
+      - ./postgres/init:/docker-entrypoint-initdb.d # 初期設定用ディレクトリのバインドマウント。ビルド時に init.sql を実行してテーブル作成などの初期設定を行う
+      - db-volume:/var/lib/postgresql/data          # 名前付きデータボリュームへ PSQL のデータが保存されているディレクトリをマウント。DB 上のデータを永続化する
+    logging:
+      # driver: 'gcplogs'
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '2'
     restart: always
 
   main:
@@ -24,6 +30,12 @@ services:
       - BOT_TOKEN
     volumes:
       - ./discordbot-mdn/:/discordbot-mdn/ # bot のソースコードをバインドマウント
+    logging:
+      # driver: 'gcplogs'
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+        max-file: '2'
     restart: always
 
 volumes:
