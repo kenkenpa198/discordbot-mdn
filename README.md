@@ -39,11 +39,11 @@
 ## 5. 実行環境
 
 初公開から2年間の間は Heroku の無料プランを利用していました。  
-[Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、Google Cloud Platform 上での稼働に移行しました。  
+[Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、Google Cloud 上での稼働に移行しました。  
 
-### 5.1. 2021年10月21日まで
+### 5.1. 2022年10月21日まで
 
-タグ: `vX.Y.Z` ～ `vX.Y.Z` <!-- TODO: バージョンの変更 -->
+タグ: `v0.17.0` まで
 
 - [Heroku](https://www.heroku.com)
     - [Heroku Dynos](https://jp.heroku.com/dynos)
@@ -51,16 +51,16 @@
 
 ### 5.2. 2022年10月22日 ～ 2022年MM月DD日 <!-- TODO: 日付の変更 -->
 
-タグ: `vX.Y.Z` ～ `vX.Y.Z` <!-- TODO: バージョンの変更 -->
+タグ: `v0.18.0` まで
 
 - [Railway](https://railway.app/)
     - Heroku サービスの有料化にあたり、一時的に利用しました。
 
 ### 5.3. 2022年MM月DD日から <!-- TODO: 日付の変更 -->
 
-タグ: `vX.Y.Z` ～ 現バージョン <!-- TODO: バージョンの変更 -->
+タグ: `v1.0.0` ～ 現バージョン
 
-- [Google Cloud Platform](https://console.cloud.google.com/)
+- [Google Cloud](https://console.cloud.google.com/)
 
 ## 6. ローカル PC 上での実行
 
@@ -70,9 +70,13 @@
 ### 6.1. 必要なもの
 
 - Docker および Docker Compose が実行可能な環境（手順は WSL2 上での実行）
+- 約 850 MB 以上の空き容量（下記内訳）
+    - `discordbot-mdn_main` : 546 MB
+    - `postgres` : 217 MB
+    - `discordbot-mdn_db-volume` : 50 MB ～
 - Discord Bot のトークン
 
-### 6.2. 実行手順 <!-- TODO: 問題ないか確認 -->
+### 6.2. 実行手順
 
 1. リポジトリをクローン・ルートディレクトリへ移動
 
@@ -132,9 +136,12 @@
 - [discord.py へようこそ。](https://discordpy.readthedocs.io/ja/latest/#)
 - [Pythonで実用Discord Bot(discordpy解説) - Qiita](https://qiita.com/1ntegrale9/items/9d570ef8175cf178468f)
 - [Discord Botアカウント初期設定ガイド for Developer - Qiita](https://qiita.com/1ntegrale9/items/cb285053f2fa5d0cccdf)
+- [DiscordBot開発実践入門 - cod-sushi - BOOTH](https://cod-sushi.booth.pm/items/2391223)
+- [DiscordBot運営実践入門 - cod-sushi - BOOTH](https://booth.pm/ja/items/1533599)
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
 - [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
 - [postgresql - Error when running psql command in /docker-entrypoint-initdb.d/db_init.sh (psql: could not connect to server: Connection refused) - Stack Overflow](https://stackoverflow.com/questions/51659972/error-when-running-psql-command-in-docker-entrypoint-initdb-d-db-init-sh-psql)
 - [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
 - [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
+- [docker-composeでサービス運用しているなら設定しておきたいログローテート - Qiita](https://qiita.com/harachan/items/fa306cc1e6b497e592c3)
