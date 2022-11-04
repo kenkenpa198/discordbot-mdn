@@ -1,5 +1,5 @@
 SELECT
     channel_id
 FROM
-    TalkChannels
+    talk_channels
 ;

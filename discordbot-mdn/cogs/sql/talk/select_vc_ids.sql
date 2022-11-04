@@ -1,5 +1,5 @@
 SELECT
     vc_id
 FROM
-    TalkChannels
+    talk_channels
 ;

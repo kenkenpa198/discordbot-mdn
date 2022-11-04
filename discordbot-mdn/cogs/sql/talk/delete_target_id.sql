@@ -1,6 +1,6 @@
 DELETE
 FROM
-    TalkChannels
+    talk_channels
 WHERE
     guild_id = '%(guild_id)s'
 ;

@@ -1,4 +1,4 @@
-INSERT INTO TalkChannels (
+INSERT INTO talk_channels (
     guild_id,
     vc_id,
     channel_id,

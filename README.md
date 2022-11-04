@@ -1,69 +1,160 @@
-![おしゃべりぼっと！もだねちゃん](https://user-images.githubusercontent.com/75349575/120725676-7439e800-c511-11eb-8503-e8a98999a57e.png)
+<!-- omit in toc -->
+# ![おしゃべりぼっと！もだねちゃん](images/kv.png)
+
 <p align="center"><b>おしゃべりぼっと！もだねちゃん</b></p>
 
----
+<!-- omit in toc -->
+## 目次
+
+- [1. もだねちゃんとは？](#1-もだねちゃんとは)
+- [2. Bot の導入方法・使い方](#2-bot-の導入方法使い方)
+- [3. 構築](#3-構築)
+    - [3.1. 必要なもの](#31-必要なもの)
+    - [3.2. 実行手順](#32-実行手順)
+- [4. 使用ソフトウェア](#4-使用ソフトウェア)
+- [5. ライセンス](#5-ライセンス)
+- [6. 謝辞](#6-謝辞)
+- [7. 参考文献](#7-参考文献)
+    - [7.1. Discord Bot](#71-discord-bot)
+    - [7.2. Docker](#72-docker)
 
 ## 1. もだねちゃんとは？
 
-もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる読み上げ bot です。  
-テキストチャンネルに投稿された文章を、ボイスチャンネルで読み上げてくれます。
+もだねちゃんは、ボイスチャットツール Discord 上で働いてくれる読み上げ Bot です。  
+テキストチャンネルに投稿された文章をボイスチャンネルで読み上げてくれます。
 
 「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。
 
-働いている様子はこちら🌸（ Youtube へ移動します）
+働いている様子はこちら🌸（Youtube へ移動します）
 
-[<img src="https://user-images.githubusercontent.com/75349575/101226033-75ab6480-36d6-11eb-877d-f63e33409883.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
+[<img src="images/movie_thumbnail.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
-## 2. 招待 URL
+## 2. Bot の導入方法・使い方
 
-[https://example.com/](https://example.com/)
+[📙お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) をご覧ください。  
+※ ご協力いただいている少数のサーバーにて試験運用中のため、現在 Bot の一般公開は行っておりません。
 
-※ ご協力いただいている少数のサーバーにて試験運用中のため、現在 bot の一般公開は行っておりません。
+## 3. 構築
 
-## 3. 使い方
+環境を構築して Bot を稼働させる場合は以下の手順で行います。  
+実行に関しては自己責任でお願いします。
 
-[📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください。
+### 3.1. 必要なもの
+
+- Docker および Docker Compose が実行可能な環境（手順は WSL2 上での実行）
+- 約 850 MB 以上の空き容量（下記内訳）
+    - `discordbot-mdn_main` イメージ: 546 MB
+    - `postgres` イメージ: 217 MB
+    - `discordbot-mdn_db-volume` ボリューム: 50 MB ～
+- Discord Bot のトークン
+
+### 3.2. 実行手順
+
+1. リポジトリをクローン。
+
+    ```shell
+    $ git clone https://github.com/kenkenpa198/discordbot-mdn.git
+    ```
+
+2. リポジトリのルートディレクトリへ移動。
+
+    ```shell
+    $ cd discordbot-mdn
+    ```
+
+3. `.env` ファイルを作成し、パスワードとトークンを記述。
+
+    ```shell
+    $ cp .env.sample .env
+    $ vim .env
+    ```
+
+    ```properties
+    # PostgreSQL イメージ用の環境変数
+    POSTGRES_USER=discordbot_mdn
+    POSTGRES_PASSWORD=__ENTER_PG_PASSWORD_HERE__ # 好みのパスワードを記述
+    POSTGRES_DB=discordbot_mdn_db
+
+    # PostgreSQL の接続用 URL
+    DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+
+    # bot のトークン
+    BOT_TOKEN=__ENTER_BOT_TOKEN_HERE__           # Discord Bot のアクセストークンを記述
+    ```
+
+4. `docker-compose` コマンドでコンテナを立ち上げ。
+
+    ```shell
+    $ docker-compose up -d
+    ...
+    Creating discordbot-mdn_db_1   ... done
+    Creating discordbot-mdn_main_1 ... done
+    ```
+
+5. `main_1` `db_1` コンテナが起動していることを確認。
+
+    ```shell
+    $ docker ps
+    CONTAINER ID   IMAGE                      ...   NAMES
+    aaaaaaaaaaaa   discordbot-mdn_main        ...   discordbot-mdn_main_1
+    bbbbbbbbbbbb   postgres:14.5-alpine3.16   ...   discordbot-mdn_db_1
+    ```
+
+6. コンテナのログを確認。`main_1` 側のログへ `Hello, World!` と表示されていれば OK 。
+
+    ```shell
+    $ docker-compose logs -f
+    main_1  | ===== もだねちゃんを起動します =====
+    main_1  | 起動時刻：2022-10-30 20:10:49.678740
+    ...
+    main_1  | ===== bot 起動時の処理を完了しました =====
+    main_1  | ===== Hello, World! =====
+    ```
+
+7. Bot を招待したサーバーで実行確認。  
+参考: [📙お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック)
 
 ## 4. 使用ソフトウェア
 
-- [alkana.py](https://github.com/cod-sushi/alkana.py)
-- [discord.py](https://discordpy.readthedocs.io/)
-- [Docker](https://www.docker.com)
-    - [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
-    - [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore) ※ 開発環境でのみ使用
-- [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
-- [Open JTalk](http://open-jtalk.sourceforge.net)
-- [Opus](https://opus-codec.org)
-- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/)
+- [Rapptz/discord.py](https://github.com/Rapptz/discord.py)  
+Copyright (c) 2015-present Rapptz  
+License: [https://github.com/Rapptz/discord.py/blob/master/LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE)
+- [zomysan/alkana.py](https://github.com/zomysan/alkana.py)  
+License: [https://github.com/zomysan/alkana.py/blob/master/LICENSE](https://github.com/zomysan/alkana.py/blob/master/LICENSE)
+- [Opus](https://opus-codec.org)  
+License: [https://opus-codec.org/license/](https://opus-codec.org/license/)
+- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/)  
+License: [https://www.psycopg.org/docs/license.html](https://www.psycopg.org/docs/license.html)
+- [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)  
+Copyright © 2020 Masaaki Shibata  
+License: [https://bitbucket.org/emptypage/open_jtalk-docker/src/master/LICENSE](https://bitbucket.org/emptypage/open_jtalk-docker/src/master/LICENSE)
+- [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-db802f226b620fc0b8adbeca7859eb203c8d3c9ce5d84870fadee05dea8f50ce?context=explore)  
+License: [https://www.postgresql.org/about/licence/](https://www.postgresql.org/about/licence/)
 
-## 5. 実行環境
-
-### 5.1. 2022年10月21日まで
-
-- [Heroku](https://www.heroku.com)
-    - [Heroku Dynos](https://jp.heroku.com/dynos)
-    - [Heroku Postgres](https://jp.heroku.com/postgres)
-
-### 5.2. 2022年10月22日から
-
-[Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、実行環境を [Railway](https://railway.app/) に移行しました（仮）。  
-
-- [Railway](https://railway.app/)
-
-## 6. ライセンス
+## 5. ライセンス
 
 [MIT License](LICENSE)
 
-## 7. その他
+## 6. 謝辞
 
-- 古いコミットに bot のトークンの記述が残っていますが既に無効化済みです。Git をプライベート設定で運用していた頃の名残です。
-    - 現在の仕様ではホスト OS の環境変数もしくは設定ファイル `.env` へ記述を行っています。
+しばたまさあきさん、捕食域の皆さんに相談やテストなどでご協力いただきました。  
+ありがとうございました！
 
-## 8. 参考文献
+## 7. 参考文献
+
+### 7.1. Discord Bot
 
 - [discord.py へようこそ。](https://discordpy.readthedocs.io/ja/latest/#)
-- [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
+- [Pythonで実用Discord Bot(discordpy解説) - Qiita](https://qiita.com/1ntegrale9/items/9d570ef8175cf178468f)
+- [DiscordBot開発実践入門 - cod-sushi - BOOTH](https://cod-sushi.booth.pm/items/2391223)
+- [DiscordBot運営実践入門 - cod-sushi - BOOTH](https://booth.pm/ja/items/1533599)
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
-- [Dockerのコンテナ間通信をする方法をまとめる - きり丸の技術日記](https://nainaistar.hatenablog.com/entry/2021/06/14/120000)
+
+### 7.2. Docker
+
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
 - [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
+- [docker-composeでサービス運用しているなら設定しておきたいログローテート - Qiita](https://qiita.com/harachan/items/fa306cc1e6b497e592c3)
+- [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
+- [postgresql - Error when running psql command in /docker-entrypoint-initdb.d/db_init.sh (psql: could not connect to server: Connection refused) - Stack Overflow](https://stackoverflow.com/questions/51659972/error-when-running-psql-command-in-docker-entrypoint-initdb-d-db-init-sh-psql)
+- [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)

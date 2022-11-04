@@ -15,7 +15,7 @@ RUN set -x && \
     pip3 install alkana==0.0.3 discord.py==1.7.3 jtalkbot==0.6.1.3 psycopg2-binary==2.9.4 && \
     # bot 用のディレクトリを作成
     mkdir /discordbot-mdn && \
-    # 新規ユーザーを作成
+    # 新規ユーザーを作成（root での稼働を防止するため）
     useradd myuser && \
     # ディレクトリへ所有権と権限を設定
     chown -R myuser /discordbot-mdn

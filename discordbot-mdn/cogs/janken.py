@@ -26,7 +26,7 @@ class Janken(commands.Cog):
         def judge_aiko(player, computer):
             if player == computer:
                 print('勝敗：アイコ')
-                print('--- 繰り返します ---')
+                print('繰り返します')
                 return 'アイコだ！さあ、もう一回！'
 
         # プレイヤーとコンピュータの手を比較して勝敗を戻り値として返す関数

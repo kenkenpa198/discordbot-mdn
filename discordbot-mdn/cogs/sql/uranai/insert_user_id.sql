@@ -1,4 +1,4 @@
-INSERT INTO PlayedFortuneUsers (
+INSERT INTO played_fortune_users (
     user_id,
     updated_at
 )

@@ -5,7 +5,7 @@ from os.path import join, dirname
 import psycopg2
 
 
-# DB 接続
+# DB へ接続
 def get_connection():
     DATABASE_URL = os.environ.get('DATABASE_URL')
     return psycopg2.connect(DATABASE_URL)
