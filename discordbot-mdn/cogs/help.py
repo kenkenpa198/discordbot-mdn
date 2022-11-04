@@ -10,7 +10,7 @@ class Help(commands.Cog):
     @commands.command(aliases=['h'])
     async def help(self, ctx):
         print('===== もだねちゃんヘルプを表示します =====')
-        embed = discord.Embed(title='もだねちゃんヘルプ', description='もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は[ 📙 ガイドブック ](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)を確認してみてね！', color=0xffd6e9)
+        embed = discord.Embed(title='もだねちゃんヘルプ', description='もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は [📙ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) を確認してみてね！', color=0xffd6e9)
         await ctx.send(embed=embed)
 
         embed = discord.Embed(title='読み上げ機能', color=0xffd6e9)
@@ -27,7 +27,7 @@ class Help(commands.Cog):
         await ctx.send(embed=embed)
 
         embed = discord.Embed(title='その他の機能', color=0xffd6e9)
-        help_name  = f'✌️ジャンケンで遊ぶ'
+        help_name  = f'✌️ ジャンケンで遊ぶ'
         help_value = f'```!mdn j```'
         embed.add_field(name=help_name, value=help_value, inline=False)
 
