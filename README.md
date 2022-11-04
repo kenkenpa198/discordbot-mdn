@@ -7,17 +7,16 @@
 ## 目次
 
 - [1. もだねちゃんとは？](#1-もだねちゃんとは)
-- [2. 招待 URL・使い方](#2-招待-url使い方)
-- [3. 使用ソフトウェア](#3-使用ソフトウェア)
-- [4. 稼働環境](#4-稼働環境)
-    - [4.1. 概観図](#41-概観図)
-    - [4.2. 稼働環境の変遷](#42-稼働環境の変遷)
-- [5. ローカル PC 上での実行](#5-ローカル-pc-上での実行)
-    - [5.1. 必要なもの](#51-必要なもの)
-    - [5.2. 実行手順](#52-実行手順)
-- [6. ライセンス](#6-ライセンス)
-- [7. その他](#7-その他)
-- [8. 参考文献](#8-参考文献)
+- [2. Bot の導入方法・使い方](#2-bot-の導入方法使い方)
+- [3. 構築](#3-構築)
+    - [3.1. 必要なもの](#31-必要なもの)
+    - [3.2. 実行手順](#32-実行手順)
+- [4. 使用ソフトウェア](#4-使用ソフトウェア)
+- [5. ライセンス](#5-ライセンス)
+- [6. 謝辞](#6-謝辞)
+- [7. 参考文献](#7-参考文献)
+    - [7.1. Discord Bot](#71-discord-bot)
+    - [7.2. Docker](#72-docker)
 
 ## 1. もだねちゃんとは？
 
@@ -30,58 +29,26 @@
 
 [<img src="images/movie_thumbnail.jpg" alt="読み上げbot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
-## 2. 招待 URL・使い方
+## 2. Bot の導入方法・使い方
 
-[📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック) をご覧ください。
+[📙お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) をご覧ください。  
+※ ご協力いただいている少数のサーバーにて試験運用中のため、現在 Bot の一般公開は行っておりません。
 
-## 3. 使用ソフトウェア
+## 3. 構築
 
-- [alkana.py](https://github.com/cod-sushi/alkana.py)
-- [discord.py](https://discordpy.readthedocs.io/)
-- [Docker](https://www.docker.com)
-    - [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)
-    - [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-9ece045f37060bf6b0a36ffbd5afa4f56636370791abae5062ed6005ec0e5110?context=explore)
-- [jtalkbot](https://bitbucket.org/emptypage/jtalkbot/src/master/)
-- [Open JTalk](http://open-jtalk.sourceforge.net)
-- [Opus](https://opus-codec.org)
-- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/)
-
-## 4. 稼働環境
-
-[Google Cloud](https://console.cloud.google.com/) 上に構築したサーバーにて稼働中です。
-
-### 4.1. 概観図
-
-<!-- TODO: 図を作成する -->
-
-### 4.2. 稼働環境の変遷
-
-初公開から約2年間の間は [Heroku](https://www.heroku.com) の無料プランを利用していました。  
-[Heroku サービスの有料化](https://blog.heroku.com/next-chapter) に伴い、Google Cloud 上での稼働に移行しました。  
-
-| 日付       | タグ             | プラットフォーム        | 備考                                                                    |
-|------------|------------------|-------------------------|-------------------------------------------------------------------------|
-| 2020-09-12 | -                | Local -> Heroku         | Heroku にて稼働を開始。                                                 |
-| 2022-08-21 | v0.17.0          | Heroku                  | Heroku 上での稼働最終バージョン。                                       |
-| 2022-08-25 | -                | -                       | Heroku サービスの有料化が発表。                                         |
-| 2022-10-22 | v0.18.0          | Heroku -> Railway       | 引っ越し先の検討のため [Railway](https://railway.app/) を一時的に利用。 |
-| 2022-11-05 | v1.0.0           | Railway -> Google Cloud | Google Cloud にて稼働開始。                                             |
-
-## 5. ローカル PC 上での実行
-
-ローカル PC 上での実行は以下の手順で行います。  
+環境を構築して Bot を稼働させる場合は以下の手順で行います。  
 実行に関しては自己責任でお願いします。
 
-### 5.1. 必要なもの
+### 3.1. 必要なもの
 
 - Docker および Docker Compose が実行可能な環境（手順は WSL2 上での実行）
 - 約 850 MB 以上の空き容量（下記内訳）
-    - `discordbot-mdn_main` : 546 MB
-    - `postgres` : 217 MB
-    - `discordbot-mdn_db-volume` : 50 MB ～
+    - `discordbot-mdn_main` イメージ: 546 MB
+    - `postgres` イメージ: 217 MB
+    - `discordbot-mdn_db-volume` ボリューム: 50 MB ～
 - Discord Bot のトークン
 
-### 5.2. 実行手順
+### 3.2. 実行手順
 
 1. リポジトリをクローン。
 
@@ -95,7 +62,7 @@
     $ cd discordbot-mdn
     ```
 
-3. `.env` ファイルを作成し、パスワードとトークンを変更。
+3. `.env` ファイルを作成し、パスワードとトークンを記述。
 
     ```shell
     $ cp .env.sample .env
@@ -119,39 +86,75 @@
 
     ```shell
     $ docker-compose up -d
+    ...
+    Creating discordbot-mdn_db_1   ... done
+    Creating discordbot-mdn_main_1 ... done
     ```
 
-5. コンテナが起動していることを確認。
+5. `main_1` `db_1` コンテナが起動していることを確認。
 
     ```shell
     $ docker ps
-    $ docker-compose logs -f
+    CONTAINER ID   IMAGE                      ...   NAMES
+    aaaaaaaaaaaa   discordbot-mdn_main        ...   discordbot-mdn_main_1
+    bbbbbbbbbbbb   postgres:14.5-alpine3.16   ...   discordbot-mdn_db_1
     ```
 
-6. Bot を招待したサーバーで実行確認。  
-参考: [📙 お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙-お仕事内容ガイドブック)
+6. コンテナのログを確認。`main_1` 側のログへ `Hello, World!` と表示されていれば OK 。
 
-## 6. ライセンス
+    ```shell
+    $ docker-compose logs -f
+    main_1  | ===== もだねちゃんを起動します =====
+    main_1  | 起動時刻：2022-10-30 20:10:49.678740
+    ...
+    main_1  | ===== bot 起動時の処理を完了しました =====
+    main_1  | ===== Hello, World! =====
+    ```
+
+7. Bot を招待したサーバーで実行確認。  
+参考: [📙お仕事内容ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック)
+
+## 4. 使用ソフトウェア
+
+- [Rapptz/discord.py](https://github.com/Rapptz/discord.py)  
+Copyright (c) 2015-present Rapptz  
+License: [https://github.com/Rapptz/discord.py/blob/master/LICENSE](https://github.com/Rapptz/discord.py/blob/master/LICENSE)
+- [zomysan/alkana.py](https://github.com/zomysan/alkana.py)  
+License: [https://github.com/zomysan/alkana.py/blob/master/LICENSE](https://github.com/zomysan/alkana.py/blob/master/LICENSE)
+- [Opus](https://opus-codec.org)  
+License: [https://opus-codec.org/license/](https://opus-codec.org/license/)
+- [psycopg2-binary](https://pypi.org/project/psycopg2-binary/)  
+License: [https://www.psycopg.org/docs/license.html](https://www.psycopg.org/docs/license.html)
+- [emptypage/open_jtalk:22.04-1.11](https://hub.docker.com/layers/emptypage/open_jtalk/22.04-1.11/images/sha256-16f1ee83f32f019c5a44eb14fd557fa36a3ff00b89e064c65e47d81f193c9601?context=explore)  
+Copyright © 2020 Masaaki Shibata  
+License: [https://bitbucket.org/emptypage/open_jtalk-docker/src/master/LICENSE](https://bitbucket.org/emptypage/open_jtalk-docker/src/master/LICENSE)
+- [postgres:14.5-alpine3.16](https://hub.docker.com/layers/library/postgres/14.5-alpine3.16/images/sha256-db802f226b620fc0b8adbeca7859eb203c8d3c9ce5d84870fadee05dea8f50ce?context=explore)  
+License: [https://www.postgresql.org/about/licence/](https://www.postgresql.org/about/licence/)
+
+## 5. ライセンス
 
 [MIT License](LICENSE)
 
-## 7. その他
+## 6. 謝辞
 
-- 古いコミットに Bot のトークンの記述が残っていますが、既に無効化済みです。
-    - Git をプライベート設定で運用していた頃の名残です。
-    - 現在の仕様ではホスト OS の環境変数もしくは設定ファイル `.env` へ書き込まれた値をコンテナへ渡しています。
+しばたまさあきさん、捕食域の皆さんに相談やテストなどでご協力いただきました。  
+ありがとうございました！
 
-## 8. 参考文献
+## 7. 参考文献
+
+### 7.1. Discord Bot
 
 - [discord.py へようこそ。](https://discordpy.readthedocs.io/ja/latest/#)
 - [Pythonで実用Discord Bot(discordpy解説) - Qiita](https://qiita.com/1ntegrale9/items/9d570ef8175cf178468f)
-- [Discord Botアカウント初期設定ガイド for Developer - Qiita](https://qiita.com/1ntegrale9/items/cb285053f2fa5d0cccdf)
 - [DiscordBot開発実践入門 - cod-sushi - BOOTH](https://cod-sushi.booth.pm/items/2391223)
 - [DiscordBot運営実践入門 - cod-sushi - BOOTH](https://booth.pm/ja/items/1533599)
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
-- [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
-- [postgresql - Error when running psql command in /docker-entrypoint-initdb.d/db_init.sh (psql: could not connect to server: Connection refused) - Stack Overflow](https://stackoverflow.com/questions/51659972/error-when-running-psql-command-in-docker-entrypoint-initdb-d-db-init-sh-psql)
-- [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)
+
+### 7.2. Docker
+
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
 - [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
 - [docker-composeでサービス運用しているなら設定しておきたいログローテート - Qiita](https://qiita.com/harachan/items/fa306cc1e6b497e592c3)
+- [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
+- [postgresql - Error when running psql command in /docker-entrypoint-initdb.d/db_init.sh (psql: could not connect to server: Connection refused) - Stack Overflow](https://stackoverflow.com/questions/51659972/error-when-running-psql-command-in-docker-entrypoint-initdb-d-db-init-sh-psql)
+- [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)
