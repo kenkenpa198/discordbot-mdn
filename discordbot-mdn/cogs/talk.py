@@ -231,7 +231,7 @@ class Talk(commands.Cog):
                     print('===== 読み上げを終了します：自動退出 =====')
                     guild_id = member.guild.id
                     talk_id = None
-                    talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
+                    talk_id = int(psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id}))
                     talk_channel = member.guild.get_channel(talk_id)
                     await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
