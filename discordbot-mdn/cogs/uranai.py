@@ -1,13 +1,16 @@
+'''Cog Uranai'''
+
+import asyncio
+from datetime import datetime
+import random
+
 import discord
 from discord.ext import commands
 from discord.ext import tasks
-import asyncio
-import random
-from datetime import datetime
-import subprocess
+
 from .utils import psql
 
-
+# TODO: CSV などへ切り出し
 ##### 占い用リスト・辞書 #####
 # 運勢結果リスト
 fortune_list = [
@@ -143,7 +146,7 @@ class Uranai(commands.Cog):
     loop.start()
 
     # もだねちゃん占い
-    @commands.command(aliases=['u'])
+    @commands.hybrid_command(aliases=['u'], description='今日の運勢を占うよ')
     async def uranai(self, ctx):
         print('===== もだねちゃん占いを開始します =====')
 
@@ -156,7 +159,7 @@ class Uranai(commands.Cog):
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
             print('遊んだ人リストにIDがあるため中断')
-            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ',description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
+            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ', description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
             await ctx.send(embed=embed)
             print('===== もだねちゃん占いを終了します =====')
             return
@@ -179,7 +182,7 @@ class Uranai(commands.Cog):
 
         # ラッキーアイテム占い処理
         print('ラッキーアイテムを決定')
-        lucky_num = random.randint(0,len(lucky_list)-1)
+        lucky_num = random.randint(0, len(lucky_list)-1)
         lucky_value = lucky_list[lucky_num]
         print(lucky_value)
 
@@ -196,9 +199,9 @@ class Uranai(commands.Cog):
         async with ctx.channel.typing():
             await asyncio.sleep(.5)
         if '⭐️⭐️⭐️⭐️⭐️⭐️' in star_result_list:
-            await ctx.send(f'わっ！★6 の運勢があるよ！\n今日はとっても良い日になりそうだね🌸\n\nまたねーっ！')
+            await ctx.send('わっ！★6 の運勢があるよ！\n今日はとっても良い日になりそうだね🌸\n\nまたねーっ！')
         else:
-            await ctx.send(f'結果はどうだった？またねー！')
+            await ctx.send('結果はどうだった？またねー！')
 
         # played_fortune_users テーブルへユーザーIDを格納する
         print('played_fortune_users テーブルへ ユーザーID を格納')
@@ -208,6 +211,5 @@ class Uranai(commands.Cog):
 
         print('===== もだねちゃん占いを終了します =====')
 
-
-def setup(bot):
-    bot.add_cog(Uranai(bot))
+async def setup(bot):
+    await bot.add_cog(Uranai(bot))

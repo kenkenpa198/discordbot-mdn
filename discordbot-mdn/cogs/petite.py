@@ -1,6 +1,7 @@
-import discord
-from discord.ext import commands
+'''Cog Petite'''
+
 import asyncio
+from discord.ext import commands
 
 
 ##### コグ #####
@@ -44,11 +45,10 @@ class Petite(commands.Cog):
     #     print('===== 初期設定を行います =====')
     #     guild = ctx.message.guild
     #     role = discord.utils.get(guild.roles, name='develop')
-    #     print('変更対象：' + str(role))
+    #     print('変更対象: ' + str(role))
     #     print('役職の色を変更しました')
     #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
     #     await ctx.send(f'ロール「もだねちゃん」の色を変更しました。')
 
-
-def setup(bot):
-    bot.add_cog(Petite(bot))
+async def setup(bot):
+    await bot.add_cog(Petite(bot))

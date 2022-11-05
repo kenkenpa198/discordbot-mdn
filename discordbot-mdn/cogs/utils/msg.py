@@ -1,3 +1,5 @@
+'''Format message modules'''
+
 import asyncio
 import re
 

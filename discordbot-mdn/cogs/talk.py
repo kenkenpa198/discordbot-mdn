@@ -1,7 +1,8 @@
+'''Cog Talk'''
+
 import asyncio
 import io
 import os
-import subprocess
 import traceback
 import wave
 
@@ -18,10 +19,9 @@ class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-
     ##### 読み上げを開始する #####
-    @commands.command(aliases=['s'])
-    async def start(self, ctx, tch: discord.TextChannel=None):
+    @commands.hybrid_command(aliases=['s', 'start'], description='読み上げを開始するよ')
+    async def t_start(self, ctx, text_channel: discord.TextChannel=None):
         print('===== 読み上げを開始します =====')
 
         # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
@@ -30,9 +30,9 @@ class Talk(commands.Cog):
             print('読み上げ対象を設定')
             talk_guild     = ctx.guild                # サーバー
             talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-            if tch:
+            if text_channel:
                 # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-                talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+                talk_channel = discord.utils.get(ctx.guild.text_channels, name=text_channel.name)
             else:
                 # 引数がない場合はコマンドを実行したテキストチャンネルを格納
                 talk_channel = ctx.channel
@@ -46,7 +46,7 @@ class Talk(commands.Cog):
             psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('完了')
 
-            embed = discord.Embed(title='読み上げ対象を再設定したよ',description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
+            embed = discord.Embed(title='読み上げ対象を再設定したよ', description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
             embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
             await ctx.send(embed=embed)
             return
@@ -75,9 +75,9 @@ class Talk(commands.Cog):
         print('読み上げ対象を設定')
         talk_guild     = ctx.guild                # サーバー
         talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-        if tch:
+        if text_channel:
             # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-            talk_channel = discord.utils.get(ctx.guild.text_channels, name=tch.name)
+            talk_channel = discord.utils.get(ctx.guild.text_channels, name=text_channel.name)
             send_hello = False
         else:
             # 引数がない場合はコマンドを実行したテキストチャンネルを格納
@@ -93,10 +93,10 @@ class Talk(commands.Cog):
         psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
         print('完了')
 
-        embed = discord.Embed(title='読み上げを開始するよ',description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
+        embed = discord.Embed(title='読み上げを開始するよ', description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
         embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
         embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
-        embed.set_footer(text='ㅤ\nヒント：\n読み上げ対象を再設定したい時や、もだねちゃんがうまく動かない時は「 !mdn s 」コマンドの再実行をお試しください。')
+        embed.set_footer(text='ㅤ\nヒント: \n読み上げ対象を再設定したい時や、もだねちゃんがうまく動かない時は「 !mdn s 」コマンドの再実行をお試しください。')
         await ctx.send(embed=embed)
         await asyncio.sleep(1)
 
@@ -105,28 +105,18 @@ class Talk(commands.Cog):
         await talk_vc.connect()
         await asyncio.sleep(.5)
         if send_hello:
-            await ctx.send(f'やっほー！もだねちゃんだよ！')
-
-
-    ##### 読み上げ対象のテキストチャンネルを再設定する #####
-    @commands.command(aliases=['c'])
-    async def change(self, ctx, tch: discord.TextChannel=None):
-        print ('===== 読み上げ対象のテキストチャンネルを再設定します =====')
-
-        embed = discord.Embed(title='読み上げ対象の再設定方法が変わりました',description='読み上げ対象チャンネルの再設定用コマンドは、読み上げ開始コマンド `!mdn s` と統合されました。\n再設定したいチャンネル上で読み上げ開始コマンドを実行してみてね！', color=0xffd6e9)
-        embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
-        await ctx.send(embed=embed)
+            await ctx.send('やっほー！もだねちゃんだよ！')
 
 
     ##### 読み上げを終了する #####
-    @commands.command(aliases=['e'])
-    async def end(self, ctx):
-        print('===== 読み上げを終了します：コマンド受付 =====')
+    @commands.hybrid_command(aliases=['e', 'end'], description='読み上げを終了するよ')
+    async def t_end(self, ctx):
+        print('===== 読み上げを終了します: コマンド受付 =====')
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
-            print('エラーコード：002')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした',description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
+            print('エラーコード: 002')
+            embed = discord.Embed(title='コマンドを受け付けられませんでした', description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
             embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
             await ctx.send(embed=embed)
             return
@@ -146,7 +136,6 @@ class Talk(commands.Cog):
     ##### テキストチャンネルに投稿されたテキストを読み上げる #####
     @commands.Cog.listener()
     async def on_message(self, message):
-
         # メッセージ投稿者がサーバーのボイスチャンネルにいなかったら無視
         if not message.guild.voice_client:
             return
@@ -228,7 +217,7 @@ class Talk(commands.Cog):
                 vc = discord.utils.get(self.bot.voice_clients, channel=before.channel)
                 if vc and vc.is_connected():
                     await asyncio.sleep(1)
-                    print('===== 読み上げを終了します：自動退出 =====')
+                    print('===== 読み上げを終了します: 自動退出 =====')
                     guild_id = member.guild.id
                     talk_id = None
                     talk_id = int(psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id}))
@@ -261,6 +250,5 @@ class Talk(commands.Cog):
             guild_id = member.guild.id
             psql.run_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
-
-def setup(bot):
-    bot.add_cog(Talk(bot))
+async def setup(bot):
+    await bot.add_cog(Talk(bot))

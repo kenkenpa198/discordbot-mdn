@@ -1,3 +1,5 @@
+'''Generate voice modules'''
+
 import os
 import subprocess
 

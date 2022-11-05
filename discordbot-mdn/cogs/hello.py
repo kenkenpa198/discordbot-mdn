@@ -1,8 +1,7 @@
-import asyncio
-import re
+'''Cog Hello'''
 
-import alkana
-import discord
+import asyncio
+
 from discord.ext import commands
 
 from .utils import msg
@@ -47,6 +46,5 @@ class Hello(commands.Cog):
             await asyncio.sleep(4)
         await message.channel.send(f'{message.author.mention}\nやっほー！もだねちゃんだよ！')
 
-
-def setup(bot):
-    bot.add_cog(Hello(bot))
+async def setup(bot):
+    await bot.add_cog(Hello(bot))

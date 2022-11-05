@@ -1,4 +1,5 @@
-##### PostgreSQL 操作用モジュール #####
+'''PostgreSQL modules'''
+
 import os
 from os.path import join, dirname
 
