@@ -1,4 +1,4 @@
-'''main bot program'''
+"""main bot program"""
 
 import asyncio
 from datetime import datetime
@@ -16,9 +16,9 @@ print('====================================')
 print('           discordbot-mdn           ')
 print('====================================')
 
-print(f'起動時刻: {str(datetime.now())}')
-print(f'python: {platform.python_version()}')
-print(f'discord.py: {discord.__version__}')
+print(str(datetime.now()))
+print(f'python v{platform.python_version()}')
+print(f'discord.py v{discord.__version__}')
 
 # logging の設定
 discord.utils.setup_logging(level=logging.INFO, root=False)
@@ -32,7 +32,7 @@ bot = commands.Bot(command_prefix='!mdn ', intents=intents)
 
 @bot.event
 async def on_ready():
-    '''bot がログイン時に実行する関数'''
+    """bot がログイン時に実行する処理"""
 
     print('===== bot 起動後の処理を実行します =====')
 
@@ -51,9 +51,9 @@ async def on_ready():
     # 読み上げ機能: 自動再接続処理
     print('読み上げ機能: 自動再接続処理を開始')
     print('読み上げ対象チャンネルの情報を talk_channels テーブルから取得')
-    guild_id_list    = psql.run_query_to_list('cogs/sql/talk/select_guild_ids.sql')
-    vc_id_list       = psql.run_query_to_list('cogs/sql/talk/select_vc_ids.sql')
-    channel_id_list  = psql.run_query_to_list('cogs/sql/talk/select_channel_ids.sql')
+    guild_id_list    = psql.do_query_fetch_list('cogs/sql/talk/select_guild_ids.sql')
+    vc_id_list       = psql.do_query_fetch_list('cogs/sql/talk/select_vc_ids.sql')
+    channel_id_list  = psql.do_query_fetch_list('cogs/sql/talk/select_channel_ids.sql')
 
     if guild_id_list:
         num = 0
@@ -84,7 +84,7 @@ async def on_ready():
 ##### イベント発生時に動作する処理 #####
 @bot.event
 async def on_command_error(ctx, error):
-    '''コマンドのエラー時に実行する関数'''
+    """コマンドのエラー時に実行する処理"""
 
     print('エラー')
     print(f'on_command_error: {error}')

@@ -43,7 +43,7 @@ class Talk(commands.Cog):
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
 
-            psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
+            psql.do_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
             print('完了')
 
             embed = discord.Embed(title='読み上げ対象を再設定したよ', description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
@@ -90,7 +90,7 @@ class Talk(commands.Cog):
         vc_id      = talk_vc.id
         channel_id = talk_channel.id
 
-        psql.run_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
+        psql.do_query('cogs/sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
         print('完了')
 
         embed = discord.Embed(title='読み上げを開始するよ', description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
@@ -122,12 +122,6 @@ class Talk(commands.Cog):
             return
 
         # ボイスチャンネルから退出する
-        guild_id = ctx.guild.id
-        talk_id = None
-        talk_id = psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id})
-        talk_channel = ctx.guild.get_channel(talk_id)
-        # talk_channel = discord.utils.get(ctx.guild.text_channels, id=int(talk_id))
-        talk_vc = ctx.voice_client.channel
         await ctx.voice_client.disconnect()
         embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
         await ctx.send(embed=embed)
@@ -141,8 +135,8 @@ class Talk(commands.Cog):
             return
 
         # talk_channels テーブルにテキストチャンネルのIDが入っていなかったら無視
-        talk_channel_list = psql.run_query_to_list('cogs/sql/talk/select_channel_ids.sql')
-        if not str(message.channel.id) in talk_channel_list:
+        talk_channel_list = psql.do_query_fetch_list('cogs/sql/talk/select_channel_ids.sql')
+        if str(message.channel.id) not in talk_channel_list:
             return
 
         # !が先頭に入っていたら or botだったら無視
@@ -219,8 +213,7 @@ class Talk(commands.Cog):
                     await asyncio.sleep(1)
                     print('===== 読み上げを終了します: 自動退出 =====')
                     guild_id = member.guild.id
-                    talk_id = None
-                    talk_id = int(psql.run_query_to_var('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id}))
+                    talk_id = int(psql.do_query_fetch_one('cogs/sql/talk/select_channel_id.sql', {'guild_id': guild_id}))
                     talk_channel = member.guild.get_channel(talk_id)
                     await vc.disconnect()
                     embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
@@ -248,7 +241,7 @@ class Talk(commands.Cog):
             # talk_channels テーブルから読み上げ対象のレコードを削除
             print('talk_channels テーブルから退出した ID のレコードを削除')
             guild_id = member.guild.id
-            psql.run_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
+            psql.do_query('cogs/sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
 async def setup(bot):
     await bot.add_cog(Talk(bot))

@@ -1,4 +1,4 @@
-'''Cog Uranai'''
+"""Cog Uranai"""
 
 import asyncio
 from datetime import datetime
@@ -121,14 +121,11 @@ lucky_list = [
     '📰 ニュース'
     ]
 
-# 遊んだ人リストを定義
-played_list = []
-
 # played_list の中身を削除する関数を定義
 def delete_played_tb():
-    played_list.clear()
-    psql.run_query('cogs/sql/uranai/delete_user_id.sql')
-    print('===== played_fortune_users テーブルとリストの中身を削除しました =====')
+    """占い済みテーブルのレコードを削除する"""
+    psql.do_query('cogs/sql/uranai/delete_user_id.sql')
+    print('===== played_fortune_users テーブルのレコードを削除しました =====')
 
 
 ##### コグ #####
@@ -154,7 +151,7 @@ class Uranai(commands.Cog):
         async with ctx.channel.typing():
             print('played_fortune_users テーブルのユーザーID をチェック')
             played_list = []
-            played_list = psql.run_query_to_list('cogs/sql/uranai/select_user_id.sql')
+            played_list = psql.do_query_fetch_list('cogs/sql/uranai/select_user_id.sql')
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
@@ -206,7 +203,7 @@ class Uranai(commands.Cog):
         # played_fortune_users テーブルへユーザーIDを格納する
         print('played_fortune_users テーブルへ ユーザーID を格納')
         user_id = ctx.author.id
-        psql.run_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
+        psql.do_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
         print('完了')
 
         print('===== もだねちゃん占いを終了します =====')
