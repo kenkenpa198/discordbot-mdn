@@ -21,8 +21,7 @@ RUN set -x && \
     chown -R myuser /discordbot-mdn
 
 # bot のソースコードをコンテナ内へ複製
-COPY /discordbot-mdn/bot.py /discordbot-mdn/bot.py
-COPY /discordbot-mdn/cogs/ /discordbot-mdn/cogs/
+COPY /discordbot-mdn/ /discordbot-mdn/
 
 # ユーザーを切り替え
 USER myuser

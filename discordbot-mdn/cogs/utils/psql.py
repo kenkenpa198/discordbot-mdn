@@ -53,10 +53,10 @@ def do_query(query_file_path, bind_dict=None):
 
     Examples
     --------
-    >>> do_query('cogs/sql/uranai/delete_user_id.sql')
-    >>> do_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
+    >>> do_query('./sql/uranai/delete_user_id.sql')
+    >>> do_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
     >>> do_query(
-            'cogs/sql/talk/upsert_target_id.sql',
+            './sql/talk/upsert_target_id.sql',
             {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id}
         )
     """

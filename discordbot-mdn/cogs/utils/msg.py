@@ -4,7 +4,7 @@ import re
 import alkana
 
 # alkana へ外部辞書を登録
-alkana.add_external_data('./cogs/csv/alkana_dict.csv')
+alkana.add_external_data('./csv/alkana_dict.csv')
 
 # 置換用辞書（かな変換の前処理用）
 init_dict = {

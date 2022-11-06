@@ -51,9 +51,9 @@ async def on_ready():
     # 読み上げ機能: 自動再接続処理
     print('読み上げ機能: 自動再接続処理を開始')
     print('読み上げ対象チャンネルの情報を talk_channels テーブルから取得')
-    guild_id_list    = psql.do_query_fetch_list('cogs/sql/talk/select_guild_ids.sql')
-    vc_id_list       = psql.do_query_fetch_list('cogs/sql/talk/select_vc_ids.sql')
-    channel_id_list  = psql.do_query_fetch_list('cogs/sql/talk/select_channel_ids.sql')
+    guild_id_list    = psql.do_query_fetch_list('./sql/talk/select_guild_ids.sql')
+    vc_id_list       = psql.do_query_fetch_list('./sql/talk/select_vc_ids.sql')
+    channel_id_list  = psql.do_query_fetch_list('./sql/talk/select_channel_ids.sql')
 
     if guild_id_list:
         num = 0

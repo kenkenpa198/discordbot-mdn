@@ -124,7 +124,7 @@ lucky_list = [
 # played_list の中身を削除する関数を定義
 def delete_played_tb():
     """占い済みテーブルのレコードを削除する"""
-    psql.do_query('cogs/sql/uranai/delete_user_id.sql')
+    psql.do_query('./sql/uranai/delete_user_id.sql')
     print('===== played_fortune_users テーブルのレコードを削除しました =====')
 
 
@@ -151,7 +151,7 @@ class Uranai(commands.Cog):
         async with ctx.channel.typing():
             print('played_fortune_users テーブルのユーザーID をチェック')
             played_list = []
-            played_list = psql.do_query_fetch_list('cogs/sql/uranai/select_user_id.sql')
+            played_list = psql.do_query_fetch_list('./sql/uranai/select_user_id.sql')
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
@@ -203,7 +203,7 @@ class Uranai(commands.Cog):
         # played_fortune_users テーブルへユーザーIDを格納する
         print('played_fortune_users テーブルへ ユーザーID を格納')
         user_id = ctx.author.id
-        psql.do_query('cogs/sql/uranai/insert_user_id.sql', {'user_id': user_id})
+        psql.do_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
         print('完了')
 
         print('===== もだねちゃん占いを終了します =====')
