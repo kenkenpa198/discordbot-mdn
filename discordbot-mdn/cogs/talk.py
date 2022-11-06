@@ -132,12 +132,17 @@ class Talk(commands.Cog):
         if str(message.channel.id) not in talk_channel_list:
             return
 
-        # !が先頭に入っていたら or botだったら無視
-        if message.content.startswith('!') or message.author.bot:
-            # もだねちゃんのセリフは通す
-            # if not 'やっほー！もだねちゃんだよ！' in message.content: # あいさつのみ通す時
-            if not message.author == self.bot.user:
-                return
+        # もだねちゃん以外の Bot だったら無視
+        if message.author.bot and message.author != self.bot.user:
+            return
+
+        # 本文が存在しなかったら無視
+        if not message.content:
+            return
+
+        # !が先頭に入っていたら（コマンドだったら）無視
+        if message.content.startswith('!'):
+            return
 
         print('===== 読み上げを実行します =====')
         print('メッセージの整形')
