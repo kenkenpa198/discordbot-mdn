@@ -1,4 +1,4 @@
-'''Cog Talk'''
+"""Cog Talk"""
 
 import asyncio
 import io
@@ -10,6 +10,7 @@ import discord
 from discord.ext import commands
 
 from .utils import msg
+from .utils import send as sd
 from .utils import psql
 from .utils import voice
 
@@ -43,28 +44,26 @@ class Talk(commands.Cog):
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
 
-            psql.do_query('./sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
-            print('完了')
+            psql.do_query(
+                './sql/talk/upsert_target_id.sql',
+                {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id}
+            )
 
-            embed = discord.Embed(title='読み上げ対象を再設定したよ', description='こちらのテキストチャンネルでおしゃべりを再開するね！', color=0xffd6e9)
-            embed.add_field(name='ㅤ\n:green_book: 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
-            await ctx.send(embed=embed)
+            await sd.send_talk_restart(ctx, channel_id)
             return
 
         # ボイスチャンネルにコマンド実行者がいるか判定
         if not ctx.author.voice:
             print('VCにコマンド実行者がいないため待機します')
-            embed = discord.Embed(title='読み上げの実施を待機するよ', description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してね。', color=0xe3e5e8)
-            await ctx.send(embed=embed)
+            await sd.send_talk_wait(ctx)
 
             # 10秒まで待機
             # ボイスチャンネルにコマンド実行者が入ったら続行する
             try:
                 await self.bot.wait_for('voice_state_update', check=voice.vc_check, timeout=10)
             except asyncio.TimeoutError:
-                embed = discord.Embed(title='読み上げの実施を中断したよ', description='読み上げを開始するには、コマンド実行者がボイスチャンネルへ入室してね。', color=0xffab6f)
-                await ctx.send(embed=embed)
                 print('===== VCへの接続を中断しました =====')
+                await sd.send_talk_stop(ctx)
                 return
             else:
                 print('VCにコマンド実行者が入室しました')
@@ -90,14 +89,12 @@ class Talk(commands.Cog):
         vc_id      = talk_vc.id
         channel_id = talk_channel.id
 
-        psql.do_query('./sql/talk/upsert_target_id.sql', {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id})
-        print('完了')
+        psql.do_query(
+            './sql/talk/upsert_target_id.sql',
+            {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id}
+        )
 
-        embed = discord.Embed(title='読み上げを開始するよ', description='こちらの内容でおしゃべりを始めるね！', color=0xffd6e9)
-        embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
-        embed.add_field(name='ㅤ\n📗 読み上げ対象', value='<#' + str(talk_channel.id) +'>')
-        embed.set_footer(text='ㅤ\nヒント: \n読み上げ対象を再設定したい時や、もだねちゃんがうまく動かない時は「 !mdn s 」コマンドの再実行をお試しください。')
-        await ctx.send(embed=embed)
+        await sd.send_talk_start(ctx, talk_vc, channel_id)
         await asyncio.sleep(1)
 
         # ボイスチャンネルへ接続する
@@ -105,7 +102,7 @@ class Talk(commands.Cog):
         await talk_vc.connect()
         await asyncio.sleep(.5)
         if send_hello:
-            await ctx.send('やっほー！もだねちゃんだよ！')
+            await sd.send_yahho(ctx)
 
 
     ##### 読み上げを終了する #####
@@ -115,16 +112,12 @@ class Talk(commands.Cog):
 
         # botがボイスチャンネルにいるか判定
         if not ctx.guild.voice_client:
-            print('エラーコード: 002')
-            embed = discord.Embed(title='コマンドを受け付けられませんでした', description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。', color=0xffab6f)
-            embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
-            await ctx.send(embed=embed)
+            await sd.send_talk_not_in_vc(ctx)
             return
 
         # ボイスチャンネルから退出する
         await ctx.voice_client.disconnect()
-        embed = discord.Embed(title='読み上げを終了したよ', description='ボイスチャンネルから退出して読み上げを終了しました。またね！', color=0xffd6e9)
-        await ctx.send(embed=embed)
+        await sd.send_talk_end(ctx)
 
 
     ##### テキストチャンネルに投稿されたテキストを読み上げる #####
@@ -163,13 +156,13 @@ class Talk(commands.Cog):
                 print('音声データを再生')
                 message.guild.voice_client.play(talk_src) # ボイスチャンネルで再生
 
-            '''
+            """
             NOTE: 以下だと音声の最初にノイズが走る
             stream = open(voice_path, 'rb')
             talk_src = discord.PCMAudio(stream)
             print('音声データを再生')
             message.guild.voice_client.play(talk_src, after=lambda e: stream.close()) # ボイスチャンネルで再生
-            '''
+            """
 
             # 再生が終わっていたら音声データを削除する
             while message.guild.voice_client.is_playing():
@@ -216,9 +209,9 @@ class Talk(commands.Cog):
                     talk_id = int(psql.do_query_fetch_one('./sql/talk/select_channel_id.sql', {'guild_id': guild_id}))
                     talk_channel = member.guild.get_channel(talk_id)
                     await vc.disconnect()
-                    embed = discord.Embed(title='読み上げを終了したよ', description='皆いなくなったので、ボイスチャンネルから退出しました。またね！', color=0xffd6e9)
+
                     try:
-                        await talk_channel.send(embed=embed)
+                        await sd.send_talk_end_auto(talk_channel)
                     except AttributeError as e:
                         print('メッセージを送信できませんでした')
                         traceback.print_exc()

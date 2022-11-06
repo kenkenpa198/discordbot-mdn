@@ -1,14 +1,13 @@
 """Cog Uranai"""
 
-import asyncio
 from datetime import datetime
 import random
 
-import discord
 from discord.ext import commands
 from discord.ext import tasks
 
 from .utils import psql
+from .utils import send as sd
 
 # TODO: CSV などへ切り出し
 ##### 占い用リスト・辞書 #####
@@ -156,8 +155,7 @@ class Uranai(commands.Cog):
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
             print('遊んだ人リストにIDがあるため中断')
-            embed = discord.Embed(title='もだねちゃん占いは 1日1回までだよ', description=f'{ctx.author.display_name}さんの運勢はもう占っちゃった！\nまた明日遊んでね！', color=0xffab6f)
-            await ctx.send(embed=embed)
+            await sd.send_uranai_played(ctx)
             print('===== もだねちゃん占いを終了します =====')
             return
 
@@ -185,20 +183,7 @@ class Uranai(commands.Cog):
 
         print('===== 結果を送信します =====')
         # メッセージ送信
-        embed = discord.Embed(title='もだねちゃん占い', description=f'{ctx.author.display_name}さんの今日の運勢だよ！', color=0xffd6e9)
-        embed.add_field(name='ㅤ\n' + fortune_list[0], value=star_result_list[0])
-        embed.add_field(name='ㅤ\n' + fortune_list[1], value=star_result_list[1])
-        embed.add_field(name='ㅤ\n' + fortune_list[2], value=star_result_list[2])
-        embed.add_field(name='ㅤ\nラッキーアイテム', value=lucky_value)
-
-        await ctx.send(embed=embed)
-        await asyncio.sleep(1)
-        async with ctx.channel.typing():
-            await asyncio.sleep(.5)
-        if '⭐️⭐️⭐️⭐️⭐️⭐️' in star_result_list:
-            await ctx.send('わっ！★6 の運勢があるよ！\n今日はとっても良い日になりそうだね🌸\n\nまたねーっ！')
-        else:
-            await ctx.send('結果はどうだった？またねー！')
+        await sd.send_uranai_result(ctx, fortune_list, star_result_list, lucky_value)
 
         # played_fortune_users テーブルへユーザーIDを格納する
         print('played_fortune_users テーブルへ ユーザーID を格納')

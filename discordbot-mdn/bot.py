@@ -11,6 +11,7 @@ import discord
 from discord.ext import commands
 
 from cogs.utils import psql
+from cogs.utils import send as sd
 
 print('====================================')
 print('           discordbot-mdn           ')
@@ -65,9 +66,8 @@ async def on_ready():
             await talk_vc.connect()
             print('VC へ接続完了')
 
-            embed = discord.Embed(title='ボイスチャンネルへ再入室しました', description='もだねちゃんが再起動したので、再接続処理を行いました。', color=0xffd6e9)
             try:
-                await talk_channel.send(embed=embed)
+                await sd.send_talk_reconnect(talk_channel)
             except AttributeError as e:
                 print('メッセージを送信できませんでした')
                 traceback.print_exc()
@@ -86,15 +86,11 @@ async def on_ready():
 async def on_command_error(ctx, error):
     """コマンドのエラー時に実行する処理"""
 
-    print('エラー')
+    print('コマンドの実行エラー')
     print(f'on_command_error: {error}')
     print(traceback.format_exc())
 
-    embed = discord.Embed(title='コマンドを受け付けられませんでした', description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\n以下のコマンドで使い方を確認してみてね！', color=0xffab6f)
-    embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='もだねちゃんのコマンド一覧を表示できます。```!mdn h```', inline=False)
-    embed.set_footer(text='ㅤ\n正しくコマンドを送信している場合でも、サーバー側の仕様によりこのメッセージが表示されることがあります。\n読み上げ終了時にこのメッセージが出てしまい、もだねちゃんを退出させることができない場合は以下の手順をお試しください。\n\n1. 「!mdn s」を送信し、読み上げ対象チャンネルを再設定する。\n2. 「!mdn e」を送信する。\n\n問題が解決されない場合、お手数ですが以下の手順でもだねちゃんを切断してあげてください。\n\n1. ボイスチャンネルのもだねちゃんを右クリックする。\n2.「切断」を選ぶ。')
-
-    await ctx.send(embed=embed)
+    await sd.send_on_command_error(ctx)
 
 
 ##### 接続処理 #####
