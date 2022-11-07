@@ -157,9 +157,11 @@ class Talk(commands.Cog):
         psql.do_query('./sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
 
-    ##### 読み上げを開始する #####
     @commands.hybrid_command(aliases=['s', 'start'], description='読み上げを開始するよ')
     async def t_start(self, ctx, text_channel: discord.TextChannel=None):
+        """
+        読み上げ開始コマンド
+        """
         logging.info('読み上げ開始コマンドを受付')
 
         # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
@@ -247,9 +249,11 @@ class Talk(commands.Cog):
             await sd.send_yahho(ctx)
 
 
-    ##### 読み上げを終了する #####
     @commands.hybrid_command(aliases=['e', 'end'], description='読み上げを終了するよ')
     async def t_end(self, ctx):
+        """
+        読み上げ終了コマンド
+        """
         logging.info('読み上げ終了コマンドを受付')
 
         # botがボイスチャンネルにいなかったらメッセージを送信
@@ -264,9 +268,11 @@ class Talk(commands.Cog):
         await sd.send_talk_end(ctx)
 
 
-    ##### テキストチャンネルに投稿されたテキストを読み上げる #####
     @commands.Cog.listener()
     async def on_message(self, message):
+        """
+        メッセージの読み上げ
+        """
         logging.info('メッセージを受付')
 
         # 読み上げ不可能な場合は終了
@@ -296,12 +302,14 @@ class Talk(commands.Cog):
             os.remove(voice_path)
 
 
-    ##### ボイスチャンネルへユーザーが入退室した時の処理 #####
     @commands.Cog.listener()
     async def on_voice_state_update(self,
                                     member: discord.Member,
                                     before: discord.VoiceState,
                                     after: discord.VoiceState):
+        """
+        ボイスチャンネルへユーザーが入退室した時の処理
+        """
         # before と after に変化がなければ無視
         if before.channel == after.channel:
             return

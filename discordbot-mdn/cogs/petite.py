@@ -10,10 +10,12 @@ class Petite(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # ping コマンド
     @commands.is_owner()
     @commands.command(aliases=['p'])
     async def ping(self, ctx):
+        """
+        ping コマンド
+        """
         logging.info('ping コマンドを受付')
         await ctx.send('pong!')
         logging.info(ctx)
@@ -30,9 +32,11 @@ class Petite(commands.Cog):
         logging.info(ctx.guild.voice_client.channel.members)
         logging.info(ctx.guild.voice_client.channel.id)
 
-    # what コマンド
     @commands.command(aliases=['w'])
     async def what(self, ctx, what):
+        """
+        what コマンド
+        """
         logging.info('what コマンドを受付')
         async with ctx.channel.typing():
             await asyncio.sleep(1)

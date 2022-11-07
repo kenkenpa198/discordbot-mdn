@@ -13,9 +13,11 @@ class Janken(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # もだねちゃんとジャンケンをする
     @commands.hybrid_command(aliases=['j'], description='ジャンケンで遊べるよ')
     async def janken(self, ctx):
+        """
+        ジャンケンコマンド
+        """
         logging.info('ジャンケンコマンドを受付')
 
         # wait_for に渡すリアクションの種別を判定するチェック関数を定義

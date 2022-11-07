@@ -15,6 +15,9 @@ class Help(commands.Cog):
 
     @commands.hybrid_command(aliases=['h'], description='ヘルプを表示するよ')
     async def help(self, ctx):
+        """
+        ヘルプコマンド
+        """
         logging.info('ヘルプコマンドを受付')
         await sd.send_help(ctx)
 

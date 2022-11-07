@@ -30,9 +30,11 @@ class Uranai(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    # 指定日時に played_fortune_users テーブルの中身を削除する
     @tasks.loop(seconds=60)
     async def loop():
+        """
+        毎日0時にレコードを削除する
+        """
         now = datetime.now().strftime('%H:%M')
         if now == '00:00':
             logging.info('played_fortune_users テーブルのレコードを削除')
@@ -40,9 +42,11 @@ class Uranai(commands.Cog):
     # ループ処理を実行
     loop.start()
 
-    # もだねちゃん占い
     @commands.hybrid_command(aliases=['u'], description='今日の運勢を占うよ')
     async def uranai(self, ctx):
+        """
+        占いコマンド
+        """
         logging.info('占いコマンドを受付')
 
         # played_fortune_users テーブルにユーザー ID があるか判定

@@ -12,7 +12,10 @@ class Hello(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_message(self, message): # メッセージが投稿された時のイベント
+    async def on_message(self, message):
+        """
+        あいさつ
+        """
         # メッセージ送信者がBotだった場合は無視する
         if message.author.bot:
             return
