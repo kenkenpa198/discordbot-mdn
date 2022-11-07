@@ -1,4 +1,4 @@
-'''Cog Janken'''
+"""Cog Janken"""
 
 import asyncio
 import logging

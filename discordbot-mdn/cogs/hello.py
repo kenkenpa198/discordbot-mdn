@@ -1,4 +1,4 @@
-'''Cog Hello'''
+"""Cog Hello"""
 
 import asyncio
 

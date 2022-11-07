@@ -1,4 +1,4 @@
-'''Cog Help'''
+"""Cog Help"""
 
 
 import logging

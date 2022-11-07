@@ -1,4 +1,4 @@
-'''Cog Reload'''
+"""Cog Reload"""
 
 from discord.ext import commands
 

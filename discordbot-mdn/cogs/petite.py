@@ -1,4 +1,4 @@
-'''Cog Petite'''
+"""Cog Petite"""
 
 import asyncio
 import logging
