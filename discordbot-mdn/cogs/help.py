@@ -1,7 +1,12 @@
 '''Cog Help'''
 
+
+import logging
 from discord.ext import commands
 from .utils import send as sd
+
+# logging の設定
+
 
 ##### コグ #####
 class Help(commands.Cog):
@@ -10,7 +15,7 @@ class Help(commands.Cog):
 
     @commands.hybrid_command(aliases=['h'], description='ヘルプを表示するよ')
     async def help(self, ctx):
-        print('===== もだねちゃんヘルプを表示します =====')
+        logging.info('ヘルプコマンドを受付')
         await sd.send_help(ctx)
 
 async def setup(bot):

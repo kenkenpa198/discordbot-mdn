@@ -22,12 +22,15 @@ print(f'python {platform.python_version()}')
 print(f'discord.py {discord.__version__}')
 
 # logging の設定
-discord.utils.setup_logging(level=logging.INFO, root=False)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s [ %(levelname)s ] %(message)s')
+# logging.basicConfig(level=logging.DEBUG, format='%(asctime)s [ %(levelname)s ] %(message)s')
+# discord.utils.setup_logging(level=logging.INFO, root=False)
 
 # intents の許可設定
 intents = discord.Intents.default()
 intents.message_content = True
 
+# Bot インスタンスの作成
 bot = commands.Bot(command_prefix='!mdn ', intents=intents)
 
 # デフォルトの help を削除
@@ -37,7 +40,7 @@ async def main():
     """discordbot-mdn を実行"""
 
     async with bot:
-        print('===== Discord サーバーへ接続します =====')
+        logging.info('Discord サーバーへの接続を開始')
 
         # Cogの読み込み
         await bot.load_extension('cogs.talk')
@@ -59,22 +62,21 @@ async def on_ready():
     """Bot がログイン時に実行する処理"""
 
     # ターミナルへログイン通知を表示
-    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    logging.info('Logged in as %s (ID: %s)', bot.user, bot.user.id)
 
-    print('===== Bot ログイン後の処理を実行します =====')
-
+    logging.info('Bot ログイン後の処理を実行')
     # アクティビティ表示を変更
-    print('アクティビティ表示を変更')
+    logging.info('アクティビティ表示を変更')
     act = discord.Game('"/" でコマンド一覧を表示するよ！                          ') # Discord のメンバー欄で「〜をプレイ中」を表示させないため空白をいっぱい入れている
     await bot.change_presence(status=None, activity=act)
 
     # スラッシュコマンドの同期
-    print('スラッシュコマンドを同期')
+    logging.info('スラッシュコマンドを同期')
     await bot.tree.sync()
 
     # 読み上げ機能: 自動再接続処理
-    print('読み上げ機能: 自動再接続処理を開始')
-    print('読み上げ対象チャンネルの情報を talk_channels テーブルから取得')
+    logging.info('読み上げ機能: 自動再接続処理を開始')
+    logging.info('読み上げ対象チャンネルの情報を talk_channels テーブルから取得')
     guild_id_list    = psql.do_query_fetch_list('./sql/talk/select_guild_ids.sql')
     vc_id_list       = psql.do_query_fetch_list('./sql/talk/select_vc_ids.sql')
     channel_id_list  = psql.do_query_fetch_list('./sql/talk/select_channel_ids.sql')
@@ -82,10 +84,10 @@ async def on_ready():
     if guild_id_list:
         num = 0
         for guild_id, vc_id, channel_id in zip(guild_id_list, vc_id_list, channel_id_list):
-            print(f'VC への接続を実行: {str(num)}')
+            logging.info('VC への接続を実行: %s', str(num))
 
-            talk_guild = bot.get_guild(int(guild_id))
-            talk_vc = talk_guild.get_channel(int(vc_id))
+            talk_guild   = bot.get_guild(int(guild_id))
+            talk_vc      = talk_guild.get_channel(int(vc_id))
             talk_channel = talk_guild.get_channel(int(channel_id))
 
             await talk_vc.connect()
@@ -93,19 +95,18 @@ async def on_ready():
 
             num += 1
     else:
-        print('読み上げ対象チャンネルが存在しなかったためスキップ')
+        logging.info('読み上げ対象チャンネルが存在しなかったためスキップ')
 
-    print('===== bot 起動時の処理を完了しました =====')
-    print('===== Hello, World! =====')
+    logging.info('bot 起動時の処理を完了')
+    logging.info('Hello, World!')
 
 
 @bot.event
 async def on_command_error(ctx, error):
     """コマンドのエラー時に実行する処理"""
 
-    print('===== コマンドの実行エラー =====')
-    print(f'on_command_error: {error}')
-    print(traceback.format_exc())
+    logging.error('on command error: %s', error)
+    logging.error(traceback.format_exc())
 
     await sd.send_on_command_error(ctx)
 

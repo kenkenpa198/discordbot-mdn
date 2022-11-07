@@ -1,6 +1,7 @@
 '''Cog Petite'''
 
 import asyncio
+import logging
 from discord.ext import commands
 
 
@@ -13,40 +14,40 @@ class Petite(commands.Cog):
     @commands.is_owner()
     @commands.command(aliases=['p'])
     async def ping(self, ctx):
-        print('===== ping! =====')
+        logging.info('ping コマンドを受付')
         await ctx.send('pong!')
-        print(ctx)
-        print(ctx.author)
-        print(ctx.author.mention)
-        print(ctx.message.content)
-        print(ctx.message.clean_content)
+        logging.info(ctx)
+        logging.info(ctx.author)
+        logging.info(ctx.author.mention)
+        logging.info(ctx.message.content)
+        logging.info(ctx.message.clean_content)
         if ctx.author.voice is None: # ボイスチャンネルにコマンド実行者がいるか判定
-            print('VCにコマンド実行者がいません')
+            logging.info('VCにコマンド実行者がいません')
             return
-        print(ctx.guild.voice_channels)
-        print(ctx.guild.voice_client)
-        print(ctx.guild.voice_client.channel)
-        print(ctx.guild.voice_client.channel.members)
-        print(ctx.guild.voice_client.channel.id)
+        logging.info(ctx.guild.voice_channels)
+        logging.info(ctx.guild.voice_client)
+        logging.info(ctx.guild.voice_client.channel)
+        logging.info(ctx.guild.voice_client.channel.members)
+        logging.info(ctx.guild.voice_client.channel.id)
 
     # what コマンド
     @commands.command(aliases=['w'])
     async def what(self, ctx, what):
-        print('===== whatってなーに？ =====')
+        logging.info('what コマンドを受付')
         async with ctx.channel.typing():
             await asyncio.sleep(1)
         what_txt = f'{what}ってなーに？'
         await ctx.send(what_txt)
-        print(what_txt)
+        logging.info(what_txt)
 
     # TODO: もだねちゃんのユーザー名の色を設定したい
     # @commands.command()
     # async def set(self, ctx):
-    #     print('===== 初期設定を行います =====')
+    #     logging.info('===== 初期設定を行います =====')
     #     guild = ctx.message.guild
     #     role = discord.utils.get(guild.roles, name='develop')
-    #     print('変更対象: ' + str(role))
-    #     print('役職の色を変更しました')
+    #     logging.info('変更対象: ' + str(role))
+    #     logging.info('役職の色を変更しました')
     #     await role.edit(colour=discord.Colour.from_rgb(250, 250, 250))
     #     await ctx.send(f'ロール「もだねちゃん」の色を変更しました。')
 

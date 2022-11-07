@@ -95,8 +95,8 @@ def make_talk_src(text):
     if len(m) > 40:
         m = m[:40]
         m += ' 以下略'
-    # print(text)
-    # print(m)
+    # logging.info(text)
+    # logging.info(m)
     return m
 
 def make_msg(text, msg_head='', msg_end=''):

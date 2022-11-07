@@ -1,5 +1,6 @@
 """PostgreSQL modules"""
 
+import logging
 import os
 
 import psycopg2
@@ -14,6 +15,7 @@ def get_connection():
     con : psycopg2.extensions.connection
         PostgreSQL への接続情報を持ったオブジェクト
     """
+    logging.info('データベースへ接続')
     DATABASE_URL = os.environ.get('DATABASE_URL')
     return psycopg2.connect(DATABASE_URL)
 
@@ -33,6 +35,10 @@ def get_query(query_file_path):
     """
     with open(query_file_path, 'r', encoding='utf-8') as f:
         query = f.read()
+
+    logging.info('クエリを読み込み: %s', query_file_path)
+    logging.debug('取得したクエリ:\n%s', query)
+
     return query
 
 def do_query(query_file_path, bind_dict=None):
@@ -66,10 +72,12 @@ def do_query(query_file_path, bind_dict=None):
 
     # 実行する SQL 文を取得
     query = get_query(query_file_path)
+    logging.debug('実行するクエリ:\n%s', query % bind_dict)
 
     # クエリを実行
     with get_connection() as conn:
         with conn.cursor() as cur:
+            logging.info('クエリを実行')
             cur.execute(query % bind_dict)
         conn.commit()
 
@@ -95,10 +103,12 @@ def do_query_fetch_one(query_file_path, bind_dict=None):
 
     # 実行する SQL 文を取得
     query = get_query(query_file_path)
+    logging.debug('実行するクエリ:\n%s', query % bind_dict)
 
     # クエリを実行
     with get_connection() as conn:
         with conn.cursor() as cur:
+            logging.info('クエリを実行')
             cur.execute(query % bind_dict)
             # 結果から1件のみを取得し1つ目のみを保持
             (result,) = cur.fetchone()
@@ -127,10 +137,12 @@ def do_query_fetch_list(query_file_path, bind_dict=None):
 
     # 実行する SQL 文を取得
     query = get_query(query_file_path)
+    logging.debug('実行するクエリ:\n%s', query % bind_dict)
 
     # クエリを実行
     with get_connection() as conn:
         with conn.cursor() as cur:
+            logging.info('クエリを実行')
             cur.execute(query % bind_dict)
             # リストを作成して行を順番に代入
             result_list = []

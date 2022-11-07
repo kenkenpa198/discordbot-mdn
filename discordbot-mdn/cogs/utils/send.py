@@ -1,6 +1,7 @@
 """send message from bot"""
 
 import asyncio
+import logging
 import discord
 
 # 色の設定
@@ -17,9 +18,12 @@ async def send_help(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = 'もだねちゃんヘルプ'
+    description = 'もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は [📙ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) を確認してみてね！'
+
     embed = discord.Embed(
-        title='もだねちゃんヘルプ',
-        description='もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は [📙ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) を確認してみてね！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
@@ -28,8 +32,10 @@ async def send_help(target):
     embed.add_field(name='ㅤ\n✌️ ジャンケンで遊ぶ',   value='```!mdn j```', inline=False)
     embed.add_field(name='ㅤ\n🔮 もだねちゃん占い',   value='```!mdn u```', inline=False)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する',   value='```!mdn h```', inline=False)
+    embed.set_footer(text='ㅤ\nヒント: \nもだねちゃんがスラッシュコマンドに対応しました！\n入力ボックスへ「/」を入力すると、簡単にコマンドを実行できます。')
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_start(target, talk_vc, talk_channel_id):
     """
@@ -44,9 +50,12 @@ async def send_talk_start(target, talk_vc, talk_channel_id):
     talk_channel_id : int
         読み上げ対象のテキストチャンネルの ID
     """
+    title = '読み上げを開始するよ'
+    description = 'こちらの内容でおしゃべりを始めるね！'
+
     embed = discord.Embed(
-        title='読み上げを開始するよ',
-        description='こちらの内容でおしゃべりを始めるね！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
@@ -55,6 +64,7 @@ async def send_talk_start(target, talk_vc, talk_channel_id):
     embed.set_footer(text='ㅤ\nヒント: \n読み上げ対象を再設定したい時は、対象のテキストチャンネルで「 !mdn s 」コマンドを再実行してください。')
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_restart(target, talk_channel_id):
     """
@@ -67,14 +77,19 @@ async def send_talk_restart(target, talk_channel_id):
     talk_channel_id : int
         読み上げ対象のテキストチャンネルの ID
     """
+    title = '読み上げ対象を再設定したよ'
+    description = 'こちらのテキストチャンネルでおしゃべりを再開するね！'
+
     embed = discord.Embed(
-        title='読み上げ対象を再設定したよ',
-        description='こちらのテキストチャンネルでおしゃべりを再開するね！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
+
     embed.add_field(name='ㅤ\n📗 読み上げ対象チャンネル', value=f'<#{str(talk_channel_id)}>')
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_wait(target):
     """
@@ -85,13 +100,17 @@ async def send_talk_wait(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = '読み上げの実施を待機するよ'
+    description = '読み上げを開始するには、10秒以内にボイスチャンネルへ入室してね。'
+
     embed = discord.Embed(
-        title='読み上げの実施を待機するよ',
-        description='読み上げを開始するには、10秒以内にボイスチャンネルへ入室してね。',
+        title=title,
+        description=description,
         color=COLOR_RUNNING
     )
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_stop(target):
     """
@@ -102,13 +121,17 @@ async def send_talk_stop(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = '読み上げの実施を中断したよ'
+    description = '読み上げを開始するには、コマンドを実行した方がボイスチャンネルへ入室してね。'
+
     embed = discord.Embed(
-        title='読み上げの実施を中断したよ',
-        description='読み上げを開始するには、コマンドを実行した方がボイスチャンネルへ入室してね。',
+        title=title,
+        description=description,
         color=COLOR_WARNING
     )
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_end(target):
     """
@@ -119,13 +142,17 @@ async def send_talk_end(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = '読み上げを終了したよ'
+    description = 'ボイスチャンネルから退出して読み上げを終了しました。またね！'
+
     embed = discord.Embed(
-        title='読み上げを終了したよ',
-        description='ボイスチャンネルから退出して読み上げを終了しました。またね！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_end_auto(target):
     """
@@ -136,13 +163,17 @@ async def send_talk_end_auto(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = '読み上げを終了したよ'
+    description = '皆いなくなったので、ボイスチャンネルから退出しました。またね！'
+
     embed = discord.Embed(
-        title='読み上げを終了したよ',
-        description='皆いなくなったので、ボイスチャンネルから退出しました。またね！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_not_in_vc(target):
     """
@@ -153,14 +184,19 @@ async def send_talk_not_in_vc(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = 'コマンドを受け付けられませんでした'
+    description = 'そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。'
+
     embed = discord.Embed(
-        title='コマンドを受け付けられませんでした',
-        description='そのコマンドは、私がボイスチャンネルへ入室している時のみ使用できるよ。\nこちらのコマンドを先に実行してね。',
-        color=COLOR_WARNING)
+        title=title,
+        description=description,
+        color=COLOR_WARNING
+    )
 
     embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_talk_reconnect(target):
     """
@@ -171,13 +207,17 @@ async def send_talk_reconnect(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = 'ボイスチャンネルへ再入室しました'
+    description = 'もだねちゃんが再起動したので、再接続処理を行いました。'
+
     embed = discord.Embed(
-        title='ボイスチャンネルへ再入室しました',
-        description='もだねちゃんが再起動したので、再接続処理を行いました。',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
 
 async def send_uranai_result(target, fortune_list, star_result_list, lucky_item):
     """
@@ -188,9 +228,12 @@ async def send_uranai_result(target, fortune_list, star_result_list, lucky_item)
     target : class
         send() を実行する対象のクラス
     """
+    title = 'もだねちゃん占い'
+    description = f'{target.author.display_name} さんの今日の運勢だよ！'
+
     embed = discord.Embed(
-        title='もだねちゃん占い',
-        description=f'{target.author.display_name} さんの今日の運勢だよ！',
+        title=title,
+        description=description,
         color=COLOR_NORMAL
     )
 
@@ -212,6 +255,7 @@ async def send_uranai_result(target, fortune_list, star_result_list, lucky_item)
         await target.send('わっ！★6 の運勢があるよ！\n今日はとっても良い日になりそうだね🌸\n\nまたねーっ！')
     else:
         await target.send('結果はどうだった？またねー！')
+    logging.info('メッセージを送信: %s', title)
 
 async def send_uranai_played(target):
     """
@@ -222,24 +266,17 @@ async def send_uranai_played(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = 'もだねちゃん占いは 1日1回までだよ'
+    description = f'{target.author.display_name} さんの運勢はもう占っちゃった！\nまた明日遊んでね！'
+
     embed = discord.Embed(
-        title='もだねちゃん占いは 1日1回までだよ',
-        description=f'{target.author.display_name} さんの運勢はもう占っちゃった！\nまた明日遊んでね！',
+        title=title,
+        description=description,
         color=COLOR_WARNING
     )
 
     await target.send(embed=embed)
-
-async def send_yahho(target):
-    """
-    あいさつを送信する
-
-    Parameters
-    ----------
-    target : class
-        send() を実行する対象のクラス
-    """
-    await target.send('やっほー！もだねちゃんだよ！')
+    logging.info('メッセージを送信: %s', title)
 
 async def send_on_command_error(target):
     """
@@ -250,9 +287,12 @@ async def send_on_command_error(target):
     target : class
         send() を実行する対象のクラス
     """
+    title = 'コマンドを受け付けられませんでした'
+    description = 'なんらかの原因でコマンドを実行できなかったよ。ごめんね。\nコマンドが正しいか確認してみてね。'
+
     embed = discord.Embed(
-        title='コマンドを受け付けられませんでした',
-        description='なんらかの原因でコマンドを実行できなかったよ。ごめんね。\nコマンドが正しいか確認してみてね。',
+        title=title,
+        description=description,
         color=COLOR_WARNING
     )
 
@@ -260,3 +300,18 @@ async def send_on_command_error(target):
     embed.set_footer(text='ㅤ\n正しくコマンドを送信している場合でもこのメッセージが表示されることがあります。\n\n読み上げ関連の操作でこのメッセージが出てしまう場合は、読み上げ対象チャンネルの再設定コマンド「!mdn s」をお試しください。\n\n問題が解決されない場合、お手数ですが以下の手順でもだねちゃんを切断してあげてください。\n\n1. ボイスチャンネルのもだねちゃんを右クリックする。\n2.「切断」を選ぶ。')
 
     await target.send(embed=embed)
+    logging.info('メッセージを送信: %s', title)
+
+async def send_yahho(target):
+    """
+    あいさつを送信する
+
+    Parameters
+    ----------
+    target : class
+        send() を実行する対象のクラス
+    """
+    text = 'やっほー！もだねちゃんだよ！'
+
+    await target.send(text)
+    logging.info('メッセージを送信: %s', text)

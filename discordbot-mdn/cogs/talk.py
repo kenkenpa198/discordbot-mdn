@@ -2,6 +2,7 @@
 
 import asyncio
 import io
+import logging
 import os
 import subprocess
 import wave
@@ -36,13 +37,9 @@ class Talk(commands.Cog):
         False : bool
             読み上げ不可能な場合は偽を返す
         """
-        # メッセージ投稿者がサーバーのボイスチャンネルにいなかったら無視
+        # メッセージが投稿されたサーバーに Bot のボイス接続が存在しなかったら無視
+        # 別のサーバーに投稿されたメッセージに対して反応を行わなくさせるための条件
         if not message.guild.voice_client:
-            return False
-
-        # talk_channels テーブルにテキストチャンネルのIDが入っていなかったら無視
-        talk_channel_list = psql.do_query_fetch_list('./sql/talk/select_channel_ids.sql')
-        if str(message.channel.id) not in talk_channel_list:
             return False
 
         # もだねちゃん以外の Bot だったら無視
@@ -55,6 +52,11 @@ class Talk(commands.Cog):
 
         # !が先頭に入っていたら（コマンドだったら）無視
         if message.content.startswith('!'):
+            return False
+
+        # talk_channels テーブルにテキストチャンネルのIDが入っていなかったら無視
+        talk_channel_list = psql.do_query_fetch_list('./sql/talk/select_channel_ids.sql')
+        if str(message.channel.id) not in talk_channel_list:
             return False
 
         return True
@@ -146,11 +148,11 @@ class Talk(commands.Cog):
         # 音声ファイルを削除
         voice_path = 'voice_' + str(member.guild.id) + '.wav'
         if os.path.isfile(voice_path):
-            print('残っていた音声ファイルを削除')
+            logging.info('残っていた音声ファイルを削除')
             os.remove(voice_path)
 
         # talk_channels テーブルから読み上げ対象のレコードを削除
-        print('talk_channels テーブルから退出した ID のレコードを削除')
+        logging.info('talk_channels テーブルから退出した ID のレコードを削除')
         guild_id = member.guild.id
         psql.do_query('./sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
@@ -158,12 +160,12 @@ class Talk(commands.Cog):
     ##### 読み上げを開始する #####
     @commands.hybrid_command(aliases=['s', 'start'], description='読み上げを開始するよ')
     async def t_start(self, ctx, text_channel: discord.TextChannel=None):
-        print('===== 読み上げを開始します =====')
+        logging.info('読み上げ開始コマンドを受付')
 
         # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
         if ctx.guild.voice_client:
             # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
-            print('読み上げ対象チャンネルを設定')
+            logging.info('読み上げ対象チャンネルを設定')
             talk_guild     = ctx.guild                # サーバー
             talk_vc        = ctx.author.voice.channel # ボイスチャンネル
             if text_channel:
@@ -174,7 +176,7 @@ class Talk(commands.Cog):
                 talk_channel = ctx.channel
 
             # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を talk_channels テーブルへ格納
-            print('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
+            logging.info('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
             guild_id   = talk_guild.id
             vc_id      = talk_vc.id
             channel_id = talk_channel.id
@@ -189,7 +191,7 @@ class Talk(commands.Cog):
 
         # ボイスチャンネルにコマンド実行者がいるか判定
         if not ctx.author.voice:
-            print('VCにコマンド実行者がいないため待機します')
+            logging.info('ボイスチャンネルにコマンド実行者がいないため待機')
             await sd.send_talk_wait(ctx)
 
             # 10秒まで待機
@@ -200,16 +202,16 @@ class Talk(commands.Cog):
             try:
                 await self.bot.wait_for('voice_state_update', check=check, timeout=10)
             except asyncio.TimeoutError:
-                print('VCへの接続を中断しました')
+                logging.warning('ボイスチャンネルへの接続を中断')
                 await sd.send_talk_stop(ctx)
                 return
             else:
-                print('VCにコマンド実行者が入室しました')
-                print('処理を再開します')
+                logging.info('ボイスチャンネルへのコマンド実行者入室を検知')
+                logging.info('処理を再開')
                 await asyncio.sleep(.5)
 
         # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
-        print('読み上げ対象を設定')
+        logging.info('読み上げ対象チャンネルを設定')
         talk_guild     = ctx.guild                # サーバー
         talk_vc        = ctx.author.voice.channel # ボイスチャンネル
         if text_channel:
@@ -222,7 +224,7 @@ class Talk(commands.Cog):
             send_hello = True
 
         # 読み上げるサーバー / ボイスチャンネル / テキストチャンネルの ID を talk_channels テーブルへ格納
-        print('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
+        logging.info('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
         guild_id   = talk_guild.id
         vc_id      = talk_vc.id
         channel_id = talk_channel.id
@@ -236,24 +238,28 @@ class Talk(commands.Cog):
         await asyncio.sleep(1)
 
         # ボイスチャンネルへ接続する
-        print('VC へ接続')
+        logging.info('ボイスチャンネルへ接続')
         await talk_vc.connect()
-        await asyncio.sleep(.5)
+
+        # あいさつを送信
         if send_hello:
+            await asyncio.sleep(.5)
             await sd.send_yahho(ctx)
 
 
     ##### 読み上げを終了する #####
     @commands.hybrid_command(aliases=['e', 'end'], description='読み上げを終了するよ')
     async def t_end(self, ctx):
-        print('===== 読み上げを終了します: コマンド受付 =====')
+        logging.info('読み上げ終了コマンドを受付')
 
         # botがボイスチャンネルにいなかったらメッセージを送信
         if not ctx.guild.voice_client:
+            logging.warning('bot がボイスチャンネルへいなかったためメッセージを送信')
             await sd.send_talk_not_in_vc(ctx)
             return
 
         # ボイスチャンネルから退出する
+        logging.info('ボイスチャンネルから切断')
         await ctx.voice_client.disconnect()
         await sd.send_talk_end(ctx)
 
@@ -261,28 +267,32 @@ class Talk(commands.Cog):
     ##### テキストチャンネルに投稿されたテキストを読み上げる #####
     @commands.Cog.listener()
     async def on_message(self, message):
+        logging.info('メッセージを受付')
 
         # 読み上げ不可能な場合は終了
         if not self.is_talkable(message):
+            logging.info('is_talkable: False')
             return
+
+        logging.info('is_talkable: True')
+        logging.info('読み上げの実行を開始')
 
         # 読み上げ中であれば1秒待機
         while message.guild.voice_client.is_playing():
-            print('音声を再生中のため待機')
+            logging.info('音声を再生中のため待機')
             await asyncio.sleep(1)
 
-        print('===== 読み上げを実行します =====')
-        print('メッセージを整形')
+        logging.info('メッセージを整形')
         talk_msg = rp.make_talk_src(message.clean_content)
 
-        print('音声ファイルを生成')
+        logging.info('音声ファイルを生成')
         voice_path = self.jtalk(talk_msg, message.guild.id)
 
-        print('音声ファイルを再生')
+        logging.info('音声ファイルを再生')
         self.play_voice(voice_path, message)
 
         if os.path.isfile(voice_path):
-            print('音声ファイルを削除')
+            logging.info('音声ファイルを削除')
             os.remove(voice_path)
 
 
@@ -296,16 +306,15 @@ class Talk(commands.Cog):
         if before.channel == after.channel:
             return
 
-        print('===== VC人数の変更を検知 =====')
         # VCへ誰かが入室した時の処理（VoiceState の before が 値無し / after が 値有り だったら）
         if not before.channel and after.channel:
-            print('VC へ入室')
+            logging.info('ボイスチャンネル人数の変更を検知: 入室')
             # vc = after.channel
-            # print(vc.members) # VC人数を表示
+            # logging.info(vc.members) # VC人数を表示
 
         # VC から誰かが退出した時の処理（VoiceState の before が 値有り / after が 値無し だったら）
         elif before.channel and not after.channel:
-            print('VC から退室')
+            logging.info('ボイスチャンネル人数の変更を検知: 退室')
             vc_b = before.channel
 
             # Bot が最後の一人になったら自動退出する
@@ -315,7 +324,7 @@ class Talk(commands.Cog):
             ):
                 vc = discord.utils.get(self.bot.voice_clients, channel=vc_b)
                 if vc and vc.is_connected():
-                    print('===== 読み上げを終了します: 自動退出 =====')
+                    logging.info('読み上げを終了: 自動退出')
                     await asyncio.sleep(1)
                     await vc.disconnect()
 
@@ -331,7 +340,7 @@ class Talk(commands.Cog):
             and not after.channel
             and member == self.bot.user
         ):
-            print('===== 読み上げ終了時の処理を行います =====')
+            logging.info('読み上げ終了時の処理を実行')
             self.talk_deinit(member)
 
 async def setup(bot):
