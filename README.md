@@ -13,10 +13,10 @@
     - [3.2. 実行手順](#32-実行手順)
 - [4. 使用ソフトウェア](#4-使用ソフトウェア)
 - [5. ライセンス](#5-ライセンス)
-- [6. 謝辞](#6-謝辞)
-- [7. 参考文献](#7-参考文献)
-    - [7.1. Discord Bot](#71-discord-bot)
-    - [7.2. Docker](#72-docker)
+- [6. 参考文献](#6-参考文献)
+    - [6.1. Discord Bot](#61-discord-bot)
+    - [6.2. Docker](#62-docker)
+- [7. 謝辞](#7-謝辞)
 
 ## 1. もだねちゃんとは？
 
@@ -86,6 +86,7 @@
 
     ```shell
     $ docker-compose up -d
+    Creating network "discordbot-mdn_default" with the default driver
     ...
     Creating discordbot-mdn_db_1   ... done
     Creating discordbot-mdn_main_1 ... done
@@ -104,11 +105,16 @@
 
     ```shell
     $ docker-compose logs -f
-    main_1  | ===== もだねちゃんを起動します =====
-    main_1  | datetime: 2022-10-30 20:10:49.678740
+    main_1  | ====================================
+    main_1  |            discordbot-mdn
+    main_1  | ====================================
+    main_1  | 2022-11-08 01:21:36.240244
+    main_1  | python 3.10.6
+    main_1  | discord.py 2.0.1
+    main_1  | 2022-11-08 01:21:36,241 [ INFO ] Discord サーバーへの接続を開始
     ...
-    main_1  | ===== bot 起動時の処理を完了しました =====
-    main_1  | ===== Hello, World! =====
+    main_1  | 2022-11-08 01:21:39,858 [ INFO ] bot 起動時の処理を完了
+    main_1  | 2022-11-08 01:21:39,858 [ INFO ] Hello, World!
     ```
 
 7. Bot を招待したサーバーで実行確認。  
@@ -135,22 +141,19 @@ License: [https://www.postgresql.org/about/licence/](https://www.postgresql.org/
 
 [MIT License](LICENSE)
 
-## 6. 謝辞
+## 6. 参考文献
 
-しばたまさあきさん、捕食域の皆さんに相談やテストなどでご協力いただきました。  
-ありがとうございました！
-
-## 7. 参考文献
-
-### 7.1. Discord Bot
+### 6.1. Discord Bot
 
 - [discord.py へようこそ。](https://discordpy.readthedocs.io/ja/latest/#)
 - [Pythonで実用Discord Bot(discordpy解説) - Qiita](https://qiita.com/1ntegrale9/items/9d570ef8175cf178468f)
 - [DiscordBot開発実践入門 - cod-sushi - BOOTH](https://cod-sushi.booth.pm/items/2391223)
 - [DiscordBot運営実践入門 - cod-sushi - BOOTH](https://booth.pm/ja/items/1533599)
 - [psycopg2 メモ - Qiita](https://qiita.com/hitsumabushi845/items/a421aff1bcd7999f7e40)
+- [Pythonのデフォルト引数で[]とか{}を使うべきではないという話 | Cosnomi Blog](https://blog.cosnomi.com/posts/1471/)
+- [Logging HOWTO — Python 3.11.0b5 ドキュメント](https://docs.python.org/ja/3/howto/logging.html)
 
-### 7.2. Docker
+### 6.2. Docker
 
 - [社内のDockerfileのベストプラクティスを公開します│FORCIA CUBE│フォルシア株式会社](https://www.forcia.com/blog/002273.html)
 - [Dockerイメージのレイヤの考え方とイメージの軽量化について - ネットワークエンジニアを目指して](https://www.itbook.info/network/docker02.html)
@@ -158,3 +161,8 @@ License: [https://www.postgresql.org/about/licence/](https://www.postgresql.org/
 - [【Docker】PostgreSQLの起動時に初期データをセットアップ | 素人エンジニアの苦悩](https://amateur-engineer.com/docker-compose-postgresql/)
 - [postgresql - Error when running psql command in /docker-entrypoint-initdb.d/db_init.sh (psql: could not connect to server: Connection refused) - Stack Overflow](https://stackoverflow.com/questions/51659972/error-when-running-psql-command-in-docker-entrypoint-initdb-d-db-init-sh-psql)
 - [Postgres公式Dockerイメージのパスワードの扱いについて](https://zenn.dev/dowanna6/articles/6cc31869346a06)
+
+## 7. 謝辞
+
+しばたまさあきさん、捕食域の皆さんに相談やテストなどでご協力いただきました。  
+ありがとうございました！
