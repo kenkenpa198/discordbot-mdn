@@ -161,7 +161,7 @@ class Talk(commands.Cog):
         """
         logging.info('読み上げ開始コマンドを受付')
 
-        # botが既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
+        # Bot が既にボイスチャンネルへ入室している場合はボイスチャンネルを再設定する
         if ctx.guild.voice_client:
             # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
             logging.info('読み上げ対象チャンネルを設定')
@@ -252,9 +252,9 @@ class Talk(commands.Cog):
         """
         logging.info('読み上げ終了コマンドを受付')
 
-        # botがボイスチャンネルにいなかったらメッセージを送信
+        # Bot がボイスチャンネルにいなかったらメッセージを送信
         if not ctx.guild.voice_client:
-            logging.warning('bot がボイスチャンネルへいなかったためメッセージを送信')
+            logging.warning('Bot がボイスチャンネルへいなかったためメッセージを送信')
             await sd.send_talk_not_in_vc(ctx)
             return
 

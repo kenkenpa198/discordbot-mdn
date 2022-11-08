@@ -54,7 +54,7 @@ class Init(commands.Cog):
         else:
             logging.info('読み上げ対象チャンネルが存在しなかったためスキップ')
 
-        logging.info('bot 起動時の処理を完了')
+        logging.info('Bot ログイン後の処理を完了')
         logging.info('Hello, World!')
 
 async def setup(bot):
