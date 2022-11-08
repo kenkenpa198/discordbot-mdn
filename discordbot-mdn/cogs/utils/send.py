@@ -29,7 +29,7 @@ async def send_help(target):
 
     embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
     embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
-    embed.add_field(name='ㅤ\n✌️ ジャンケンで遊ぶ',   value='```!mdn j```', inline=False)
+    embed.add_field(name='ㅤ\n✌ ジャンケンで遊ぶ',   value='```!mdn j```', inline=False)
     embed.add_field(name='ㅤ\n🔮 もだねちゃん占い',   value='```!mdn u```', inline=False)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する',   value='```!mdn h```', inline=False)
     embed.set_footer(text='ㅤ\nヒント: \nもだねちゃんがスラッシュコマンドに対応しました！\n入力ボックスへ「/」を入力すると、簡単にコマンドを実行できます。')

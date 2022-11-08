@@ -13,7 +13,7 @@ class Janken(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(aliases=['j'], description='ジャンケンで遊べるよ')
+    @commands.hybrid_command(aliases=['j'], description='✌️ ジャンケンで遊べるよ')
     async def janken(self, ctx):
         """
         ジャンケンコマンド

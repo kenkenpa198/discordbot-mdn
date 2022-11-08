@@ -13,7 +13,7 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(aliases=['h'], description='ヘルプを表示するよ')
+    @commands.hybrid_command(aliases=['h'], description='❓ ヘルプを表示するよ')
     async def help(self, ctx):
         """
         ヘルプコマンド

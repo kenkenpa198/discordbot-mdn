@@ -157,8 +157,8 @@ class Talk(commands.Cog):
         psql.do_query('./sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
 
-    @commands.hybrid_command(aliases=['s', 'start'], description='読み上げを開始するよ')
-    async def t_start(self, ctx, text_channel: discord.TextChannel=None):
+    @commands.hybrid_command(aliases=['s', 'start'], description='🎤 読み上げを開始するよ')
+    async def talk_start(self, ctx, text_channel: discord.TextChannel=None):
         """
         読み上げ開始コマンド
         """
@@ -249,8 +249,8 @@ class Talk(commands.Cog):
             await sd.send_yahho(ctx)
 
 
-    @commands.hybrid_command(aliases=['e', 'end'], description='読み上げを終了するよ')
-    async def t_end(self, ctx):
+    @commands.hybrid_command(aliases=['e', 'end'], description='🎤 読み上げを終了するよ')
+    async def talk_end(self, ctx):
         """
         読み上げ終了コマンド
         """
