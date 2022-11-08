@@ -24,7 +24,7 @@ class Init(commands.Cog):
 
         # アクティビティ表示を変更
         logging.info('アクティビティ表示を変更')
-        act = discord.Game('"/" でコマンド一覧を表示するよ！                          ') # Discord のメンバー欄で「〜をプレイ中」を表示させないため空白をいっぱい入れている
+        act = discord.Game('"/" でコマンドを実行できるよ！                                        ') # Discord のメンバー欄で「〜をプレイ中」を表示させないため空白をいっぱい入れている
         await self.bot.change_presence(status=None, activity=act)
 
         # スラッシュコマンドの同期
