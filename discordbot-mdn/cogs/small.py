@@ -1,4 +1,4 @@
-"""Cog Petite"""
+"""Cog Small"""
 
 import asyncio
 import logging
@@ -6,7 +6,7 @@ from discord.ext import commands
 
 
 ##### コグ #####
-class Petite(commands.Cog):
+class Small(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -56,4 +56,4 @@ class Petite(commands.Cog):
     #     await ctx.send(f'ロール「もだねちゃん」の色を変更しました。')
 
 async def setup(bot):
-    await bot.add_cog(Petite(bot))
+    await bot.add_cog(Small(bot))
