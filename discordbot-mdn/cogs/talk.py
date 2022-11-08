@@ -15,8 +15,6 @@ from .utils import psql
 from .utils import replace as rp
 from .utils import send as sd
 
-
-##### コグ #####
 class Talk(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -156,7 +154,6 @@ class Talk(commands.Cog):
         guild_id = member.guild.id
         psql.do_query('./sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
-
     @commands.hybrid_command(aliases=['s', 'start'], description='🎤 読み上げを開始するよ')
     async def talk_start(self, ctx, text_channel: discord.TextChannel=None):
         """
@@ -248,7 +245,6 @@ class Talk(commands.Cog):
             await asyncio.sleep(.5)
             await sd.send_yahho(ctx)
 
-
     @commands.hybrid_command(aliases=['e', 'end'], description='🎤 読み上げを終了するよ')
     async def talk_end(self, ctx):
         """
@@ -266,7 +262,6 @@ class Talk(commands.Cog):
         logging.info('ボイスチャンネルから切断')
         await ctx.voice_client.disconnect()
         await sd.send_talk_end(ctx)
-
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -300,7 +295,6 @@ class Talk(commands.Cog):
         if os.path.isfile(voice_path):
             logging.info('音声ファイルを削除')
             os.remove(voice_path)
-
 
     @commands.Cog.listener()
     async def on_voice_state_update(self,

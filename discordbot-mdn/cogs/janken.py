@@ -7,8 +7,6 @@ import random
 import discord
 from discord.ext import commands
 
-
-##### コグ #####
 class Janken(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

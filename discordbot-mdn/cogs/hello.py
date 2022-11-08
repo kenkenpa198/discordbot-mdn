@@ -1,11 +1,8 @@
 """Cog Hello"""
 
 import asyncio
-
 from discord.ext import commands
-
 from .utils import replace as rp
-
 
 class Hello(commands.Cog):
     def __init__(self, bot):

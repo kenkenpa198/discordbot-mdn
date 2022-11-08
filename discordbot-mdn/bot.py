@@ -66,6 +66,5 @@ async def on_command_error(ctx, error):
 
     await sd.send_on_command_error(ctx)
 
-
 ##### main() を呼び出し #####
 asyncio.run(main())

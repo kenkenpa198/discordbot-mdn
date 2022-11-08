@@ -4,8 +4,6 @@ import asyncio
 import logging
 from discord.ext import commands
 
-
-##### コグ #####
 class Small(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

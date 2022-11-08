@@ -2,8 +2,6 @@
 
 from discord.ext import commands
 
-
-##### コグ #####
 class Reload(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

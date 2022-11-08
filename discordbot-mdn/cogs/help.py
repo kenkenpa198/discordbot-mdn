@@ -1,14 +1,9 @@
 """Cog Help"""
 
-
 import logging
 from discord.ext import commands
 from .utils import send as sd
 
-# logging の設定
-
-
-##### コグ #####
 class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
