@@ -32,7 +32,7 @@ async def send_help(target):
     embed.add_field(name='ㅤ\n✌ ジャンケンで遊ぶ',   value='```/janken```', inline=False)
     embed.add_field(name='ㅤ\n🔮 もだねちゃん占い',   value='```/uranai```', inline=False)
     embed.add_field(name='ㅤ\n❓ ヘルプを表示する',   value='```/help```', inline=False)
-    embed.set_footer(text='ㅤ\nヒント:\n「!mdn ...」を送信する従来の操作方法でも実行できます。\n使用方法はガイドブックを参照してください。')
+    embed.set_footer(text='ㅤ\nヒント:\n「!mdn」から始まる従来のコマンドでも操作できます。\n使用方法はガイドブックを参照してください。')
 
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
@@ -61,7 +61,7 @@ async def send_talk_begin(target, talk_vc, talk_channel_id):
 
     embed.add_field(name='ㅤ\n🎤 入室ボイスチャンネル', value=talk_vc)
     embed.add_field(name='ㅤ\n📗 読み上げ対象チャンネル', value=f'<#{str(talk_channel_id)}>')
-    embed.set_footer(text='ㅤ\nヒント: \n読み上げ対象を再設定したい時は、対象のテキストチャンネルで「 !mdn s 」コマンドを再実行してください。')
+    embed.set_footer(text='ㅤ\nヒント: \n読み上げ対象を再設定したい時は、対象のテキストチャンネルで「/talk-begin」コマンドを再実行してください。')
 
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
@@ -193,7 +193,7 @@ async def send_talk_not_in_vc(target):
         color=COLOR_WARNING
     )
 
-    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
+    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```/talk-begin```', inline=False)
 
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
@@ -296,8 +296,8 @@ async def send_on_command_error(target):
         color=COLOR_WARNING
     )
 
-    embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```!mdn h```', inline=False)
-    embed.set_footer(text='ㅤ\n正しくコマンドを送信している場合でもこのメッセージが表示されることがあります。\n\n読み上げ関連の操作でこのメッセージが出てしまう場合は、読み上げ対象チャンネルの再設定コマンド「!mdn s」をお試しください。\n\n問題が解決されない場合、お手数ですが以下の手順でもだねちゃんを切断してあげてください。\n\n1. ボイスチャンネルのもだねちゃんを右クリックする。\n2.「切断」を選ぶ。')
+    embed.add_field(name='ㅤ\n❓ ヘルプを表示する', value='```/help```', inline=False)
+    embed.set_footer(text='ㅤ\n正しくコマンドを送信している場合でもこのメッセージが表示されることがあります。\n\n読み上げ関連の操作でこのメッセージが出てしまう場合は、「/talk-begin」を送信して読み上げ対象チャンネルの再設定をお試しください。\n\n問題が解決されない場合、お手数ですが以下の手順でもだねちゃんを切断してあげてください。\n\n1. ボイスチャンネルのもだねちゃんを右クリックする。\n2.「切断」を選ぶ。')
 
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
