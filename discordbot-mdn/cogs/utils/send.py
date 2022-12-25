@@ -19,7 +19,7 @@ async def send_help(target):
         send() を実行する対象のクラス
     """
     title = 'もだねちゃんヘルプ'
-    description = 'もだねちゃんのお仕事コマンド一覧だよ！\nもっと詳しい操作方法は [📙ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) を確認してみてね！'
+    description = 'もだねちゃんのスラッシュコマンド一覧だよ！\nもっと詳しい操作方法は [📙ガイドブック](https://github.com/kenkenpa198/discordbot-mdn/wiki/📙お仕事内容ガイドブック) を確認してみてね。'
 
     embed = discord.Embed(
         title=title,
@@ -27,17 +27,17 @@ async def send_help(target):
         color=COLOR_NORMAL
     )
 
-    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```!mdn s```', inline=False)
-    embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```!mdn e```', inline=False)
-    embed.add_field(name='ㅤ\n✌ ジャンケンで遊ぶ',   value='```!mdn j```', inline=False)
-    embed.add_field(name='ㅤ\n🔮 もだねちゃん占い',   value='```!mdn u```', inline=False)
-    embed.add_field(name='ㅤ\n❓ ヘルプを表示する',   value='```!mdn h```', inline=False)
-    embed.set_footer(text='ㅤ\nヒント: \nもだねちゃんがスラッシュコマンドに対応しました！\n入力ボックスへ「/」を入力すると、簡単にコマンドを実行できます。')
+    embed.add_field(name='ㅤ\n🎤 読み上げを開始する', value='```/talk-begin```', inline=False)
+    embed.add_field(name='ㅤ\n🎤 読み上げを終了する', value='```/talk-end```', inline=False)
+    embed.add_field(name='ㅤ\n✌ ジャンケンで遊ぶ',   value='```/janken```', inline=False)
+    embed.add_field(name='ㅤ\n🔮 もだねちゃん占い',   value='```/uranai```', inline=False)
+    embed.add_field(name='ㅤ\n❓ ヘルプを表示する',   value='```/help```', inline=False)
+    embed.set_footer(text='ㅤ\nヒント:\n「!mdn ...」を送信する従来の操作方法でも実行できます。\n使用方法はガイドブックを参照してください。')
 
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
 
-async def send_talk_start(target, talk_vc, talk_channel_id):
+async def send_talk_begin(target, talk_vc, talk_channel_id):
     """
     読み上げ機能のメッセージ送信: 読み上げ開始
 

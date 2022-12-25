@@ -154,8 +154,12 @@ class Talk(commands.Cog):
         guild_id = member.guild.id
         psql.do_query('./sql/talk/delete_target_id.sql', {'guild_id': guild_id})
 
-    @commands.hybrid_command(aliases=['s', 'start'], description='🎤 読み上げを開始するよ')
-    async def talk_start(self, ctx, text_channel: discord.TextChannel=None):
+    @commands.hybrid_command(
+        name='talk-begin',
+        description='🎤 読み上げを開始するよ',
+        aliases=['b', 'begin', 's', 'start']
+    )
+    async def talk_begin(self, ctx, text_channel: discord.TextChannel=None):
         """
         読み上げ開始コマンド
         """
@@ -233,7 +237,7 @@ class Talk(commands.Cog):
             {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id}
         )
 
-        await sd.send_talk_start(ctx, talk_vc, channel_id)
+        await sd.send_talk_begin(ctx, talk_vc, channel_id)
         await asyncio.sleep(1)
 
         # ボイスチャンネルへ接続する
@@ -245,7 +249,11 @@ class Talk(commands.Cog):
             await asyncio.sleep(.5)
             await sd.send_yahho(ctx)
 
-    @commands.hybrid_command(aliases=['e', 'end'], description='🎤 読み上げを終了するよ')
+    @commands.hybrid_command(
+        name='talk-end',
+        description='🎤 読み上げを終了するよ',
+        aliases=['e', 'end'],
+    )
     async def talk_end(self, ctx):
         """
         読み上げ終了コマンド

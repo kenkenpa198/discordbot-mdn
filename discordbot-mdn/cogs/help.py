@@ -8,7 +8,10 @@ class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.hybrid_command(aliases=['h'], description='❓ ヘルプを表示するよ')
+    @commands.hybrid_command(
+        description='❓ ヘルプを表示するよ',
+        aliases=['h']
+    )
     async def help(self, ctx):
         """
         ヘルプコマンド
