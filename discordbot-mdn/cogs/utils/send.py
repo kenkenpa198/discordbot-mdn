@@ -37,7 +37,7 @@ async def send_help(target):
     await target.send(embed=embed)
     logging.info('メッセージを送信: %s', title)
 
-async def send_talk_start(target, talk_vc, talk_channel_id):
+async def send_talk_begin(target, talk_vc, talk_channel_id):
     """
     読み上げ機能のメッセージ送信: 読み上げ開始
 
