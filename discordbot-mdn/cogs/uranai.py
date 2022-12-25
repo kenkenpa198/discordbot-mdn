@@ -39,7 +39,10 @@ class Uranai(commands.Cog):
     # ループ処理を実行
     loop.start()
 
-    @commands.hybrid_command(aliases=['u'], description='🔮 今日の運勢を占うよ')
+    @commands.hybrid_command(
+        description='🔮 今日の運勢を占うよ',
+        aliases=['u']
+    )
     async def uranai(self, ctx):
         """
         占いコマンド
