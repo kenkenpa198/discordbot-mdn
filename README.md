@@ -139,7 +139,7 @@ License: [https://www.postgresql.org/about/licence/](https://www.postgresql.org/
 
 ## 5. ライセンス
 
-[MIT License](LICENSE)
+[GNU General Public License v2.0](LICENSE)
 
 ## 6. 参考文献
 
