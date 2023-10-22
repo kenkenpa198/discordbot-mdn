@@ -1,3 +1,8 @@
+
+⚠️ This software ended its update in October 2023. It has not been maintained since then.
+
+---
+
 <!-- omit in toc -->
 # ![おしゃべりぼっと！もだねちゃん](images/kv.png)
 
