@@ -1,8 +1,4 @@
 
-⚠️ This software ended its update in October 2023. It has not been maintained since then.
-
----
-
 <!-- omit in toc -->
 # ![おしゃべりぼっと！もだねちゃん](images/kv.png)
 
@@ -30,7 +26,7 @@
 
 「しゃべるのが恥ずかしい」「深夜なので声を出しにくい」などの理由でお声を出しづらい方でも、お友達と楽しく会話することができます。
 
-働いている様子はこちら🌸（Youtube へ移動します）
+働いている様子はこちら！※Youtube へ移動します
 
 [<img src="images/movie_thumbnail.jpg" alt="読み上げBot もだねちゃん 紹介動画" width="70%">](https://youtu.be/cRBdej7tsGc)
 
