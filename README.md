@@ -72,9 +72,9 @@
 
     ```properties
     # PostgreSQL イメージ用の環境変数
-    POSTGRES_USER=discordbot_mdn
+    POSTGRES_USER=discordbot-mdn
     POSTGRES_PASSWORD=__ENTER_PG_PASSWORD_HERE__ # 好みのパスワードを記述
-    POSTGRES_DB=discordbot_mdn_db
+    POSTGRES_DB=discordbot-mdn-db
 
     # PostgreSQL の接続用 URL
     DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
