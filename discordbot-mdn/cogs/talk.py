@@ -36,7 +36,9 @@ class Talk(commands.Cog):
             読み上げ不可能な場合は偽を返す
         """
         # メッセージが投稿されたサーバーに Bot のボイス接続が存在しなかったら無視
-        # 別のサーバーに投稿されたメッセージに対して反応を行わなくさせるための条件
+        #
+        # Discord ボットは複数のサーバーに参加できるが、ボイス接続はサーバーごとに独立している
+        # ボイス接続がないサーバーのメッセージに反応することを防ぐためにこのチェックを通す
         if not message.guild.voice_client:
             return False
 
@@ -56,10 +58,9 @@ class Talk(commands.Cog):
         talk_channel_list = psql.do_query_fetch_list('./sql/talk/select_channel_ids.sql')
         if str(message.channel.id) not in talk_channel_list:
             return False
-
         return True
 
-    def jtalk(self, text, guild_id):
+    async def jtalk(self, text, guild_id):
         """
         音声ファイルを作成する
 
@@ -85,23 +86,29 @@ class Talk(commands.Cog):
         speed      = ['-r',   '0.7'] # スピーチ速度係数
         halftone   = ['-fm', '-3.5'] # 追加ハーフトーン（高低）
         volume     = ['-g',  '-5.0'] # 声の大きさ
-
         # ファイルパスの指定
-        voice_path = 'voice_' + str(guild_id) + '.wav'
-        outwav     = ['-ow', voice_path]
-
+        voice_path = f'voice_{guild_id}.wav'
+        outwav = ['-ow', voice_path]
         # コマンドを作成して標準入力から作成
-        cmd        = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
-        c          = subprocess.Popen(cmd, stdin=subprocess.PIPE)
-        c.stdin.write(text.encode())
-        c.stdin.close()
-        c.wait()
+        cmd = open_jtalk + mech + htsvoice + speed + halftone + volume + outwav
+        try:
+            c = subprocess.Popen(cmd, stdin=subprocess.PIPE)
+            c.stdin.write(text.encode())
+            c.stdin.close()
+            c.wait()
+        except Exception as e:
+            logging.error(f"Error generating voice file: {e}")
+            return None
 
         # 音声ファイルをモノラルからステレオへ変換
-        voice_fmt_src = openjtalk.mono_to_stereo(voice_path)
-        os.remove(voice_path)
-        with open(voice_path, 'wb') as f:
-            f.write(voice_fmt_src)
+        try:
+            voice_fmt_src = openjtalk.mono_to_stereo(voice_path)
+            os.remove(voice_path)
+            with open(voice_path, 'wb') as f:
+                f.write(voice_fmt_src)
+        except Exception as e:
+            logging.error(f"Error processing voice file: {e}")
+            return None
 
         return voice_path
 
@@ -123,11 +130,18 @@ class Talk(commands.Cog):
             talk_src = discord.PCMAudio(stream)
             message.guild.voice_client.play(talk_src, after=lambda e: stream.close())
         """
-        with wave.open(voice_path, 'rb') as wi:
-            voice_src = wi.readframes(-1)
-        stream = io.BytesIO(voice_src) # バイナリファイルとして読み込み
-        talk_src = discord.PCMAudio(stream) # 音声ファイルを音声ソースとして変数に格納
-        message.guild.voice_client.play(talk_src) # ボイスチャンネルで再生
+        try:
+            with wave.open(voice_path, 'rb') as wi:
+                voice_src = wi.readframes(-1)
+
+            # バイナリファイルとして読み込み
+            stream = io.BytesIO(voice_src)
+            # 音声ファイルを音声ソースとする
+            talk_src = discord.PCMAudio(stream)
+            # ボイスチャンネルで再生
+            message.guild.voice_client.play(talk_src)
+        except Exception as e:
+            logging.error(f"Error playing voice file: {e}")
 
     def talk_deinit(self, member):
         """
@@ -144,7 +158,7 @@ class Talk(commands.Cog):
         削除前にボイスチャンネルを抜けた場合、削除処理が行われないため後処理でも削除処理を行う。
         """
         # 音声ファイルを削除
-        voice_path = 'voice_' + str(member.guild.id) + '.wav'
+        voice_path = f'voice_{member.guild.id}.wav'
         if os.path.isfile(voice_path):
             logging.info('残っていた音声ファイルを削除')
             os.remove(voice_path)
@@ -159,7 +173,7 @@ class Talk(commands.Cog):
         description='🎤 読み上げを開始するよ',
         aliases=['b', 'begin', 's', 'start']
     )
-    async def talk_begin(self, ctx, text_channel: discord.TextChannel=None):
+    async def talk_begin(self, ctx, text_channel: discord.TextChannel = None):
         """
         読み上げ開始コマンド
         """
@@ -169,19 +183,13 @@ class Talk(commands.Cog):
         if ctx.guild.voice_client:
             # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
             logging.info('読み上げ対象チャンネルを設定')
-            talk_guild     = ctx.guild                # サーバー
-            talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-            if text_channel:
-                # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-                talk_channel = discord.utils.get(ctx.guild.text_channels, name=text_channel.name)
-            else:
-                # 引数がない場合はコマンドを実行したテキストチャンネルを格納
-                talk_channel = ctx.channel
+            talk_guild = ctx.guild                     # サーバー
+            talk_vc = ctx.author.voice.channel         # ボイスチャンネル
+            talk_channel = text_channel or ctx.channel # テキストチャンネル
 
-            # 読み上げるサーバー / テキストチャンネル / ボイスチャンネルの ID を talk_channels テーブルへ格納
             logging.info('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
-            guild_id   = talk_guild.id
-            vc_id      = talk_vc.id
+            guild_id = talk_guild.id
+            vc_id = talk_vc.id
             channel_id = talk_channel.id
 
             psql.do_query(
@@ -215,21 +223,14 @@ class Talk(commands.Cog):
 
         # 読み上げ対象のサーバー/ ボイスチャンネル / テキストチャンネルを変数に格納
         logging.info('読み上げ対象チャンネルを設定')
-        talk_guild     = ctx.guild                # サーバー
-        talk_vc        = ctx.author.voice.channel # ボイスチャンネル
-        if text_channel:
-            # !mdn s に引数がある場合は指定のテキストチャンネルを格納
-            talk_channel = discord.utils.get(ctx.guild.text_channels, name=text_channel.name)
-            send_hello = False
-        else:
-            # 引数がない場合はコマンドを実行したテキストチャンネルを格納
-            talk_channel = ctx.channel
-            send_hello = True
+        talk_guild = ctx.guild                     # サーバー
+        talk_vc = ctx.author.voice.channel         # ボイスチャンネル
+        talk_channel = text_channel or ctx.channel # テキストチャンネル
+        send_hello = not text_channel
 
-        # 読み上げるサーバー / ボイスチャンネル / テキストチャンネルの ID を talk_channels テーブルへ格納
         logging.info('読み上げ対象チャンネルの情報を talk_channels テーブルへ格納')
-        guild_id   = talk_guild.id
-        vc_id      = talk_vc.id
+        guild_id = talk_guild.id
+        vc_id = talk_vc.id
         channel_id = talk_channel.id
 
         psql.do_query(
@@ -295,7 +296,10 @@ class Talk(commands.Cog):
         talk_msg = rp.make_talk_src(message.clean_content)
 
         logging.info('音声ファイルを生成')
-        voice_path = self.jtalk(talk_msg, message.guild.id)
+        voice_path = await self.jtalk(talk_msg, message.guild.id)
+
+        if not voice_path:
+            return
 
         logging.info('音声ファイルを再生')
         self.play_voice(voice_path, message)
@@ -305,10 +309,7 @@ class Talk(commands.Cog):
             os.remove(voice_path)
 
     @commands.Cog.listener()
-    async def on_voice_state_update(self,
-                                    member: discord.Member,
-                                    before: discord.VoiceState,
-                                    after: discord.VoiceState):
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
         """
         ボイスチャンネルへユーザーが入退室した時の処理
         """
@@ -328,10 +329,7 @@ class Talk(commands.Cog):
             vc_b = before.channel
 
             # Bot が最後の一人になったら自動退出する
-            if (
-                len(vc_b.members) == 1
-                and vc_b.members[0] == self.bot.user
-            ):
+            if len(vc_b.members) == 1 and vc_b.members[0] == self.bot.user:
                 vc = discord.utils.get(self.bot.voice_clients, channel=vc_b)
                 if vc and vc.is_connected():
                     logging.info('読み上げを終了: 自動退出')
@@ -345,11 +343,7 @@ class Talk(commands.Cog):
                     await sd.send_talk_end_auto(talk_channel)
 
         # Bot が VC から退出した時の処理
-        if (
-            before.channel
-            and not after.channel
-            and member == self.bot.user
-        ):
+        if before.channel and not after.channel and member == self.bot.user:
             logging.info('読み上げ終了時の処理を実行')
             self.talk_deinit(member)
 
