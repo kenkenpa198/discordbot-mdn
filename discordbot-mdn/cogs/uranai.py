@@ -39,10 +39,16 @@ class Uranai(commands.Cog):
     # ループ処理を実行
     loop.start()
 
+    # 占いコマンド
+    # @commands.cooldown で 15 秒に 1 回のみ実行可能としている
+    # Ref:
+    # https://discordpy.readthedocs.io/ja/latest/ext/commands/api.html#discord.ext.commands.cooldown
+    # https://qiita.com/daima3629/items/aed5c128fcbd258c2e38
     @commands.hybrid_command(
         description='🔮 今日の運勢を占うよ',
         aliases=['u']
     )
+    @commands.cooldown(1, 15.0)
     async def uranai(self, ctx):
         """
         占いコマンド
@@ -86,6 +92,15 @@ class Uranai(commands.Cog):
         psql.execute_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
 
         logging.info('もだねちゃん占いを終了')
+
+    # CommandOnCooldown エラーが発生した時メッセージを返す
+    # https://discordpy.readthedocs.io/ja/latest/ext/commands/api.html#discord.ext.commands.cooldown
+    # https://discordpy.readthedocs.io/ja/latest/ext/commands/api.html?highlight=commands%20cog#discord.ext.commands.Cog.listener
+    # https://qiita.com/daima3629/items/aed5c128fcbd258c2e38
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, err):
+        if isinstance(err, commands.CommandOnCooldown):
+            return await sd.send_on_command_error_cooldown(ctx)
 
 async def setup(bot):
     await bot.add_cog(Uranai(bot))
