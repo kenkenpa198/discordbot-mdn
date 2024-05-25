@@ -78,7 +78,7 @@ def do_query(query_file_path, bind_dict=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
         conn.commit()
 
 def do_query_fetch_one(query_file_path, bind_dict=None):
@@ -109,7 +109,7 @@ def do_query_fetch_one(query_file_path, bind_dict=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
             # 結果から1件のみを取得し1つ目のみを保持
             (result,) = cur.fetchone()
         conn.commit()
@@ -143,7 +143,7 @@ def do_query_fetch_list(query_file_path, bind_dict=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
             # リストを作成して行を順番に代入
             result_list = []
             for row in cur:
