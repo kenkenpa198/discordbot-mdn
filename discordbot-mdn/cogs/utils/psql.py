@@ -41,7 +41,7 @@ def get_query(query_file_path):
 
     return query
 
-def do_query(query_file_path, bind_dict=None):
+def execute_query(query_file_path, bind_dict=None):
     """
     SQL クエリを実行する
 
@@ -59,9 +59,9 @@ def do_query(query_file_path, bind_dict=None):
 
     Examples
     --------
-    >>> do_query('./sql/uranai/delete_user_id.sql')
-    >>> do_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
-    >>> do_query(
+    >>> execute_query('./sql/uranai/delete_user_id.sql')
+    >>> execute_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
+    >>> execute_query(
             './sql/talk/upsert_target_id.sql',
             {'guild_id': guild_id, 'vc_id': vc_id, 'channel_id': channel_id}
         )
@@ -72,16 +72,16 @@ def do_query(query_file_path, bind_dict=None):
 
     # 実行する SQL 文を取得
     query = get_query(query_file_path)
-    logging.debug('実行するクエリ:\n%s', query % bind_dict)
+    logging.debug('実行するクエリ:\n%s', query)
 
     # クエリを実行
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
         conn.commit()
 
-def do_query_fetch_one(query_file_path, bind_dict=None):
+def execute_query_fetch_one(query_file_path, bind_dict=None):
     """
     SQL クエリを実行し結果1つを取得する
 
@@ -109,13 +109,13 @@ def do_query_fetch_one(query_file_path, bind_dict=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
             # 結果から1件のみを取得し1つ目のみを保持
             (result,) = cur.fetchone()
         conn.commit()
     return result
 
-def do_query_fetch_list(query_file_path, bind_dict=None):
+def execute_query_fetch_list(query_file_path, bind_dict=None):
     """
     SQL クエリを実行し行をリストで返す
 
@@ -143,7 +143,7 @@ def do_query_fetch_list(query_file_path, bind_dict=None):
     with get_connection() as conn:
         with conn.cursor() as cur:
             logging.info('クエリを実行')
-            cur.execute(query % bind_dict)
+            cur.execute(query, bind_dict)
             # リストを作成して行を順番に代入
             result_list = []
             for row in cur:
