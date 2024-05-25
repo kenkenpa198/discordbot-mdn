@@ -35,7 +35,7 @@ class Uranai(commands.Cog):
         now = datetime.now().strftime('%H:%M')
         if now == '00:00':
             logging.info('played_fortune_users テーブルのレコードを削除')
-            psql.do_query('./sql/uranai/delete_user_id.sql')
+            psql.execute_query('./sql/uranai/delete_user_id.sql')
     # ループ処理を実行
     loop.start()
 
@@ -53,7 +53,7 @@ class Uranai(commands.Cog):
         async with ctx.channel.typing():
             logging.info('played_fortune_users テーブルのユーザー ID をチェック')
             played_list = []
-            played_list = psql.do_query_fetch_list('./sql/uranai/select_user_id.sql')
+            played_list = psql.execute_query_fetch_list('./sql/uranai/select_user_id.sql')
 
         # played_list にユーザーIDがあるか判定
         if str(ctx.author.id) in played_list:
@@ -83,7 +83,7 @@ class Uranai(commands.Cog):
         # played_fortune_users テーブルへユーザーIDを格納する
         logging.info('played_fortune_users テーブルへ ユーザーID を格納')
         user_id = ctx.author.id
-        psql.do_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
+        psql.execute_query('./sql/uranai/insert_user_id.sql', {'user_id': user_id})
 
         logging.info('もだねちゃん占いを終了')
 
